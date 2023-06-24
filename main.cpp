@@ -271,7 +271,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE21, GET_AUDIO_SFX_VOLUME); // 0xE21=1,get_audio_sfx_volume %1d%
     CLEO_RegisterOpcode(0xE22, GET_AUDIO_RADIO_VOLUME); // 0xE22=1,get_audio_radio_volume %1d%
     CLEO_RegisterOpcode(0xE3B, GET_AUDIOSTREAM_INTERNAL); // 0xE3B=2,get_audiostream_internal %1d% store_to %2d%
-
+*/
     // Memory
     CLEO_RegisterOpcode(0xE28, WRITE_STRUCT_OFFSET); // 0xE28=4,write_struct %1d% offset %2d% size %3d% value %4d%
     CLEO_RegisterOpcode(0xD4E, READ_STRUCT_OFFSET); // 0xD4E=4,%4d% = read_struct %1d% offset %2d% size %3d% // keep newOpcodes ordering for SB
@@ -284,7 +284,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEE3, WRITE_STRUCT_OFFSET_MULTI); // 0xEE3=-1,write_struct_offset_multi %1d% offset %2d% count %3d% size %4d%
     
     // Radar blips
-    CLEO_RegisterOpcode(0xE2A, ADD_CLEO_BLIP); // 0xE2A=9,add_cleo_blip %1d% position %2d% %3d% is_short %4d% RGBA %5d% %6d% %7d% %8d% store_to %9d%
+    /*CLEO_RegisterOpcode(0xE2A, ADD_CLEO_BLIP); // 0xE2A=9,add_cleo_blip %1d% position %2d% %3d% is_short %4d% RGBA %5d% %6d% %7d% %8d% store_to %9d%
     CLEO_RegisterOpcode(0xE2B, REMOVE_CLEO_BLIP); // 0xE2B=1,remove_cleo_blip %1d%
 
     // Render object
