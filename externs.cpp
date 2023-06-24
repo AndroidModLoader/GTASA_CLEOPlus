@@ -13,6 +13,7 @@ RsGlobalType* RsGlobal;
 uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds;
 bool *ms_bTakePhoto, *bDisplayHud;
 MobileMenu *gMobileMenu;
+CPickup* aPickUps;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -26,6 +27,7 @@ CPed* (*GetPedFromRef)(int);
 CObject* (*GetObjectFromRef)(int);
 void (*UpdateCompareFlag)(CRunningScript*, uint8_t);
 bool (*CalcScreenCoors)(RwV3d const&,RwV3d*,float *,float *,bool,bool);
+int (*GetActualPickupIndex)(int);
 
 // int main
 void ResolveExternals()
@@ -52,6 +54,7 @@ void ResolveExternals()
     SET_TO(ms_bTakePhoto, aml->GetSym(hGTASA, "_ZN7CWeapon13ms_bTakePhotoE"));
     SET_TO(bDisplayHud, aml->GetSym(hGTASA, "_ZN11CTheScripts11bDisplayHudE"));
     SET_TO(gMobileMenu, aml->GetSym(hGTASA, "gMobileMenu"));
+    SET_TO(aPickUps, *(uintptr_t*)(pGTASA + 0x678BF8));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -65,4 +68,5 @@ void ResolveExternals()
     SET_TO(GetObjectFromRef, aml->GetSym(hGTASA, "_ZN6CPools9GetObjectEi"));
     SET_TO(UpdateCompareFlag, aml->GetSym(hGTASA, "_ZN14CRunningScript17UpdateCompareFlagEh"));
     SET_TO(CalcScreenCoors, aml->GetSym(hGTASA, "_ZN7CSprite15CalcScreenCoorsERK5RwV3dPS0_PfS4_bb"));
+    SET_TO(GetActualPickupIndex, aml->GetSym(hGTASA, "_ZN8CPickups20GetActualPickupIndexEi"));
 }

@@ -297,7 +297,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE36, SET_RENDER_OBJECT_ROTATION); // 0xE36=4,set_render_object_rotation %1d% %2d% %3d% %4d%
     CLEO_RegisterOpcode(0xE37, SET_RENDER_OBJECT_SCALE); // 0xE37=4,set_render_object_scale %1d% %2d% %3d% %4d%
     CLEO_RegisterOpcode(0xE3A, SET_RENDER_OBJECT_DISTORTION); // 0xE3A=5,set_render_object_distortion %1d% %2d% %3d% %4d% %5d%
-    
+    */
     // Pickup
     CLEO_RegisterOpcode(0xE33, GET_PICKUP_THIS_COORD); // 0xE33=5,get_pickup_this_coord %1d% %2d% %3d% only_available %4d% store_to %5d%
     CLEO_RegisterOpcode(0xE34, GET_PICKUP_MODEL); // 0xE34=2,get_pickup_model %1d% %2d%
@@ -305,7 +305,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE39, GET_PICKUP_TYPE); // 0xE39=2,get_pickup_type %1d% store_to %2d%
     
     // Timer
-    CLEO_RegisterOpcode(0xE4E, DISPLAY_ONSCREEN_TIMER_LOCAL); // 0xE4E=2,display_onscreen_timer_local %1d% direction %2d%
+    /*CLEO_RegisterOpcode(0xE4E, DISPLAY_ONSCREEN_TIMER_LOCAL); // 0xE4E=2,display_onscreen_timer_local %1d% direction %2d%
     CLEO_RegisterOpcode(0xE4F, DISPLAY_ONSCREEN_TIMER_WITH_STRING_LOCAL); // 0xE4F=3,display_onscreen_timer_with_string_local %1d% direction %2d% GXT %3d%
     CLEO_RegisterOpcode(0xE50, DISPLAY_ONSCREEN_COUNTER_LOCAL); // 0xE50=2,display_onscreen_counter_local %1d% direction %2d%
     CLEO_RegisterOpcode(0xE51, DISPLAY_ONSCREEN_COUNTER_WITH_STRING_LOCAL); // 0xE51=3,display_onscreen_counter_with_string_local %1d% direction %2d% GXT %3d%

@@ -31,6 +31,7 @@ extern RsGlobalType* RsGlobal;
 extern uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds;
 extern bool *ms_bTakePhoto, *bDisplayHud;
 extern MobileMenu *gMobileMenu;
+extern CPickup* aPickUps;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -44,6 +45,7 @@ extern CPed* (*GetPedFromRef)(int);
 extern CObject* (*GetObjectFromRef)(int);
 extern void (*UpdateCompareFlag)(CRunningScript*, uint8_t);
 extern bool (*CalcScreenCoors)(RwV3d const&,RwV3d*,float *,float *,bool,bool);
+extern int (*GetActualPickupIndex)(int);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
