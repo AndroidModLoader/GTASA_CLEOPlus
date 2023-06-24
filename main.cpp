@@ -1,11 +1,6 @@
 #include <mod/amlmod.h>
 #include <mod/logger.h>
-
-#include "cleo.h"
-#include <GTASA_STRUCTS.h>
-
-#define CLEO_RegisterOpcode(x, h) cleo->RegisterOpcode(x, h); cleo->RegisterOpcodeFunction(#h, h)
-#define CLEO_Fn(h) void h (void *handle, uint32_t *ip, uint16_t opcode, const char *name)
+#include "externs.h"
 
 MYMOD(net.juniordjjr.rusjj.cleoplus, CLEOPlus, 1.0, JuniorDjjr & RusJJ)
 NEEDGAME(com.rockstargames.gtasa)
@@ -14,16 +9,9 @@ NEEDGAME(com.rockstargames.gtasa)
 uintptr_t pGTASA;
 void* hGTASA;
 cleo_ifs_t* cleo;
-bool newOpcodesInstalled = false;
 
 // Game Vars
 
-
-// CLEO functions
-CLEO_Fn(CREATE_OBJECT_NO_SAVE)
-{
-
-}
 
 // int main!
 extern "C" void OnModLoad()
@@ -33,12 +21,14 @@ extern "C" void OnModLoad()
     hGTASA = aml->GetLibHandle("libGTASA.so");
     cleo = (cleo_ifs_t*)GetInterface("CLEO");
 
+    ResolveExternals();
+
     //NoSave
     CLEO_RegisterOpcode(0xE01, CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
     CLEO_RegisterOpcode(0xE02, SET_CAR_GENERATOR_NO_SAVE); // 0xE02=1,set_car_generator %1d% no_save
 
     //Environment
-    if (!newOpcodesInstalled) CLEO_RegisterOpcode(0xD59, GET_CURRENT_WEATHER);
+    CLEO_RegisterOpcode(0xD59, GET_CURRENT_WEATHER);
     CLEO_RegisterOpcode(0xE04, GET_NEXT_WEATHER); // 0xE04=1,get_next_weather_to %1d%
     CLEO_RegisterOpcode(0xE05, SET_NEXT_WEATHER); // 0xE05=1,set_next_weather_to %1d%
     CLEO_RegisterOpcode(0xE06, GET_RAIN_INTENSITY); // 0xE06=1,get_rain_intensity %1d%
@@ -58,7 +48,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE0D, MARK_OBJECT_AS_NEEDED); // 0xE0D=1,mark_object_as_needed %1d%
 
     //Screen
-    CLEO_RegisterOpcode(0xE0E, GET_CURRENT_RESOLUTION); // 0xE0E=2,get_current_resolution_to %1d% %2d%
+    /*CLEO_RegisterOpcode(0xE0E, GET_CURRENT_RESOLUTION); // 0xE0E=2,get_current_resolution_to %1d% %2d%
     CLEO_RegisterOpcode(0xE0F, GET_FIXED_XY_ASPECT_RATIO); // 0xE0F=4,get_fixed_xy_aspect_ratio %1d% %2d% to %3d% %4d%
     CLEO_RegisterOpcode(0xE3F, CONVERT_3D_TO_SCREEN_2D); // 0xE3F=9,convert_3d_to_screen_2d %1d% %2d% %3d% checkNearClip %4d% checkFarClip %5d% store_2d_to %6d% %7d% size_to %8d% %9d%
     CLEO_RegisterOpcode(0xEB8, IS_RADAR_VISIBLE); // 0xEB8=0,is_radar_visible
@@ -374,4 +364,5 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE7C, LIST_REMOVE_STRING_VALUE); // 0xE7C=2,list_remove_string_value %1d% value %2d%
     CLEO_RegisterOpcode(0xE7D, LIST_REMOVE_INDEX_RANGE); // 0xE7D=3,list_remove_index %1d% start %2d% end %3d%
     CLEO_RegisterOpcode(0xE7E, REVERSE_LIST); // 0xE7E=1,reverse_list %1d%
+    */
 }
