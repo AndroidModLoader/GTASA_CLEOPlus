@@ -6,9 +6,13 @@ CCamera* TheCamera;
 tUsedObject* UsedObjectArray;
 CBaseModelInfo** ms_modelInfoPtrs;
 CCarGenerator* CarGeneratorArray;
-uint16_t *OldWeatherType, *NewWeatherType, *ForcedWeatherType;
+uint16_t *OldWeatherType, *NewWeatherType, *ForcedWeatherType, *m_ItemToFlash;
 float *Rain, *UnderWaterness, *m_fDNBalanceParam;
 uint8_t *ms_nGameClockHours, *ms_nGameClockMinutes;
+RsGlobalType* RsGlobal;
+uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds;
+bool *ms_bTakePhoto, *bDisplayHud;
+MobileMenu *gMobileMenu;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -21,6 +25,7 @@ CVehicle* (*GetVehicleFromRef)(int);
 CPed* (*GetPedFromRef)(int);
 CObject* (*GetObjectFromRef)(int);
 void (*UpdateCompareFlag)(CRunningScript*, uint8_t);
+bool (*CalcScreenCoors)(RwV3d const&,RwV3d*,float *,float *,bool,bool);
 
 // int main
 void ResolveExternals()
@@ -33,11 +38,20 @@ void ResolveExternals()
     SET_TO(OldWeatherType, aml->GetSym(hGTASA, "_ZN8CWeather14OldWeatherTypeE"));
     SET_TO(NewWeatherType, aml->GetSym(hGTASA, "_ZN8CWeather14NewWeatherTypeE"));
     SET_TO(ForcedWeatherType, aml->GetSym(hGTASA, "_ZN8CWeather17ForcedWeatherTypeE"));
+    SET_TO(m_ItemToFlash, aml->GetSym(hGTASA, "_ZN4CHud13m_ItemToFlashE"));
     SET_TO(Rain, aml->GetSym(hGTASA, "_ZN8CWeather4RainE"));
     SET_TO(UnderWaterness, aml->GetSym(hGTASA, "_ZN8CWeather14UnderWaternessE"));
     SET_TO(m_fDNBalanceParam, aml->GetSym(hGTASA, "_ZN25CCustomBuildingDNPipeline17m_fDNBalanceParamE"));
     SET_TO(ms_nGameClockHours, aml->GetSym(hGTASA, "_ZN6CClock18ms_nGameClockHoursE"));
     SET_TO(ms_nGameClockMinutes, aml->GetSym(hGTASA, "_ZN6CClock20ms_nGameClockMinutesE"));
+    SET_TO(RsGlobal, aml->GetSym(hGTASA, "RsGlobal"));
+    SET_TO(gbCineyCamProcessedOnFrame, aml->GetSym(hGTASA, "gbCineyCamProcessedOnFrame"));
+    SET_TO(m_FrameCounter, aml->GetSym(hGTASA, "_ZN6CTimer14m_FrameCounterE"));
+    SET_TO(ms_exitEnterState, aml->GetSym(hGTASA, "_ZN17CEntryExitManager17ms_exitEnterStateE"));
+    SET_TO(m_snTimeInMilliseconds, aml->GetSym(hGTASA, "_ZN6CTimer22m_snTimeInMillisecondsE"));
+    SET_TO(ms_bTakePhoto, aml->GetSym(hGTASA, "_ZN7CWeapon13ms_bTakePhotoE"));
+    SET_TO(bDisplayHud, aml->GetSym(hGTASA, "_ZN11CTheScripts11bDisplayHudE"));
+    SET_TO(gMobileMenu, aml->GetSym(hGTASA, "gMobileMenu"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -50,4 +64,5 @@ void ResolveExternals()
     SET_TO(GetPedFromRef, aml->GetSym(hGTASA, "_ZN6CPools6GetPedEi"));
     SET_TO(GetObjectFromRef, aml->GetSym(hGTASA, "_ZN6CPools9GetObjectEi"));
     SET_TO(UpdateCompareFlag, aml->GetSym(hGTASA, "_ZN14CRunningScript17UpdateCompareFlagEh"));
+    SET_TO(CalcScreenCoors, aml->GetSym(hGTASA, "_ZN7CSprite15CalcScreenCoorsERK5RwV3dPS0_PfS4_bb"));
 }

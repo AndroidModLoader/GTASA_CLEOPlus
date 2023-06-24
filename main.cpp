@@ -48,7 +48,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE0D, MARK_OBJECT_AS_NEEDED); // 0xE0D=1,mark_object_as_needed %1d%
 
     //Screen
-    /*CLEO_RegisterOpcode(0xE0E, GET_CURRENT_RESOLUTION); // 0xE0E=2,get_current_resolution_to %1d% %2d%
+    CLEO_RegisterOpcode(0xE0E, GET_CURRENT_RESOLUTION); // 0xE0E=2,get_current_resolution_to %1d% %2d%
     CLEO_RegisterOpcode(0xE0F, GET_FIXED_XY_ASPECT_RATIO); // 0xE0F=4,get_fixed_xy_aspect_ratio %1d% %2d% to %3d% %4d%
     CLEO_RegisterOpcode(0xE3F, CONVERT_3D_TO_SCREEN_2D); // 0xE3F=9,convert_3d_to_screen_2d %1d% %2d% %3d% checkNearClip %4d% checkFarClip %5d% store_2d_to %6d% %7d% size_to %8d% %9d%
     CLEO_RegisterOpcode(0xEB8, IS_RADAR_VISIBLE); // 0xEB8=0,is_radar_visible
@@ -56,7 +56,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEC7, GET_FADE_ALPHA); // 0xEC7=1,get_fade_alpha %1d%
 
     //Input
-    CLEO_RegisterOpcode(0xE10, IS_MOUSE_WHEEL_UP); // 0xE10=0,is_mouse_wheel_up
+    /*CLEO_RegisterOpcode(0xE10, IS_MOUSE_WHEEL_UP); // 0xE10=0,is_mouse_wheel_up
     CLEO_RegisterOpcode(0xE11, IS_MOUSE_WHEEL_DOWN); // 0xE11=0,is_mouse_wheel_down
     CLEO_RegisterOpcode(0xE23, GET_MOUSE_SENSIBILITY); // 0xE23=1,get_mouse_sensibility_to %1d%
     CLEO_RegisterOpcode(0xE3D, IS_KEY_JUST_PRESSED); // 0xE3D=1,is_key_just_pressed %1d%
@@ -66,10 +66,10 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE68, SET_PLAYER_CONTROL_PAD); // 0xE68=2,set_player_control_pad %1d% %2d% 
     CLEO_RegisterOpcode(0xE69, SET_PLAYER_CONTROL_PAD_MOVEMENT); // 0xE69=2,set_player_control_pad_movement %1d% %2d% 
     CLEO_RegisterOpcode(0xE8D, IS_ANY_FIRE_BUTTON_PRESSED); // 0xE8D=1,is_any_fire_button_pressed %1d%
-    CLEO_RegisterOpcode(0xE6E, IS_SELECT_MENU_JUST_PRESSED); // 0xE6E=0,is_select_menu_just_pressed
+    CLEO_RegisterOpcode(0xE6E, IS_SELECT_MENU_JUST_PRESSED); // 0xE6E=0,is_select_menu_just_pressed*/
 
     //Events
-    CLEO_RegisterOpcode(0xED0, RETURN_SCRIPT_EVENT); // 0xED0=0,return_script_event
+    /*CLEO_RegisterOpcode(0xED0, RETURN_SCRIPT_EVENT); // 0xED0=0,return_script_event
     CLEO_RegisterOpcode(0xED1, SET_SCRIPT_EVENT_SAVE_CONFIRMATION); // 0xED1=3,set_script_event_save_confirmation %1d% label %2p% args %3d%
     CLEO_RegisterOpcode(0xED2, SET_SCRIPT_EVENT_CHAR_DELETE); // 0xED2=3,set_script_event_char_delete %1d% label %2p% args %3d%
     CLEO_RegisterOpcode(0xED3, SET_SCRIPT_EVENT_CHAR_CREATE); // 0xED3=3,set_script_event_char_create %1d% label %2p% args %3d%
