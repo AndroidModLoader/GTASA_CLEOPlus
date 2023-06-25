@@ -20,6 +20,58 @@ struct tUsedObject
 
 void ResolveExternals();
 
+inline int GetPCOffset()
+{
+    switch(cleo->GetGameIdentifier())
+    {
+        case GTASA: return 20;
+        case GTALCS: return 24;
+
+        default: return 16;
+    }
+}
+inline char* CLEO_ReadStringEx(void* handle, char* buf, size_t size)
+{
+    uint8_t byte = **(uint8_t**)((int)handle + GetPCOffset());
+    if(byte <= 8) return NULL; // Not a string
+
+    static char newBuf[128];
+    if(!buf || size < 1) buf = (char*)newBuf;
+
+    switch(byte)
+    {
+        case 0xA:
+        case 0xB:
+        case 0x10:
+        case 0x11:
+        {
+            size = (size > 16) ? 16 : size;
+            memcpy(buf, (char*)cleo->GetPointerToScriptVar(handle), size);
+            buf[size-1] = 0;
+            return buf;
+        }
+
+        default:
+        {
+            return cleo->ReadStringLong(handle, buf, size) ? buf : NULL;
+        }
+    }
+    return buf;
+}
+inline void CLEO_WriteStringEx(void* handle, const char* buf)
+{
+    if(**(uint8_t**)((int)handle + GetPCOffset()) > 8)
+    {
+        char* dst = (char*)cleo->GetPointerToScriptVar(handle);
+        memcpy(dst, buf, 15); dst[15] = 0;
+    }
+    else
+    {
+        char* dst = (char*)cleo->ReadParam(handle)->i;
+        strcpy(dst, buf);
+    }
+}
+
 // Game vars
 extern CCamera* TheCamera;
 extern tUsedObject* UsedObjectArray;
