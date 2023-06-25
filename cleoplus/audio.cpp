@@ -11,14 +11,14 @@ inline float GetSettingVal(unsigned char set)
 
 CLEO_Fn(GET_AUDIO_SFX_VOLUME)
 {
-    cleo->ReadParam(handle)->f = GetSettingVal(SETITEM_SA_SFX_VOLUME);
+    cleo->GetPointerToScriptVar(handle)->f = GetSettingVal(SETITEM_SA_SFX_VOLUME);
 }
 CLEO_Fn(GET_AUDIO_RADIO_VOLUME)
 {
-    cleo->ReadParam(handle)->f = GetSettingVal(SETITEM_SA_RADIO_VOLUME);
+    cleo->GetPointerToScriptVar(handle)->f = GetSettingVal(SETITEM_SA_RADIO_VOLUME);
 }
 CLEO_Fn(GET_AUDIOSTREAM_INTERNAL) // useless?
 {
     int* stream = (int*)cleo->ReadParam(handle)->i;
-    cleo->ReadParam(handle)->i = *stream;
+    cleo->GetPointerToScriptVar(handle)->i = *stream;
 }

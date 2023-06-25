@@ -73,7 +73,7 @@ CLEO_Fn(CREATE_LIST)
         logger->Error("CREATE_LIST failed: list type unknown %d", scriptList->type);
     }
     scriptLists.push_back(scriptList);
-    cleo->ReadParam(handle)->i = (int)scriptList;
+    cleo->GetPointerToScriptVar(handle)->i = (int)scriptList;
 }
 CLEO_Fn(DELETE_LIST)
 {
@@ -190,7 +190,7 @@ CLEO_Fn(GET_LIST_SIZE)
             logger->Error("GET_LIST_SIZE failed: list type unknown %d", scriptList->type);
         }
     }
-    cleo->ReadParam(handle)->i = size;
+    cleo->GetPointerToScriptVar(handle)->i = size;
 }
 CLEO_Fn(GET_LIST_VALUE_BY_INDEX)
 {
@@ -203,12 +203,12 @@ CLEO_Fn(GET_LIST_VALUE_BY_INDEX)
         it = l->begin();
         if (index >= l->size())
         {
-            cleo->ReadParam(handle)->i = 0;
+            cleo->GetPointerToScriptVar(handle)->i = 0;
         }
         else
         {
             advance(it, index);
-            cleo->ReadParam(handle)->i = *it;
+            cleo->GetPointerToScriptVar(handle)->i = *it;
         }
     }
     else if (scriptList->type == 1) // float
@@ -218,12 +218,12 @@ CLEO_Fn(GET_LIST_VALUE_BY_INDEX)
         it = l->begin();
         if (index >= l->size())
         {
-            cleo->ReadParam(handle)->i = 0;
+            cleo->GetPointerToScriptVar(handle)->i = 0;
         }
         else
         {
             advance(it, index);
-            cleo->ReadParam(handle)->f = *it;
+            cleo->GetPointerToScriptVar(handle)->f = *it;
         }
     }
     else

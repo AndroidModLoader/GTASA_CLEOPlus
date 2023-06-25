@@ -13,16 +13,16 @@ inline void FixAspectRatio(float *x, float *y)
 
 CLEO_Fn(GET_CURRENT_RESOLUTION)
 {
-    cleo->ReadParam(handle)->i = RsGlobal->maximumWidth;
-    cleo->ReadParam(handle)->i = RsGlobal->maximumHeight;
+    cleo->GetPointerToScriptVar(handle)->i = RsGlobal->maximumWidth;
+    cleo->GetPointerToScriptVar(handle)->i = RsGlobal->maximumHeight;
 }
 CLEO_Fn(GET_FIXED_XY_ASPECT_RATIO)
 {
     float x = cleo->ReadParam(handle)->f;
     float y = cleo->ReadParam(handle)->f;
     FixAspectRatio(&x, &y);
-    cleo->ReadParam(handle)->f = x;
-    cleo->ReadParam(handle)->f = y;
+    cleo->GetPointerToScriptVar(handle)->f = x;
+    cleo->GetPointerToScriptVar(handle)->f = y;
 }
 CLEO_Fn(CONVERT_3D_TO_SCREEN_2D)
 {
@@ -41,10 +41,10 @@ CLEO_Fn(CONVERT_3D_TO_SCREEN_2D)
     sizeX = (sizeX / RsGlobal->maximumWidth) * 8.0f;
     sizeY = (sizeY / RsGlobal->maximumHeight) * 8.0f;
 
-    cleo->ReadParam(handle)->f = x;
-    cleo->ReadParam(handle)->f = y;
-    cleo->ReadParam(handle)->f = sizeX;
-    cleo->ReadParam(handle)->f = sizeY;
+    cleo->GetPointerToScriptVar(handle)->f = x;
+    cleo->GetPointerToScriptVar(handle)->f = y;
+    cleo->GetPointerToScriptVar(handle)->f = sizeX;
+    cleo->GetPointerToScriptVar(handle)->f = sizeY;
 
     UpdateCompareFlag((CRunningScript*)handle, result);
 }
@@ -62,6 +62,6 @@ CLEO_Fn(IS_HUD_VISIBLE)
 }
 CLEO_Fn(GET_FADE_ALPHA)
 {
-    cleo->ReadParam(handle)->f = TheCamera->m_fFloatingFade;
+    cleo->GetPointerToScriptVar(handle)->f = TheCamera->m_fFloatingFade;
     UpdateCompareFlag((CRunningScript*)handle, TheCamera->m_fFloatingFade > 0);
 }

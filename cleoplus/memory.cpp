@@ -76,7 +76,7 @@ CLEO_Fn(READ_STRUCT_OFFSET_MULTI)
 
     for (unsigned int i = 0; i < (count * size); i += size)
     {
-        cleo_ifs_t::data_t *pointer = cleo->ReadParam(handle);
+        cleo_ifs_t::data_t *pointer = cleo->GetPointerToScriptVar(handle);
         if (pointer != nullptr)
         {
             pointer->i = 0;

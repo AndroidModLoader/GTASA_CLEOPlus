@@ -36,17 +36,17 @@ CLEO_Fn(GET_COLLISION_BETWEEN_POINTS)
 
     if (bResult)
     {
-        cleo->ReadParam(handle)->f = colPoint->m_vecPoint.x;
-        cleo->ReadParam(handle)->f = colPoint->m_vecPoint.y;
-        cleo->ReadParam(handle)->f = colPoint->m_vecPoint.z;
-        cleo->ReadParam(handle)->i = (int)colEntity;
+        cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecPoint.x;
+        cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecPoint.y;
+        cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecPoint.z;
+        cleo->GetPointerToScriptVar(handle)->i = (int)colEntity;
     }
     else
     {
-        cleo->ReadParam(handle)->f = 0.0f;
-        cleo->ReadParam(handle)->f = 0.0f;
-        cleo->ReadParam(handle)->f = 0.0f;
-        cleo->ReadParam(handle)->i = 0;
+        cleo->GetPointerToScriptVar(handle)->f = 0.0f;
+        cleo->GetPointerToScriptVar(handle)->f = 0.0f;
+        cleo->GetPointerToScriptVar(handle)->f = 0.0f;
+        cleo->GetPointerToScriptVar(handle)->i = 0;
     }
     if(deleteColPointAfter) delete colPoint;
     UpdateCompareFlag((CRunningScript*)handle, bResult);
@@ -54,30 +54,30 @@ CLEO_Fn(GET_COLLISION_BETWEEN_POINTS)
 CLEO_Fn(GET_COLPOINT_NORMAL_VECTOR)
 {
     CColPoint *colPoint = (CColPoint*)cleo->ReadParam(handle)->i;
-    cleo->ReadParam(handle)->f = colPoint->m_vecNormal.x;
-    cleo->ReadParam(handle)->f = colPoint->m_vecNormal.y;
-    cleo->ReadParam(handle)->f = colPoint->m_vecNormal.z;
+    cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecNormal.x;
+    cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecNormal.y;
+    cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecNormal.z;
 }
 CLEO_Fn(GET_COLPOINT_SURFACE)
 {
     CColPoint *colPoint = (CColPoint*)cleo->ReadParam(handle)->i;
-    cleo->ReadParam(handle)->i = colPoint->m_nSurfaceTypeB;
+    cleo->GetPointerToScriptVar(handle)->i = colPoint->m_nSurfaceTypeB;
 }
 CLEO_Fn(GET_COLPOINT_DEPTH)
 {
     CColPoint *colPoint = (CColPoint*)cleo->ReadParam(handle)->i;
-    cleo->ReadParam(handle)->f = colPoint->m_fDepth;
+    cleo->GetPointerToScriptVar(handle)->f = colPoint->m_fDepth;
 }
 CLEO_Fn(GET_COLPOINT_LIGHTING)
 {
     CColPoint *colPoint = (CColPoint*)cleo->ReadParam(handle)->i;
     bool night = cleo->ReadParam(handle)->i;
-    cleo->ReadParam(handle)->i = night ? colPoint->m_nLightingB.night : colPoint->m_nLightingB.day;
+    cleo->GetPointerToScriptVar(handle)->i = night ? colPoint->m_nLightingB.night : colPoint->m_nLightingB.day;
 }
 CLEO_Fn(GET_COLPOINT_COORDINATES)
 {
     CColPoint *colPoint = (CColPoint*)cleo->ReadParam(handle)->i;
-    cleo->ReadParam(handle)->f = colPoint->m_vecPoint.x;
-    cleo->ReadParam(handle)->f = colPoint->m_vecPoint.y;
-    cleo->ReadParam(handle)->f = colPoint->m_vecPoint.z;
+    cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecPoint.x;
+    cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecPoint.y;
+    cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecPoint.z;
 }
