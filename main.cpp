@@ -341,7 +341,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEE1, GET_COLPOINT_COORDINATES); // 0xEE1=4,get_colpoint_coordinates %1d% store_to %2d% %3d% %4d%
 
     // List
-    /*CLEO_RegisterOpcode(0xE72, CREATE_LIST); // 0xE72=2,create_list %1d% store_to %2d%
+    CLEO_RegisterOpcode(0xE72, CREATE_LIST); // 0xE72=2,create_list %1d% store_to %2d%
     CLEO_RegisterOpcode(0xE73, DELETE_LIST); // 0xE73=1,delete_list %1d%
     CLEO_RegisterOpcode(0xE74, LIST_ADD); // 0xE74=2,list_add %1d% value %2d%
     CLEO_RegisterOpcode(0xE75, LIST_REMOVE_VALUE); // 0xE75=2,list_remove_value %1d% value %2d%
@@ -354,5 +354,4 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE7C, LIST_REMOVE_STRING_VALUE); // 0xE7C=2,list_remove_string_value %1d% value %2d%
     CLEO_RegisterOpcode(0xE7D, LIST_REMOVE_INDEX_RANGE); // 0xE7D=3,list_remove_index %1d% start %2d% end %3d%
     CLEO_RegisterOpcode(0xE7E, REVERSE_LIST); // 0xE7E=1,reverse_list %1d%
-    */
 }

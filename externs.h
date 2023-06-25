@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mod/amlmod.h>
+#include <mod/logger.h>
 #include "GTASA_STRUCTS.h"
 #include "cleo.h"
 
