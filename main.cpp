@@ -266,12 +266,12 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEF7, CLAMP_INT); // 0xEF7=4,clamp_int %1d% min %2d% max %3d% store_to %4d%
     CLEO_RegisterOpcode(0xEB3, CONVERT_DIRECTION_TO_QUAT); // 0xEB3=4,convert_direction_to_quat %1d% dir %2d% %3d% %4d%
     CLEO_RegisterOpcode(0xEF3, LERP); // 0xEF3=4,lerp %1d% %2d% %3d% store_to %4d%
-    
+*/
     // Audio
     CLEO_RegisterOpcode(0xE21, GET_AUDIO_SFX_VOLUME); // 0xE21=1,get_audio_sfx_volume %1d%
     CLEO_RegisterOpcode(0xE22, GET_AUDIO_RADIO_VOLUME); // 0xE22=1,get_audio_radio_volume %1d%
     CLEO_RegisterOpcode(0xE3B, GET_AUDIOSTREAM_INTERNAL); // 0xE3B=2,get_audiostream_internal %1d% store_to %2d%
-*/
+
     // Memory
     CLEO_RegisterOpcode(0xE28, WRITE_STRUCT_OFFSET); // 0xE28=4,write_struct %1d% offset %2d% size %3d% value %4d%
     CLEO_RegisterOpcode(0xD4E, READ_STRUCT_OFFSET); // 0xD4E=4,%4d% = read_struct %1d% offset %2d% size %3d% // keep newOpcodes ordering for SB
