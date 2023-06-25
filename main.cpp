@@ -331,7 +331,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE96, CLEAR_CHAR_PRIMARY_TASKS); // 0xE96=1,clear_char_primary_tasks %1d%
     CLEO_RegisterOpcode(0xE97, CLEAR_CHAR_SECONDARY_TASKS); // 0xE97=1,clear_char_secondary_tasks %1d%
     CLEO_RegisterOpcode(0xEFF, GET_CHAR_SIMPLEST_ACTIVE_TASK); // 0xEFF=3,get_char_simplest_active_task %1d% id_to %2d% pointer_to %3d%
-
+*/
     // Colpoint
     CLEO_RegisterOpcode(0xD3A, GET_COLLISION_BETWEEN_POINTS); // 0xD3A=20,get_collision_between_points %1d% %2d% %3d% and %4d% %5d% %6d% flags %7d% %8d% %9d% %10d% %11d% %12d% %13d% %14d% ignore_entity %15d% store_point_to %17d% %18d% %19d% entity_to %20d% colpoint_data_to %16d% // keep NewOpcodes order
     CLEO_RegisterOpcode(0xD3B, GET_COLPOINT_NORMAL_VECTOR); // 0xD3B=4,get_colpoint_normal_vector %1d% store_to %2d% %3d% %4d%
@@ -341,7 +341,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEE1, GET_COLPOINT_COORDINATES); // 0xEE1=4,get_colpoint_coordinates %1d% store_to %2d% %3d% %4d%
 
     // List
-    CLEO_RegisterOpcode(0xE72, CREATE_LIST); // 0xE72=2,create_list %1d% store_to %2d%
+    /*CLEO_RegisterOpcode(0xE72, CREATE_LIST); // 0xE72=2,create_list %1d% store_to %2d%
     CLEO_RegisterOpcode(0xE73, DELETE_LIST); // 0xE73=1,delete_list %1d%
     CLEO_RegisterOpcode(0xE74, LIST_ADD); // 0xE74=2,list_add %1d% value %2d%
     CLEO_RegisterOpcode(0xE75, LIST_REMOVE_VALUE); // 0xE75=2,list_remove_value %1d% value %2d%
