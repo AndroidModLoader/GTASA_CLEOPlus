@@ -85,7 +85,7 @@ extern uint16_t *OldWeatherType, *NewWeatherType, *ForcedWeatherType, *m_ItemToF
 extern float *Rain, *UnderWaterness, *m_fDNBalanceParam;
 extern uint8_t *ms_nGameClockHours, *ms_nGameClockMinutes;
 extern RsGlobalType* RsGlobal;
-extern uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds;
+extern uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds, *ZonesRevealed;
 extern bool *ms_bTakePhoto, *bDisplayHud;
 extern MobileMenu *gMobileMenu;
 extern CPickup* aPickUps;
@@ -109,6 +109,7 @@ extern void (*QuaternionSet)(CQuaternion*, const RwMatrix& m);
 extern void (*QuaternionMult)(const CQuaternion *a1, const CQuaternion *a2, const CQuaternion *a3);
 extern void (*RtQuatRotate)(CQuaternion *, CVector const*, float, RwOpCombineType);
 extern void (*RwMatrixRotate)(RwMatrix *, RwV3d const*, float, RwOpCombineType);
+extern bool (*GetCurrentZoneLockedOrUnlocked)(float, float);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
@@ -398,3 +399,5 @@ CLEO_Fn(LIST_ADD_STRING); // 0xE7B=2,list_add_string %1d% value %2d%
 CLEO_Fn(LIST_REMOVE_STRING_VALUE); // 0xE7C=2,list_remove_string_value %1d% value %2d%
 CLEO_Fn(LIST_REMOVE_INDEX_RANGE); // 0xE7D=3,list_remove_index %1d% start %2d% end %3d%
 CLEO_Fn(REVERSE_LIST); // 0xE7E=1,reverse_list %1d%
+
+void RadarBlip_Patch();

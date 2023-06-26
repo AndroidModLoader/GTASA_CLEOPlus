@@ -6,7 +6,7 @@ LOCAL_MODULE    := CLEOPlus
 LOCAL_SRC_FILES := main.cpp externs.cpp mod/logger.cpp
 LOCAL_SRC_FILES += addons/SimplexPerlinNoise.cpp
 LOCAL_SRC_FILES += cleoplus/nosave.cpp cleoplus/environment.cpp cleoplus/scriptents.cpp cleoplus/screen.cpp cleoplus/types.cpp cleoplus/memory.cpp cleoplus/pickup.cpp cleoplus/colpoint.cpp 
-LOCAL_SRC_FILES += cleoplus/list.cpp cleoplus/audio.cpp cleoplus/input.cpp cleoplus/math.cpp 
+LOCAL_SRC_FILES += cleoplus/list.cpp cleoplus/audio.cpp cleoplus/input.cpp cleoplus/math.cpp cleoplus/radarblip.cpp 
 LOCAL_CFLAGS += -O2 -mfloat-abi=softfp -DNDEBUG -std=c++17
 LOCAL_C_INCLUDES += ./include
 LOCAL_LDLIBS += -llog

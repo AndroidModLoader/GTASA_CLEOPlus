@@ -10,7 +10,7 @@ uint16_t *OldWeatherType, *NewWeatherType, *ForcedWeatherType, *m_ItemToFlash;
 float *Rain, *UnderWaterness, *m_fDNBalanceParam;
 uint8_t *ms_nGameClockHours, *ms_nGameClockMinutes;
 RsGlobalType* RsGlobal;
-uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds;
+uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds, *ZonesRevealed;
 bool *ms_bTakePhoto, *bDisplayHud;
 MobileMenu *gMobileMenu;
 CPickup* aPickUps;
@@ -34,6 +34,7 @@ void (*QuaternionSet)(CQuaternion*, const RwMatrix& m);
 void (*QuaternionMult)(const CQuaternion *a1, const CQuaternion *a2, const CQuaternion *a3);
 void (*RtQuatRotate)(CQuaternion *, CVector const*, float, RwOpCombineType);
 void (*RwMatrixRotate)(RwMatrix *, RwV3d const*, float, RwOpCombineType);
+bool (*GetCurrentZoneLockedOrUnlocked)(float, float);
 
 // int main
 void ResolveExternals()
@@ -62,6 +63,7 @@ void ResolveExternals()
     SET_TO(gMobileMenu, aml->GetSym(hGTASA, "gMobileMenu"));
     SET_TO(aPickUps, *(uintptr_t*)(pGTASA + 0x678BF8));
     SET_TO(pIgnoreEntity, aml->GetSym(hGTASA, "_ZN6CWorld13pIgnoreEntityE"));
+    SET_TO(ZonesRevealed, aml->GetSym(hGTASA, "_ZN9CTheZones13ZonesRevealedE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -81,4 +83,5 @@ void ResolveExternals()
     SET_TO(QuaternionMult, aml->GetSym(hGTASA, "_ZN11CQuaternion8MultiplyERKS_S1_"));
     SET_TO(RtQuatRotate, aml->GetSym(hGTASA, "_Z12RtQuatRotateP6RtQuatPK5RwV3df15RwOpCombineType"));
     SET_TO(RwMatrixRotate, aml->GetSym(hGTASA, "_Z14RwMatrixRotateP11RwMatrixTagPK5RwV3df15RwOpCombineType"));
+    SET_TO(GetCurrentZoneLockedOrUnlocked, aml->GetSym(hGTASA, "_ZN9CTheZones30GetCurrentZoneLockedOrUnlockedEff"));
 }

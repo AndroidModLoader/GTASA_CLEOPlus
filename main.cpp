@@ -284,11 +284,12 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEE3, WRITE_STRUCT_OFFSET_MULTI); // 0xEE3=-1,write_struct_offset_multi %1d% offset %2d% count %3d% size %4d%
     
     // Radar blips
-    /*CLEO_RegisterOpcode(0xE2A, ADD_CLEO_BLIP); // 0xE2A=9,add_cleo_blip %1d% position %2d% %3d% is_short %4d% RGBA %5d% %6d% %7d% %8d% store_to %9d%
+    CLEO_RegisterOpcode(0xE2A, ADD_CLEO_BLIP); // 0xE2A=9,add_cleo_blip %1d% position %2d% %3d% is_short %4d% RGBA %5d% %6d% %7d% %8d% store_to %9d%
     CLEO_RegisterOpcode(0xE2B, REMOVE_CLEO_BLIP); // 0xE2B=1,remove_cleo_blip %1d%
+    RadarBlip_Patch();
 
     // Render object
-    CLEO_RegisterOpcode(0xE2E, CREATE_RENDER_OBJECT_TO_CHAR_BONE); // 0xE2E=10,create_render_object_to_char_bone %1d% model %2d% bone %3d% offset %4d% %5d% %6d% rotation %7d% %8d% %9d% store_to %10d%
+    /*CLEO_RegisterOpcode(0xE2E, CREATE_RENDER_OBJECT_TO_CHAR_BONE); // 0xE2E=10,create_render_object_to_char_bone %1d% model %2d% bone %3d% offset %4d% %5d% %6d% rotation %7d% %8d% %9d% store_to %10d%
     //CLEO_RegisterOpcode(0xF02, CREATE_RENDER_OBJECT_TO_CHAR_BONE_FROM_SPECIAL); // 0F02=10,create_render_object_to_char_bone_from_special %1d% special_model %2d% bone %3d% offset %4d% %5d% %6d% rotation %7d% %8d% %9d% scale %10d% %11d% %12d% store_to %13d%
     CLEO_RegisterOpcode(0xE2F, DELETE_RENDER_OBJECT); // 0xE2F=1,delete_render_object %1d%
     CLEO_RegisterOpcode(0xE30, SET_RENDER_OBJECT_AUTO_HIDE); // 0xE30=4,set_render_object_auto_hide %1d% dead %2d% weapon %3d% car %4d%
