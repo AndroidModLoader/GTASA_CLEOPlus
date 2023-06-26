@@ -101,6 +101,10 @@ extern void (*UpdateCompareFlag)(CRunningScript*, uint8_t);
 extern bool (*CalcScreenCoors)(RwV3d const&,RwV3d*,float *,float *,bool,bool);
 extern int (*GetActualPickupIndex)(int);
 extern bool (*ProcessLineOfSight)(CVector const&,CVector const&,CColPoint &,CEntity *&,bool,bool,bool,bool,bool,bool,bool,bool);
+extern void (*QuaternionSet)(CQuaternion*, const RwMatrix& m);
+extern void (*QuaternionMult)(const CQuaternion *a1, const CQuaternion *a2, const CQuaternion *a3);
+extern void (*RtQuatRotate)(CQuaternion *, CVector const*, float, RwOpCombineType);
+extern void (*RwMatrixRotate)(RwMatrix *, RwV3d const*, float, RwOpCombineType);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%

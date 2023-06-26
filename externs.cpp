@@ -30,6 +30,10 @@ void (*UpdateCompareFlag)(CRunningScript*, uint8_t);
 bool (*CalcScreenCoors)(RwV3d const&,RwV3d*,float *,float *,bool,bool);
 int (*GetActualPickupIndex)(int);
 bool (*ProcessLineOfSight)(CVector const&,CVector const&,CColPoint &,CEntity *&,bool,bool,bool,bool,bool,bool,bool,bool);
+void (*QuaternionSet)(CQuaternion*, const RwMatrix& m);
+void (*QuaternionMult)(const CQuaternion *a1, const CQuaternion *a2, const CQuaternion *a3);
+void (*RtQuatRotate)(CQuaternion *, CVector const*, float, RwOpCombineType);
+void (*RwMatrixRotate)(RwMatrix *, RwV3d const*, float, RwOpCombineType);
 
 // int main
 void ResolveExternals()
@@ -73,4 +77,8 @@ void ResolveExternals()
     SET_TO(CalcScreenCoors, aml->GetSym(hGTASA, "_ZN7CSprite15CalcScreenCoorsERK5RwV3dPS0_PfS4_bb"));
     SET_TO(GetActualPickupIndex, aml->GetSym(hGTASA, "_ZN8CPickups20GetActualPickupIndexEi"));
     SET_TO(ProcessLineOfSight, aml->GetSym(hGTASA, "_ZN6CWorld18ProcessLineOfSightERK7CVectorS2_R9CColPointRP7CEntitybbbbbbbb"));
+    SET_TO(QuaternionSet, aml->GetSym(hGTASA, "_ZN11CQuaternion3SetERK11RwMatrixTag"));
+    SET_TO(QuaternionMult, aml->GetSym(hGTASA, "_ZN11CQuaternion8MultiplyERKS_S1_"));
+    SET_TO(RtQuatRotate, aml->GetSym(hGTASA, "_Z12RtQuatRotateP6RtQuatPK5RwV3df15RwOpCombineType"));
+    SET_TO(RwMatrixRotate, aml->GetSym(hGTASA, "_Z14RwMatrixRotateP11RwMatrixTagPK5RwV3df15RwOpCombineType"));
 }

@@ -56,17 +56,17 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEC7, GET_FADE_ALPHA); // 0xEC7=1,get_fade_alpha %1d%
 
     //Input
-    /*CLEO_RegisterOpcode(0xE10, IS_MOUSE_WHEEL_UP); // 0xE10=0,is_mouse_wheel_up
-    CLEO_RegisterOpcode(0xE11, IS_MOUSE_WHEEL_DOWN); // 0xE11=0,is_mouse_wheel_down
-    CLEO_RegisterOpcode(0xE23, GET_MOUSE_SENSIBILITY); // 0xE23=1,get_mouse_sensibility_to %1d%
-    CLEO_RegisterOpcode(0xE3D, IS_KEY_JUST_PRESSED); // 0xE3D=1,is_key_just_pressed %1d%
-    CLEO_RegisterOpcode(0xE3E, IS_BUTTON_JUST_PRESSED); // 0xE3E=2,is_button_just_pressed %1d% button %2d%
+    //CLEO_RegisterOpcode(0xE10, IS_MOUSE_WHEEL_UP); // 0xE10=0,is_mouse_wheel_up
+    //CLEO_RegisterOpcode(0xE11, IS_MOUSE_WHEEL_DOWN); // 0xE11=0,is_mouse_wheel_down 
+    //CLEO_RegisterOpcode(0xE23, GET_MOUSE_SENSIBILITY); // 0xE23=1,get_mouse_sensibility_to %1d%
+    //CLEO_RegisterOpcode(0xE3D, IS_KEY_JUST_PRESSED); // 0xE3D=1,is_key_just_pressed %1d%
+    //CLEO_RegisterOpcode(0xE3E, IS_BUTTON_JUST_PRESSED); // 0xE3E=2,is_button_just_pressed %1d% button %2d%
     CLEO_RegisterOpcode(0xE60, SET_CAMERA_CONTROL); // 0xE60=2,set_camera_control %1d% %2d% 
     CLEO_RegisterOpcode(0xE67, IS_AIM_BUTTON_PRESSED); // 0xE67=1,is_aim_button_pressed %1d%
     CLEO_RegisterOpcode(0xE68, SET_PLAYER_CONTROL_PAD); // 0xE68=2,set_player_control_pad %1d% %2d% 
     CLEO_RegisterOpcode(0xE69, SET_PLAYER_CONTROL_PAD_MOVEMENT); // 0xE69=2,set_player_control_pad_movement %1d% %2d% 
     CLEO_RegisterOpcode(0xE8D, IS_ANY_FIRE_BUTTON_PRESSED); // 0xE8D=1,is_any_fire_button_pressed %1d%
-    CLEO_RegisterOpcode(0xE6E, IS_SELECT_MENU_JUST_PRESSED); // 0xE6E=0,is_select_menu_just_pressed*/
+    CLEO_RegisterOpcode(0xE6E, IS_SELECT_MENU_JUST_PRESSED); // 0xE6E=0,is_select_menu_just_pressed
 
     //Events
     /*CLEO_RegisterOpcode(0xED0, RETURN_SCRIPT_EVENT); // 0xED0=0,return_script_event
@@ -241,7 +241,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE3C, GET_TEXTURE_FROM_SPRITE); // 0xE3C=2,get_texture_from_sprite %1d% store_to %2d%
     CLEO_RegisterOpcode(0xE62, DRAW_STRING); // 0xE62=8,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d%
     CLEO_RegisterOpcode(0xE63, DRAW_STRING_EXT); // 0xE63=27,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d% prop %9d% align %10d% wrap %11d% justify %12d% color %13d% %14d% %15d% %16d% outline %17d% shadow %18d% dropColor %19d% %20d% %21d% %22d% background %23d% backColor %24d% %25d% %26d% %27d%
-    
+*/
     // Math
     CLEO_RegisterOpcode(0xD1E, QUAT_SLERP); // 0xD1E=4,quat_slerp %1d% to %2d% lambda %3d% result %4d%
     CLEO_RegisterOpcode(0xD16, SET_MATRIX_ROTATION_FROM_QUAT); // 0xD16=2,set_matrix_rotation_from_quat %1d% rotation_from_quat %2d%
@@ -266,7 +266,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEF7, CLAMP_INT); // 0xEF7=4,clamp_int %1d% min %2d% max %3d% store_to %4d%
     CLEO_RegisterOpcode(0xEB3, CONVERT_DIRECTION_TO_QUAT); // 0xEB3=4,convert_direction_to_quat %1d% dir %2d% %3d% %4d%
     CLEO_RegisterOpcode(0xEF3, LERP); // 0xEF3=4,lerp %1d% %2d% %3d% store_to %4d%
-*/
+
     // Audio
     CLEO_RegisterOpcode(0xE21, GET_AUDIO_SFX_VOLUME); // 0xE21=1,get_audio_sfx_volume %1d%
     CLEO_RegisterOpcode(0xE22, GET_AUDIO_RADIO_VOLUME); // 0xE22=1,get_audio_radio_volume %1d%
