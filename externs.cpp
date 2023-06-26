@@ -15,6 +15,8 @@ bool *ms_bTakePhoto, *bDisplayHud;
 MobileMenu *gMobileMenu;
 CPickup* aPickUps;
 CEntity** pIgnoreEntity;
+CSprite2d* RadarBlipSprites;
+CSprite2d* ScriptSprites;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -35,6 +37,9 @@ void (*QuaternionMult)(const CQuaternion *a1, const CQuaternion *a2, const CQuat
 void (*RtQuatRotate)(CQuaternion *, CVector const*, float, RwOpCombineType);
 void (*RwMatrixRotate)(RwMatrix *, RwV3d const*, float, RwOpCombineType);
 bool (*GetCurrentZoneLockedOrUnlocked)(float, float);
+void (*TransformRealWorldPointToRadarSpace)(CVector2D &, CVector2D const&);
+float (*LimitRadarPoint)(CVector2D &);
+void (*TransformRadarPointToScreenSpace)(CVector2D &, CVector2D const&);
 
 // int main
 void ResolveExternals()
@@ -64,6 +69,8 @@ void ResolveExternals()
     SET_TO(aPickUps, *(uintptr_t*)(pGTASA + 0x678BF8));
     SET_TO(pIgnoreEntity, aml->GetSym(hGTASA, "_ZN6CWorld13pIgnoreEntityE"));
     SET_TO(ZonesRevealed, aml->GetSym(hGTASA, "_ZN9CTheZones13ZonesRevealedE"));
+    SET_TO(RadarBlipSprites, aml->GetSym(hGTASA, "_ZN6CRadar16RadarBlipSpritesE"));
+    SET_TO(ScriptSprites, aml->GetSym(hGTASA, "_ZN11CTheScripts13ScriptSpritesE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -84,4 +91,7 @@ void ResolveExternals()
     SET_TO(RtQuatRotate, aml->GetSym(hGTASA, "_Z12RtQuatRotateP6RtQuatPK5RwV3df15RwOpCombineType"));
     SET_TO(RwMatrixRotate, aml->GetSym(hGTASA, "_Z14RwMatrixRotateP11RwMatrixTagPK5RwV3df15RwOpCombineType"));
     SET_TO(GetCurrentZoneLockedOrUnlocked, aml->GetSym(hGTASA, "_ZN9CTheZones30GetCurrentZoneLockedOrUnlockedEff"));
+    SET_TO(TransformRealWorldPointToRadarSpace, aml->GetSym(hGTASA, "_ZN6CRadar35TransformRealWorldPointToRadarSpaceER9CVector2DRKS0_"));
+    SET_TO(LimitRadarPoint, aml->GetSym(hGTASA, "_ZN6CRadar15LimitRadarPointER9CVector2D"));
+    SET_TO(TransformRadarPointToScreenSpace, aml->GetSym(hGTASA, "_ZN6CRadar32TransformRadarPointToScreenSpaceER9CVector2DRKS0_"));
 }

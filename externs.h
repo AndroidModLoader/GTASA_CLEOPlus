@@ -90,6 +90,8 @@ extern bool *ms_bTakePhoto, *bDisplayHud;
 extern MobileMenu *gMobileMenu;
 extern CPickup* aPickUps;
 extern CEntity** pIgnoreEntity;
+extern CSprite2d* RadarBlipSprites;
+extern CSprite2d* ScriptSprites;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -110,6 +112,9 @@ extern void (*QuaternionMult)(const CQuaternion *a1, const CQuaternion *a2, cons
 extern void (*RtQuatRotate)(CQuaternion *, CVector const*, float, RwOpCombineType);
 extern void (*RwMatrixRotate)(RwMatrix *, RwV3d const*, float, RwOpCombineType);
 extern bool (*GetCurrentZoneLockedOrUnlocked)(float, float);
+extern void (*TransformRealWorldPointToRadarSpace)(CVector2D &, CVector2D const&);
+extern float (*LimitRadarPoint)(CVector2D &);
+extern void (*TransformRadarPointToScreenSpace)(CVector2D &, CVector2D const&);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
