@@ -31,13 +31,31 @@ public:
     void Draw(float x, float y)
     {
         float blipScale = *(float*)(pGTASA + 0x43F990);
+        int spriteIdForDisplay = (spriteId != -1) ? spriteId : RADAR_SPRITE_PROPERTYG;
+        int spriteIdForLegend = (spriteId != -1) ? spriteId : RADAR_SPRITE_NONE;
         if(gMobileMenu->m_bDrawMenuMap)
         {
-
+            
         }
         else
         {
             
+        }
+
+        float width = (blipScale * RsGlobal->maximumWidth) / 64.0f;
+        float height = (blipScale * RsGlobal->maximumHeight) / 44.80f;
+
+        logger->Info("In Draw 1 %f %f", width, height);
+        if(DisplayThisBlip(spriteIdForDisplay, -99))
+        {
+            logger->Info("In Draw 2 %f %f", x, y);
+            CRect rect;
+            rect.left = x - width;
+            rect.top = y - height;
+            rect.right = width + x;
+            rect.bottom = height + y;
+            DrawSprite(sprite, rect, color);
+            if (spriteIdForLegend != RADAR_SPRITE_NONE) AddBlipToLegendList(0, spriteIdForLegend);
         }
     }
     inline bool HasBeenRevealed()

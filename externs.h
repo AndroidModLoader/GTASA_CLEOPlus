@@ -115,6 +115,9 @@ extern bool (*GetCurrentZoneLockedOrUnlocked)(float, float);
 extern void (*TransformRealWorldPointToRadarSpace)(CVector2D &, CVector2D const&);
 extern float (*LimitRadarPoint)(CVector2D &);
 extern void (*TransformRadarPointToScreenSpace)(CVector2D &, CVector2D const&);
+extern bool (*DisplayThisBlip)(int, char);
+extern void (*AddBlipToLegendList)(uint8_t, int);
+extern void (*DrawSprite)(CSprite2d*, CRect const&, CRGBA const&);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%

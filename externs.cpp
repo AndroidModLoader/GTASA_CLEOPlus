@@ -40,6 +40,9 @@ bool (*GetCurrentZoneLockedOrUnlocked)(float, float);
 void (*TransformRealWorldPointToRadarSpace)(CVector2D &, CVector2D const&);
 float (*LimitRadarPoint)(CVector2D &);
 void (*TransformRadarPointToScreenSpace)(CVector2D &, CVector2D const&);
+bool (*DisplayThisBlip)(int, char);
+void (*AddBlipToLegendList)(uint8_t, int);
+void (*DrawSprite)(CSprite2d*, CRect const&, CRGBA const&);
 
 // int main
 void ResolveExternals()
@@ -94,4 +97,7 @@ void ResolveExternals()
     SET_TO(TransformRealWorldPointToRadarSpace, aml->GetSym(hGTASA, "_ZN6CRadar35TransformRealWorldPointToRadarSpaceER9CVector2DRKS0_"));
     SET_TO(LimitRadarPoint, aml->GetSym(hGTASA, "_ZN6CRadar15LimitRadarPointER9CVector2D"));
     SET_TO(TransformRadarPointToScreenSpace, aml->GetSym(hGTASA, "_ZN6CRadar32TransformRadarPointToScreenSpaceER9CVector2DRKS0_"));
+    SET_TO(DisplayThisBlip, aml->GetSym(hGTASA, "_ZN6CRadar15DisplayThisBlipEia"));
+    SET_TO(AddBlipToLegendList, aml->GetSym(hGTASA, "_ZN6CRadar19AddBlipToLegendListEhi"));
+    SET_TO(DrawSprite, aml->GetSym(hGTASA, "_ZN9CSprite2d4DrawERK5CRectRK5CRGBA"));
 }
