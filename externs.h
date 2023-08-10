@@ -1,5 +1,6 @@
 #pragma once
 
+#include <list>
 #include <mod/amlmod.h>
 #include <mod/logger.h>
 #include "GTASA_STRUCTS.h"
@@ -83,15 +84,19 @@ extern CBaseModelInfo** ms_modelInfoPtrs;
 extern CCarGenerator* CarGeneratorArray;
 extern uint16_t *OldWeatherType, *NewWeatherType, *ForcedWeatherType, *m_ItemToFlash;
 extern float *Rain, *UnderWaterness, *m_fDNBalanceParam;
-extern uint8_t *ms_nGameClockHours, *ms_nGameClockMinutes;
+extern uint8_t *ms_nGameClockHours, *ms_nGameClockMinutes, *ScriptSpace;
 extern RsGlobalType* RsGlobal;
 extern uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds, *ZonesRevealed;
-extern bool *ms_bTakePhoto, *bDisplayHud;
+extern bool *ms_bTakePhoto, *bDisplayHud, *ms_running;
 extern MobileMenu *gMobileMenu;
 extern CPickup* aPickUps;
 extern CEntity** pIgnoreEntity;
 extern CSprite2d* RadarBlipSprites;
 extern CSprite2d* ScriptSprites;
+extern int32_t *OnAMissionFlag;
+extern CPool<CPed, CCopPed> **ms_pPedPool;
+extern CPool<CVehicle, CHeli> **ms_pVehiclePool;
+extern CPool<CObject, CCutsceneObject> **ms_pObjectPool;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -118,6 +123,8 @@ extern void (*TransformRadarPointToScreenSpace)(CVector2D &, CVector2D const&);
 extern bool (*DisplayThisBlip)(int, char);
 extern void (*AddBlipToLegendList)(uint8_t, int);
 extern void (*DrawSprite)(CSprite2d*, CRect const&, CRGBA const&);
+extern int (*GetUppercaseKey)(const char*);
+extern CWeaponInfo* (*GetWeaponInfo)(int, char);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
@@ -409,3 +416,4 @@ CLEO_Fn(LIST_REMOVE_INDEX_RANGE); // 0xE7D=3,list_remove_index %1d% start %2d% e
 CLEO_Fn(REVERSE_LIST); // 0xE7E=1,reverse_list %1d%
 
 void RadarBlip_Patch();
+void ExtEntVars_Patch();

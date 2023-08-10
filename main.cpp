@@ -92,7 +92,7 @@ extern "C" void OnModLoad()
 
     //Extended
     //CHAR
-    /*CLEO_RegisterOpcode(0xE14, INIT_EXTENDED_CHAR_VARS); // 0E14=3,init_extended_char_vars %1d% id %2d% new_vars %3d%
+    CLEO_RegisterOpcode(0xE14, INIT_EXTENDED_CHAR_VARS); // 0E14=3,init_extended_char_vars %1d% id %2d% new_vars %3d%
     CLEO_RegisterOpcode(0xE15, SET_EXTENDED_CHAR_VAR); // 0E15=4,set_extended_char_var %1d% id %2d% var %3d% value %4d%
     CLEO_RegisterOpcode(0xE16, GET_EXTENDED_CHAR_VAR); // 0E16=4,get_extended_char_var %1d% id %2d% var %3d% to %4d%
 
@@ -105,9 +105,10 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE1A, INIT_EXTENDED_OBJECT_VARS); // 0E1A=3,init_extended_object_vars %1d% id %2d% new_vars %3d%
     CLEO_RegisterOpcode(0xE1B, SET_EXTENDED_OBJECT_VAR); // 0E1B=4,set_extended_object_var %1d% id %2d% var %3d% value %4d%
     CLEO_RegisterOpcode(0xE1C, GET_EXTENDED_OBJECT_VAR); // 0E1C=4,get_extended_object_var %1d% id %2d% var %3d% to %4d%
-*/
+    ExtEntVars_Patch();
+
     // Misc
-    /*CLEO_RegisterOpcode(0xE1D, IS_ON_MISSION); // 0E1D=0,is_on_mission
+    CLEO_RegisterOpcode(0xE1D, IS_ON_MISSION); // 0E1D=0,is_on_mission
     CLEO_RegisterOpcode(0xE20, IS_ON_SAMP); // 0E20=0,is_on_samp
     CLEO_RegisterOpcode(0xE25, IS_ON_CUTSCENE); // 0E25=0,is_on_cutscene
     CLEO_RegisterOpcode(0xE24, FIX_CHAR_GROUND_BRIGHTNESS_AND_FADE_IN); // 0E24=4,fix_char %1d% ground %2d% brightness %3d% and_fade_in %4d%
@@ -241,7 +242,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE3C, GET_TEXTURE_FROM_SPRITE); // 0E3C=2,get_texture_from_sprite %1d% store_to %2d%
     CLEO_RegisterOpcode(0xE62, DRAW_STRING); // 0E62=8,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d%
     CLEO_RegisterOpcode(0xE63, DRAW_STRING_EXT); // 0E63=27,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d% prop %9d% align %10d% wrap %11d% justify %12d% color %13d% %14d% %15d% %16d% outline %17d% shadow %18d% dropColor %19d% %20d% %21d% %22d% background %23d% backColor %24d% %25d% %26d% %27d%
-*/
+
     // Math
     CLEO_RegisterOpcode(0xD1E, QUAT_SLERP); // 0D1E=4,quat_slerp %1d% to %2d% lambda %3d% result %4d%
     CLEO_RegisterOpcode(0xD16, SET_MATRIX_ROTATION_FROM_QUAT); // 0D16=2,set_matrix_rotation_from_quat %1d% rotation_from_quat %2d%

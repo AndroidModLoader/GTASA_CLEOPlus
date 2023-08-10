@@ -8,15 +8,19 @@ CBaseModelInfo** ms_modelInfoPtrs;
 CCarGenerator* CarGeneratorArray;
 uint16_t *OldWeatherType, *NewWeatherType, *ForcedWeatherType, *m_ItemToFlash;
 float *Rain, *UnderWaterness, *m_fDNBalanceParam;
-uint8_t *ms_nGameClockHours, *ms_nGameClockMinutes;
+uint8_t *ms_nGameClockHours, *ms_nGameClockMinutes, *ScriptSpace;
 RsGlobalType* RsGlobal;
 uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds, *ZonesRevealed;
-bool *ms_bTakePhoto, *bDisplayHud;
+bool *ms_bTakePhoto, *bDisplayHud, *ms_running;
 MobileMenu *gMobileMenu;
 CPickup* aPickUps;
 CEntity** pIgnoreEntity;
 CSprite2d* RadarBlipSprites;
 CSprite2d* ScriptSprites;
+int32_t *OnAMissionFlag;
+CPool<CPed, CCopPed> **ms_pPedPool;
+CPool<CVehicle, CHeli> **ms_pVehiclePool;
+CPool<CObject, CCutsceneObject> **ms_pObjectPool;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -43,6 +47,8 @@ void (*TransformRadarPointToScreenSpace)(CVector2D &, CVector2D const&);
 bool (*DisplayThisBlip)(int, char);
 void (*AddBlipToLegendList)(uint8_t, int);
 void (*DrawSprite)(CSprite2d*, CRect const&, CRGBA const&);
+int (*GetUppercaseKey)(const char*);
+CWeaponInfo* (*GetWeaponInfo)(int, char);
 
 // int main
 void ResolveExternals()
@@ -74,6 +80,12 @@ void ResolveExternals()
     SET_TO(ZonesRevealed, aml->GetSym(hGTASA, "_ZN9CTheZones13ZonesRevealedE"));
     SET_TO(RadarBlipSprites, aml->GetSym(hGTASA, "_ZN6CRadar16RadarBlipSpritesE"));
     SET_TO(ScriptSprites, aml->GetSym(hGTASA, "_ZN11CTheScripts13ScriptSpritesE"));
+    SET_TO(OnAMissionFlag, aml->GetSym(hGTASA, "_ZN11CTheScripts14OnAMissionFlagE"));
+    SET_TO(ScriptSpace, aml->GetSym(hGTASA, "_ZN11CTheScripts11ScriptSpaceE"));
+    SET_TO(ms_running, aml->GetSym(hGTASA, "_ZN12CCutsceneMgr10ms_runningE"));
+    SET_TO(ms_pPedPool, aml->GetSym(hGTASA, "_ZN6CPools11ms_pPedPoolE"));
+    SET_TO(ms_pVehiclePool, aml->GetSym(hGTASA, "_ZN6CPools15ms_pVehiclePoolE"));
+    SET_TO(ms_pObjectPool, aml->GetSym(hGTASA, "_ZN6CPools14ms_pObjectPoolE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -100,4 +112,6 @@ void ResolveExternals()
     SET_TO(DisplayThisBlip, aml->GetSym(hGTASA, "_ZN6CRadar15DisplayThisBlipEia"));
     SET_TO(AddBlipToLegendList, aml->GetSym(hGTASA, "_ZN6CRadar19AddBlipToLegendListEhi"));
     SET_TO(DrawSprite, aml->GetSym(hGTASA, "_ZN9CSprite2d4DrawERK5CRectRK5CRGBA"));
+    SET_TO(GetUppercaseKey, aml->GetSym(hGTASA, "_ZN7CKeyGen15GetUppercaseKeyEPKc"));
+    SET_TO(GetWeaponInfo, aml->GetSym(hGTASA, "_ZN11CWeaponInfo13GetWeaponInfoE11eWeaponTypea"));
 }
