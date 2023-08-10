@@ -108,7 +108,7 @@ CLEO_Fn(SET_EXTENDED_CHAR_VAR)
 {
     char buf[100];
     bool bResult = false;
-    CObject *ped = GetObjectFromRef(cleo->ReadParam(handle)->i);
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = cleo->ReadParam(handle)->i;
@@ -131,7 +131,7 @@ CLEO_Fn(GET_EXTENDED_CHAR_VAR)
 {
     char buf[100];
     bool bResult = false;
-    CObject *ped = GetObjectFromRef(cleo->ReadParam(handle)->i);
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = 0;

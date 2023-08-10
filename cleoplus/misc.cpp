@@ -16,7 +16,47 @@ CLEO_Fn(IS_ON_CUTSCENE)
 }
 CLEO_Fn(FIX_CHAR_GROUND_BRIGHTNESS_AND_FADE_IN)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    int ground = cleo->ReadParam(handle)->i;
+    int brightness = cleo->ReadParam(handle)->i;
+    int fade = cleo->ReadParam(handle)->i;
+
+    if(!ped) return;
+
+    if (fade && ped->m_pRwClump) SetClumpAlpha(ped->m_pRwClump, 0);
+
+    CVector *pedPos = NULL;
+    if(ground)
+    {
+        pedPos = &ped->GetPosition();
+
+        bool foundGround;
+        CEntity *foundEntity;
+        float foundZ = FindGroundZFor3DCoord(pedPos->x, pedPos->y, pedPos->z, &foundGround, &foundEntity);
+        if (foundGround)
+        {
+            pedPos->z = GetDistanceFromCentreOfMassToBaseOfModel(ped) + foundZ;
+            ped->Teleport(*pedPos);
+        }
+    }
+
+    if(brightness)
+    {
+        if (!pedPos) pedPos = &ped->GetPosition();
+
+        CEntity *outEntity;
+        CColPoint outColPoint;
+        if (ProcessVerticalLine(*pedPos, -1000.0, outColPoint, outEntity, 1, 0, 0, 0, 0, 0, NULL))
+        {
+            ped->m_fContactSurfaceBrightness =
+                      outColPoint.m_nLightingB.day
+                    * 0.033333334f
+                    * (1.0f - *m_fDNBalanceParam)
+                    + outColPoint.m_nLightingB.night
+                    * 0.033333334f
+                    * *m_fDNBalanceParam;
+        }
+    }
 }
 CLEO_Fn(IS_WEAPON_FIRE_TYPE)
 {

@@ -49,6 +49,9 @@ void (*AddBlipToLegendList)(uint8_t, int);
 void (*DrawSprite)(CSprite2d*, CRect const&, CRGBA const&);
 int (*GetUppercaseKey)(const char*);
 CWeaponInfo* (*GetWeaponInfo)(int, char);
+void (*SetClumpAlpha)(RpClump*, int);
+float (*GetDistanceFromCentreOfMassToBaseOfModel)(CEntity*);
+bool (*ProcessVerticalLine)(CVector const&,float,CColPoint &,CEntity *&,bool,bool,bool,bool,bool,bool,CStoredCollPoly *);
 
 // int main
 void ResolveExternals()
@@ -114,4 +117,7 @@ void ResolveExternals()
     SET_TO(DrawSprite, aml->GetSym(hGTASA, "_ZN9CSprite2d4DrawERK5CRectRK5CRGBA"));
     SET_TO(GetUppercaseKey, aml->GetSym(hGTASA, "_ZN7CKeyGen15GetUppercaseKeyEPKc"));
     SET_TO(GetWeaponInfo, aml->GetSym(hGTASA, "_ZN11CWeaponInfo13GetWeaponInfoE11eWeaponTypea"));
+    SET_TO(SetClumpAlpha, aml->GetSym(hGTASA, "_ZN18CVisibilityPlugins13SetClumpAlphaEP7RpClumpi"));
+    SET_TO(GetDistanceFromCentreOfMassToBaseOfModel, aml->GetSym(hGTASA, "_ZN7CEntity40GetDistanceFromCentreOfMassToBaseOfModelEv"));
+    SET_TO(ProcessVerticalLine, aml->GetSym(hGTASA, "_ZN6CWorld19ProcessVerticalLineERK7CVectorfR9CColPointRP7CEntitybbbbbbP15CStoredCollPoly"));
 }
