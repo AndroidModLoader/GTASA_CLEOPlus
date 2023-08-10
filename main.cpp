@@ -10,8 +10,10 @@ uintptr_t pGTASA;
 void* hGTASA;
 cleo_ifs_t* cleo;
 
-// Game Vars
-
+// Some opcodes changes compared to PC version:
+// CHANGE_PLAYER_MONEY has 2 additional modes:
+// - 3 = dont take money less than 0
+// - 4 = dont take money if they are negative
 
 // int main!
 extern "C" void OnModLoad()
@@ -105,9 +107,9 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE1A, INIT_EXTENDED_OBJECT_VARS); // 0E1A=3,init_extended_object_vars %1d% id %2d% new_vars %3d%
     CLEO_RegisterOpcode(0xE1B, SET_EXTENDED_OBJECT_VAR); // 0E1B=4,set_extended_object_var %1d% id %2d% var %3d% value %4d%
     CLEO_RegisterOpcode(0xE1C, GET_EXTENDED_OBJECT_VAR); // 0E1C=4,get_extended_object_var %1d% id %2d% var %3d% to %4d%
-    ExtEntVars_Patch();
 
     // Misc
+    Misc_Patch();
     CLEO_RegisterOpcode(0xE1D, IS_ON_MISSION); // 0E1D=0,is_on_mission
     CLEO_RegisterOpcode(0xE20, IS_ON_SAMP); // 0E20=0,is_on_samp
     CLEO_RegisterOpcode(0xE25, IS_ON_CUTSCENE); // 0E25=0,is_on_cutscene

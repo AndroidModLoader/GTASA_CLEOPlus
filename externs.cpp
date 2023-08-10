@@ -11,7 +11,7 @@ float *Rain, *UnderWaterness, *m_fDNBalanceParam;
 uint8_t *ms_nGameClockHours, *ms_nGameClockMinutes, *ScriptSpace;
 RsGlobalType* RsGlobal;
 uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds, *ZonesRevealed;
-bool *ms_bTakePhoto, *bDisplayHud, *ms_running;
+bool *ms_bTakePhoto, *bDisplayHud, *ms_running, *m_aCheatsActive;
 MobileMenu *gMobileMenu;
 CPickup* aPickUps;
 CEntity** pIgnoreEntity;
@@ -29,6 +29,7 @@ float (*FindGroundZFor3DCoord)(float, float, float, bool*, CEntity**);
 void (*ClearSpaceForMissionEntity)(CVector&, CEntity*);
 void (*AddToWorld)(CEntity*);
 int (*GetObjectRef)(CObject*);
+int (*GetVehicleRef)(CVehicle*);
 CVehicle* (*GetVehicleFromRef)(int);
 CPed* (*GetPedFromRef)(int);
 CObject* (*GetObjectFromRef)(int);
@@ -52,6 +53,9 @@ CWeaponInfo* (*GetWeaponInfo)(int, char);
 void (*SetClumpAlpha)(RpClump*, int);
 float (*GetDistanceFromCentreOfMassToBaseOfModel)(CEntity*);
 bool (*ProcessVerticalLine)(CVector const&,float,CColPoint &,CEntity *&,bool,bool,bool,bool,bool,bool,CStoredCollPoly *);
+CPlayerPed* (*FindPlayerPed)(int);
+CPlayerInfo* (*GetPlayerInfoForThisPlayerPed)(CPlayerPed*);
+char (*GetWeaponSkill)(CPed*, eWeaponType);
 
 // int main
 void ResolveExternals()
@@ -86,6 +90,7 @@ void ResolveExternals()
     SET_TO(OnAMissionFlag, aml->GetSym(hGTASA, "_ZN11CTheScripts14OnAMissionFlagE"));
     SET_TO(ScriptSpace, aml->GetSym(hGTASA, "_ZN11CTheScripts11ScriptSpaceE"));
     SET_TO(ms_running, aml->GetSym(hGTASA, "_ZN12CCutsceneMgr10ms_runningE"));
+    SET_TO(m_aCheatsActive, aml->GetSym(hGTASA, "_ZN6CCheat15m_aCheatsActiveE"));
     SET_TO(ms_pPedPool, aml->GetSym(hGTASA, "_ZN6CPools11ms_pPedPoolE"));
     SET_TO(ms_pVehiclePool, aml->GetSym(hGTASA, "_ZN6CPools15ms_pVehiclePoolE"));
     SET_TO(ms_pObjectPool, aml->GetSym(hGTASA, "_ZN6CPools14ms_pObjectPoolE"));
@@ -97,6 +102,7 @@ void ResolveExternals()
     SET_TO(ClearSpaceForMissionEntity, aml->GetSym(hGTASA, "_ZN11CTheScripts26ClearSpaceForMissionEntityERK7CVectorP7CEntity"));
     SET_TO(AddToWorld, aml->GetSym(hGTASA, "_ZN6CWorld3AddEP7CEntity"));
     SET_TO(GetObjectRef, aml->GetSym(hGTASA, "_ZN6CPools12GetObjectRefEP7CObject"));
+    SET_TO(GetVehicleRef, aml->GetSym(hGTASA, "_ZN6CPools13GetVehicleRefEP8CVehicle"));
     SET_TO(GetVehicleFromRef, aml->GetSym(hGTASA, "_ZN6CPools10GetVehicleEi"));
     SET_TO(GetPedFromRef, aml->GetSym(hGTASA, "_ZN6CPools6GetPedEi"));
     SET_TO(GetObjectFromRef, aml->GetSym(hGTASA, "_ZN6CPools9GetObjectEi"));
@@ -120,4 +126,7 @@ void ResolveExternals()
     SET_TO(SetClumpAlpha, aml->GetSym(hGTASA, "_ZN18CVisibilityPlugins13SetClumpAlphaEP7RpClumpi"));
     SET_TO(GetDistanceFromCentreOfMassToBaseOfModel, aml->GetSym(hGTASA, "_ZN7CEntity40GetDistanceFromCentreOfMassToBaseOfModelEv"));
     SET_TO(ProcessVerticalLine, aml->GetSym(hGTASA, "_ZN6CWorld19ProcessVerticalLineERK7CVectorfR9CColPointRP7CEntitybbbbbbP15CStoredCollPoly"));
+    SET_TO(FindPlayerPed, aml->GetSym(hGTASA, "_Z13FindPlayerPedi"));
+    SET_TO(GetPlayerInfoForThisPlayerPed, aml->GetSym(hGTASA, "_ZN10CPlayerPed29GetPlayerInfoForThisPlayerPedEv"));
+    SET_TO(GetWeaponSkill, aml->GetSym(hGTASA, "_ZN4CPed14GetWeaponSkillE11eWeaponType"));
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <cctype>
 #include <mod/amlmod.h>
 #include <mod/logger.h>
 #include "GTASA_STRUCTS.h"
@@ -76,6 +77,15 @@ inline void CLEO_WriteStringEx(void* handle, const char* buf)
         strcpy(dst, buf);
     }
 }
+inline void toupper(char *s)
+{
+    char *p = s;
+    while(*p)
+    {
+        *p = toupper(*p);
+        ++p;
+    }
+}
 
 // Game vars
 extern CCamera* TheCamera;
@@ -87,7 +97,7 @@ extern float *Rain, *UnderWaterness, *m_fDNBalanceParam;
 extern uint8_t *ms_nGameClockHours, *ms_nGameClockMinutes, *ScriptSpace;
 extern RsGlobalType* RsGlobal;
 extern uint32_t *gbCineyCamProcessedOnFrame, *m_FrameCounter, *ms_exitEnterState, *m_snTimeInMilliseconds, *ZonesRevealed;
-extern bool *ms_bTakePhoto, *bDisplayHud, *ms_running;
+extern bool *ms_bTakePhoto, *bDisplayHud, *ms_running, *m_aCheatsActive;
 extern MobileMenu *gMobileMenu;
 extern CPickup* aPickUps;
 extern CEntity** pIgnoreEntity;
@@ -105,6 +115,7 @@ extern float (*FindGroundZFor3DCoord)(float, float, float, bool*, CEntity**);
 extern void (*ClearSpaceForMissionEntity)(CVector&, CEntity*);
 extern void (*AddToWorld)(CEntity*);
 extern int (*GetObjectRef)(CObject*);
+extern int (*GetVehicleRef)(CVehicle*);
 extern CVehicle* (*GetVehicleFromRef)(int);
 extern CPed* (*GetPedFromRef)(int);
 extern CObject* (*GetObjectFromRef)(int);
@@ -128,6 +139,9 @@ extern CWeaponInfo* (*GetWeaponInfo)(int, char);
 extern void (*SetClumpAlpha)(RpClump*, int);
 extern float (*GetDistanceFromCentreOfMassToBaseOfModel)(CEntity*);
 extern bool (*ProcessVerticalLine)(CVector const&,float,CColPoint &,CEntity *&,bool,bool,bool,bool,bool,bool,CStoredCollPoly *);
+extern CPlayerPed* (*FindPlayerPed)(int);
+extern CPlayerInfo* (*GetPlayerInfoForThisPlayerPed)(CPlayerPed*);
+extern char (*GetWeaponSkill)(CPed*, eWeaponType);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
@@ -419,4 +433,4 @@ CLEO_Fn(LIST_REMOVE_INDEX_RANGE); // 0xE7D=3,list_remove_index %1d% start %2d% e
 CLEO_Fn(REVERSE_LIST); // 0xE7E=1,reverse_list %1d%
 
 void RadarBlip_Patch();
-void ExtEntVars_Patch();
+void Misc_Patch();

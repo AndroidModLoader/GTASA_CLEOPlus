@@ -1,8 +1,10 @@
 #include "externs.h"
 
+int timesGameRestarted = 0;
+
 CLEO_Fn(IS_ON_MISSION)
 {
-    
+    UpdateCompareFlag((CRunningScript*)handle, *OnAMissionFlag && *(ScriptSpace + *OnAMissionFlag));
 }
 CLEO_Fn(IS_ON_SAMP)
 {
@@ -71,11 +73,11 @@ CLEO_Fn(IS_WEAPON_FIRE_TYPE)
 }
 CLEO_Fn(GET_CURRENT_SAVE_SLOT)
 {
-    
+    cleo->GetPointerToScriptVar(handle)->i = gMobileMenu->m_nGenericGameStorageSlot;
 }
 CLEO_Fn(IS_GAME_FIRST_START)
 {
-    
+    UpdateCompareFlag((CRunningScript*)handle, timesGameRestarted == 0);
 }
 CLEO_Fn(SET_CHAR_COORDINATES_SIMPLE)
 {
@@ -86,19 +88,38 @@ CLEO_Fn(SET_CHAR_COORDINATES_SIMPLE)
 }
 CLEO_Fn(FRAME_MOD)
 {
-    
+    int frame = cleo->ReadParam(handle)->i;
+    UpdateCompareFlag((CRunningScript*)handle, *m_FrameCounter % frame == 0);
 }
 CLEO_Fn(RANDOM_PERCENT)
 {
-    
+    int percent = cleo->ReadParam(handle)->i;
+    int random = rand() % 101;
+    UpdateCompareFlag((CRunningScript*)handle, random <= percent);
 }
 CLEO_Fn(GET_TRAILER_FROM_CAR)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    int trailerRef = -1;
+    if(vehicle)
+    {
+        CVehicle* trailer = vehicle->m_pVehicleBeingTowed;
+        if(trailer) trailerRef = GetVehicleRef(trailer);
+    }
+    cleo->GetPointerToScriptVar(handle)->i = trailerRef;
+    UpdateCompareFlag((CRunningScript*)handle, trailerRef != -1);
 }
 CLEO_Fn(GET_CAR_FROM_TRAILER)
 {
-    
+    CVehicle *trailer = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    int vehicleRef = -1;
+    if(trailer)
+    {
+        CVehicle* vehicle = trailer->m_pTowingVehicle;
+        if(vehicle) vehicleRef = GetVehicleRef(vehicle);
+    }
+    cleo->GetPointerToScriptVar(handle)->i = vehicleRef;
+    UpdateCompareFlag((CRunningScript*)handle, vehicleRef != -1);
 }
 CLEO_Fn(GET_CAR_DUMMY_COORD)
 {
@@ -106,19 +127,60 @@ CLEO_Fn(GET_CAR_DUMMY_COORD)
 }
 CLEO_Fn(IS_CHEAT_ACTIVE)
 {
-    
+    int i = cleo->ReadParam(handle)->i;
+    UpdateCompareFlag((CRunningScript*)handle, m_aCheatsActive[i]);
 }
 CLEO_Fn(CHANGE_PLAYER_MONEY)
 {
-    
+    int playerNum = cleo->ReadParam(handle)->i;
+    int mode = cleo->ReadParam(handle)->i;
+    int value = cleo->ReadParam(handle)->i;
+    CPlayerPed* player = FindPlayerPed(playerNum);
+
+    CPlayerInfo* info;
+    if(player && (info = GetPlayerInfoForThisPlayerPed(player)))
+    {
+        switch(mode)
+        {
+            case 0:
+                info->m_nMoney = value;
+                info->m_nDisplayMoney = value;
+                break;
+
+            case 1:
+                info->m_nMoney += value;
+                break;
+
+            case 2:
+                info->m_nMoney -= value;
+                break;
+
+            case 3:
+                info->m_nMoney -= value;
+                if(info->m_nMoney < 0) info->m_nMoney = 0;
+                break;
+
+            case 4:
+                if(info->m_nMoney > 0) info->m_nMoney -= value;
+                break;
+        }
+    }
 }
 CLEO_Fn(CAR_HORN)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    if(!vehicle) return;
+
+    vehicle->m_cHorn = 1;
+    vehicle->PlayCarHorn();
 }
 CLEO_Fn(GET_STRING_LENGTH)
 {
-    
+    char buf[128];
+    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+    int len = strnlen(buf, 128);
+    cleo->GetPointerToScriptVar(handle)->i = len;
+    UpdateCompareFlag((CRunningScript*)handle, len > 0);
 }
 CLEO_Fn(COPY_STRING)
 {
@@ -126,31 +188,78 @@ CLEO_Fn(COPY_STRING)
 }
 CLEO_Fn(GET_CAR_ALARM)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    int mode = -1;
+    if(vehicle)
+    {
+        if(vehicle->CarAlarmState == 0) mode = 0;
+        else mode = 1 + (vehicle->CarAlarmState != 0xFFFF);
+    }
+    cleo->GetPointerToScriptVar(handle)->i = mode;
 }
 CLEO_Fn(SET_CAR_ALARM)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    int mode = cleo->ReadParam(handle)->i;
+    if(vehicle)
+    {
+        switch(mode)
+        {
+            case 0: vehicle->CarAlarmState = 0; return;
+            case 1: vehicle->CarAlarmState = 0xFFFF; return;
+            case 2: vehicle->CarAlarmState = 0xFFFE; return;
+        }
+    }
 }
 CLEO_Fn(GET_CHAR_MAX_HEALTH)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    float maxHealth = 0.0f;
+    if(ped->m_nPedType <= PED_TYPE_PLAYER2)
+    {
+        maxHealth = (float)(GetPlayerInfoForThisPlayerPed((CPlayerPed*)ped)->m_nMaxHealth);
+    }
+    else
+    {
+        maxHealth = ped->m_fMaxHealth;
+    }
+    cleo->GetPointerToScriptVar(handle)->f = maxHealth;
 }
 CLEO_Fn(GET_CHAR_HEALTH_PERCENT)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    float maxHealth = 0.0f;
+    if(ped->m_nPedType <= PED_TYPE_PLAYER2)
+    {
+        maxHealth = (float)(GetPlayerInfoForThisPlayerPed((CPlayerPed*)ped)->m_nMaxHealth);
+    }
+    else
+    {
+        maxHealth = ped->m_fMaxHealth;
+    }
+    float curHealth = ped->m_fHealth;
+    cleo->GetPointerToScriptVar(handle)->f = (curHealth / maxHealth) * 100.0f;
 }
 CLEO_Fn(GET_CURRENT_CAMERA_MODE)
 {
-    
+    cleo->GetPointerToScriptVar(handle)->i = TheCamera->m_apCams[TheCamera->m_nCurrentActiveCam].Mode;
 }
 CLEO_Fn(GET_CAR_COLLISION_INTENSITY)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    float intensity = 0.0f;
+    if(vehicle) intensity = vehicle->m_fDamageIntensity;
+    cleo->GetPointerToScriptVar(handle)->f = intensity;
+    UpdateCompareFlag((CRunningScript*)handle, intensity > 0);
 }
 CLEO_Fn(GET_CAR_COLLISION_COORDINATES)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    CVector pos;
+    if(vehicle) pos = vehicle->m_vecLastCollisionPosn;
+    cleo->GetPointerToScriptVar(handle)->f = pos.x;
+    cleo->GetPointerToScriptVar(handle)->f = pos.y;
+    cleo->GetPointerToScriptVar(handle)->f = pos.z;
 }
 CLEO_Fn(STREAM_CUSTOM_SCRIPT_FROM_LABEL)
 {
@@ -162,91 +271,164 @@ CLEO_Fn(GET_LAST_CREATED_CUSTOM_SCRIPT)
 }
 CLEO_Fn(GET_OBJECT_CENTRE_OF_MASS_TO_BASE_OF_MODEL)
 {
-    
+    CObject *object = GetObjectFromRef(cleo->ReadParam(handle)->i);
+    float dist = 999999.0f;
+    if(object) dist = GetDistanceFromCentreOfMassToBaseOfModel(object);
+    cleo->GetPointerToScriptVar(handle)->f = dist;
+    UpdateCompareFlag((CRunningScript*)handle, dist != 999999.0f);
 }
 CLEO_Fn(GET_MODEL_TYPE)
 {
-    
+    int modelId = cleo->ReadParam(handle)->i;
+    int type = -1;
+    if(modelId >= 0)
+    {
+        CBaseModelInfo* modelInfo = ms_modelInfoPtrs[modelId];
+        if(modelInfo) type = modelInfo->GetModelType();
+    }
+    cleo->GetPointerToScriptVar(handle)->i = type;
 }
 CLEO_Fn(IS_STRING_EQUAL)
 {
-    
+    bool bResult = true;
+    char stringA[128], stringB[128], ignoreChar[2];
+    CLEO_ReadStringEx(handle, stringA, sizeof(stringA));
+    CLEO_ReadStringEx(handle, stringB, sizeof(stringB));
+    int maxSize = cleo->ReadParam(handle)->i;
+    int caseSensitive = cleo->ReadParam(handle)->i;
+    CLEO_ReadStringEx(handle, ignoreChar, sizeof(ignoreChar));
+
+    if(!caseSensitive)
+    {
+        toupper(stringA);
+        toupper(stringB);
+    }
+
+    int i = 0;
+    while (i < maxSize && stringA[i] != 0 && stringB[i] != 0)
+    {
+        if (stringA[i] != ignoreChar[0] && stringB[i] != ignoreChar[0])
+        {
+            if (stringA[i] != stringB[i])
+            {
+                bResult = false;
+                break;
+            }
+        }
+        ++i;
+    }
+    UpdateCompareFlag((CRunningScript*)handle, bResult);
 }
 CLEO_Fn(IS_STRING_COMMENT)
 {
-    
+    bool bResult = false;
+    char buf[128];
+    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+
+    unsigned int i = 0;
+    while (buf[i] == ' ' && i <= 127) ++i;
+    if (buf[i] == '#' || buf[i] == ';' || (buf[i] == '/' && buf[i + 1] == '/')) bResult = true;
+    UpdateCompareFlag((CRunningScript*)handle, bResult);
 }
 CLEO_Fn(DOES_CAR_HAVE_PART_NODE)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    int nodeId = cleo->ReadParam(handle)->i;
+    bool bResult = false;
+    if(vehicle) bResult = ((CAutomobile*)vehicle)->m_CarNodes[nodeId] != NULL;
+    UpdateCompareFlag((CRunningScript*)handle, bResult);
 }
 CLEO_Fn(GET_CURRENT_CHAR_WEAPONINFO)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    eWeaponType weaponType = ped->m_Weapons[ped->m_byteCurrentWeaponSlot].m_nType;
+    CWeaponInfo *weaponInfo = GetWeaponInfo(weaponType, GetWeaponSkill(ped, weaponType));
+    cleo->GetPointerToScriptVar(handle)->i = (int)weaponInfo;
+    UpdateCompareFlag((CRunningScript*)handle, weaponInfo != NULL);
 }
 CLEO_Fn(GET_WEAPONINFO)
 {
-    
+    int weaponId = cleo->ReadParam(handle)->i;
+    int skill = cleo->ReadParam(handle)->i;
+    CWeaponInfo *weaponInfo = GetWeaponInfo((eWeaponType)weaponId, skill);
+    cleo->GetPointerToScriptVar(handle)->i = (int)weaponInfo;
+    UpdateCompareFlag((CRunningScript*)handle, weaponInfo != NULL);
 }
 CLEO_Fn(GET_WEAPONINFO_MODELS)
 {
-    
+    CWeaponInfo *weaponInfo = (CWeaponInfo*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = weaponInfo->m_nModelId1;
+    cleo->GetPointerToScriptVar(handle)->i = weaponInfo->m_nModelId2;
 }
 CLEO_Fn(GET_WEAPONINFO_FLAGS)
 {
-    
+    CWeaponInfo *weaponInfo = (CWeaponInfo*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = weaponInfo->m_nFlags;
 }
 CLEO_Fn(GET_WEAPONINFO_ANIMGROUP)
 {
-    
+    CWeaponInfo *weaponInfo = (CWeaponInfo*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = weaponInfo->m_eAnimGroup;
 }
 CLEO_Fn(GET_WEAPONINFO_TOTAL_CLIP)
 {
-    
+    CWeaponInfo *weaponInfo = (CWeaponInfo*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = weaponInfo->m_nAmmoClip;
 }
 CLEO_Fn(GET_WEAPONINFO_FIRE_TYPE)
 {
-    
+    CWeaponInfo *weaponInfo = (CWeaponInfo*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = weaponInfo->m_nWeaponFire;
 }
 CLEO_Fn(GET_WEAPONINFO_SLOT)
 {
-    
+    CWeaponInfo *weaponInfo = (CWeaponInfo*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = weaponInfo->m_nSlot;
 }
 CLEO_Fn(GET_CHAR_WEAPON_STATE)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->i = ped->m_Weapons[ped->m_byteCurrentWeaponSlot].m_nState;
 }
 CLEO_Fn(GET_CHAR_WEAPON_CLIP)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->i = ped->m_Weapons[ped->m_byteCurrentWeaponSlot].m_nAmmoInClip;
 }
 CLEO_Fn(GET_CHAR_COLLISION_SURFACE)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->i = ped->m_nContactSurface;
 }
 CLEO_Fn(GET_CHAR_COLLISION_LIGHTING)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->f = ped->m_fContactSurfaceBrightness;
 }
 CLEO_Fn(GET_CAR_COLLISION_SURFACE)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->f = vehicle->m_fContactSurfaceBrightness;
 }
 CLEO_Fn(GET_CAR_COLLISION_LIGHTING)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->i = vehicle->m_nContactSurface;
 }
 CLEO_Fn(IS_CHAR_REALLY_IN_AIR)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    UpdateCompareFlag((CRunningScript*)handle, !ped->physicalFlags.bOnSolidSurface && !ped->physicalFlags.bSubmergedInWater);
 }
 CLEO_Fn(IS_CAR_REALLY_IN_AIR)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    UpdateCompareFlag((CRunningScript*)handle, !vehicle->physicalFlags.bOnSolidSurface && !vehicle->physicalFlags.bSubmergedInWater);
 }
 CLEO_Fn(IS_OBJECT_REALLY_IN_AIR)
 {
-    
+    CObject *object = GetObjectFromRef(cleo->ReadParam(handle)->i);
+    UpdateCompareFlag((CRunningScript*)handle, !object->physicalFlags.bOnSolidSurface && !object->physicalFlags.bSubmergedInWater);
 }
 CLEO_Fn(SIMULATE_OBJECT_DAMAGE)
 {
@@ -563,4 +745,15 @@ CLEO_Fn(GET_SCRIPT_VAR)
 CLEO_Fn(SET_CAR_DOOR_WINDOW_STATE)
 {
     
+}
+
+DECL_HOOKv(InitialiseWhenRestarting)
+{
+    InitialiseWhenRestarting();
+
+    ++timesGameRestarted;
+}
+void Misc_Patch()
+{
+    HOOKPLT(InitialiseWhenRestarting, pGTASA + 0x672014);
 }
