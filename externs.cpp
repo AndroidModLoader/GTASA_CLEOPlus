@@ -21,6 +21,7 @@ int32_t *OnAMissionFlag;
 CPool<CPed, CCopPed> **ms_pPedPool;
 CPool<CVehicle, CHeli> **ms_pVehiclePool;
 CPool<CObject, CCutsceneObject> **ms_pObjectPool;
+CScriptResourceManager *ScriptResourceManager;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -56,6 +57,12 @@ bool (*ProcessVerticalLine)(CVector const&,float,CColPoint &,CEntity *&,bool,boo
 CPlayerPed* (*FindPlayerPed)(int);
 CPlayerInfo* (*GetPlayerInfoForThisPlayerPed)(CPlayerPed*);
 char (*GetWeaponSkill)(CPed*, eWeaponType);
+void (*ObjectDamage)(CObject *,float,CVector *,CVector *,CEntity *,eWeaponType);
+void (*AddToResourceManager)(CScriptResourceManager *,int,uint,CRunningScript *);
+void (*RequestModel)(int,int);
+void (*LoadAllRequestedModels)(bool);
+void (*TimerSuspend)();
+void (*TimerResume)();
 
 // int main
 void ResolveExternals()
@@ -94,6 +101,7 @@ void ResolveExternals()
     SET_TO(ms_pPedPool, aml->GetSym(hGTASA, "_ZN6CPools11ms_pPedPoolE"));
     SET_TO(ms_pVehiclePool, aml->GetSym(hGTASA, "_ZN6CPools15ms_pVehiclePoolE"));
     SET_TO(ms_pObjectPool, aml->GetSym(hGTASA, "_ZN6CPools14ms_pObjectPoolE"));
+    SET_TO(ScriptResourceManager, aml->GetSym(hGTASA, "_ZN11CTheScripts21ScriptResourceManagerE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -129,4 +137,10 @@ void ResolveExternals()
     SET_TO(FindPlayerPed, aml->GetSym(hGTASA, "_Z13FindPlayerPedi"));
     SET_TO(GetPlayerInfoForThisPlayerPed, aml->GetSym(hGTASA, "_ZN10CPlayerPed29GetPlayerInfoForThisPlayerPedEv"));
     SET_TO(GetWeaponSkill, aml->GetSym(hGTASA, "_ZN4CPed14GetWeaponSkillE11eWeaponType"));
+    SET_TO(ObjectDamage, aml->GetSym(hGTASA, "_ZN7CObject12ObjectDamageEfP7CVectorS1_P7CEntity11eWeaponType"));
+    SET_TO(AddToResourceManager, aml->GetSym(hGTASA, "_ZN22CScriptResourceManager20AddToResourceManagerEijP14CRunningScript"));
+    SET_TO(RequestModel, aml->GetSym(hGTASA, "_ZN10CStreaming12RequestModelEii"));
+    SET_TO(LoadAllRequestedModels, aml->GetSym(hGTASA, "_ZN10CStreaming22LoadAllRequestedModelsEb"));
+    SET_TO(TimerSuspend, aml->GetSym(hGTASA, "_ZN6CTimer7SuspendEv"));
+    SET_TO(TimerResume, aml->GetSym(hGTASA, "_ZN6CTimer6ResumeEv"));
 }

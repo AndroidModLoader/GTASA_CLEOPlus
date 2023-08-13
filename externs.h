@@ -107,6 +107,7 @@ extern int32_t *OnAMissionFlag;
 extern CPool<CPed, CCopPed> **ms_pPedPool;
 extern CPool<CVehicle, CHeli> **ms_pVehiclePool;
 extern CPool<CObject, CCutsceneObject> **ms_pObjectPool;
+extern CScriptResourceManager *ScriptResourceManager;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -142,6 +143,12 @@ extern bool (*ProcessVerticalLine)(CVector const&,float,CColPoint &,CEntity *&,b
 extern CPlayerPed* (*FindPlayerPed)(int);
 extern CPlayerInfo* (*GetPlayerInfoForThisPlayerPed)(CPlayerPed*);
 extern char (*GetWeaponSkill)(CPed*, eWeaponType);
+extern void (*ObjectDamage)(CObject *,float,CVector *,CVector *,CEntity *,eWeaponType);
+extern void (*AddToResourceManager)(CScriptResourceManager *,int,uint,CRunningScript *);
+extern void (*RequestModel)(int,int);
+extern void (*LoadAllRequestedModels)(bool);
+extern void (*TimerSuspend)();
+extern void (*TimerResume)();
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%

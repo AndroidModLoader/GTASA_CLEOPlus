@@ -408,3 +408,6 @@ GTASA_STRUCTS.h
 RW_STRUCTS.h
 .vscode/settings.json
 cleo.h
+GTASA_DECLS.h
+GTASA_STRUCTS_210.h
+RW_STRUCTS_210.h

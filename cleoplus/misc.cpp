@@ -432,18 +432,31 @@ CLEO_Fn(IS_OBJECT_REALLY_IN_AIR)
 }
 CLEO_Fn(SIMULATE_OBJECT_DAMAGE)
 {
-    
+    CObject *object = GetObjectFromRef(cleo->ReadParam(handle)->i);
+    float damage = cleo->ReadParam(handle)->f;
+    int type = cleo->ReadParam(handle)->i;
+    ObjectDamage(object, damage, NULL, NULL, NULL, (eWeaponType)type);
 }
 CLEO_Fn(REQUEST_PRIORITY_MODEL)
 {
-    
+    int model = cleo->ReadParam(handle)->i;
+    RequestModel(model, eStreamingFlags::STREAMING_KEEP_IN_MEMORY | eStreamingFlags::STREAMING_MISSION_REQUIRED | eStreamingFlags::STREAMING_PRIORITY_REQUEST);
+    AddToResourceManager(ScriptResourceManager, model, 2, (CRunningScript*)handle);
 }
 CLEO_Fn(LOAD_ALL_PRIORITY_MODELS_NOW)
 {
-    
+    TimerSuspend();
+    LoadAllRequestedModels(false);
+    TimerResume();
 }
 CLEO_Fn(LOAD_SPECIAL_CHARACTER_FOR_ID)
 {
+    int id = cleo->ReadParam(handle)->i;
+    CBaseModelInfo* modelInfo = ms_modelInfoPtrs[modelId];
+    if(!modelInfo)
+    {
+
+    }
     
 }
 CLEO_Fn(UNLOAD_SPECIAL_CHARACTER_FROM_ID)
