@@ -452,12 +452,33 @@ CLEO_Fn(LOAD_ALL_PRIORITY_MODELS_NOW)
 CLEO_Fn(LOAD_SPECIAL_CHARACTER_FOR_ID)
 {
     int id = cleo->ReadParam(handle)->i;
-    CBaseModelInfo* modelInfo = ms_modelInfoPtrs[modelId];
+    CBaseModelInfo* modelInfo = ms_modelInfoPtrs[id];
     if(!modelInfo)
     {
-
+        CPedModelInfo* pedModelInfo = AddPedModel(id);
+        SetColModel(pedModelInfo, ms_colModelPed1, false);
+        CPedModelInfo* basePedModelInfo = (CPedModelInfo*)ms_modelInfoPtrs[290];
+        pedModelInfo->m_defaultPedType = ePedType::PED_TYPE_CIVMALE;
+        pedModelInfo->m_defaultPedStats = ePedStats::PEDSTAT_STD_MISSION;
+        if(basePedModelInfo)
+        {
+            pedModelInfo->m_motionAnimGroup = basePedModelInfo->m_motionAnimGroup;
+            pedModelInfo->m_drivesWhichCars = basePedModelInfo->m_drivesWhichCars;
+            pedModelInfo->m_flags = basePedModelInfo->m_flags;
+            pedModelInfo->m_radio1 = basePedModelInfo->m_radio1;
+            pedModelInfo->m_radio2 = basePedModelInfo->m_radio2;
+            pedModelInfo->m_Race = basePedModelInfo->m_Race;
+            pedModelInfo->m_AudioPedType = basePedModelInfo->m_AudioPedType;
+            pedModelInfo->m_FirstVoice = basePedModelInfo->m_FirstVoice;
+            pedModelInfo->m_LastVoice = basePedModelInfo->m_LastVoice;
+            pedModelInfo->m_NextVoice = basePedModelInfo->m_NextVoice;
+        }
     }
-    
+    char buf[128];
+    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+    RequestSpecialModel(id, buf, eStreamingFlags::STREAMING_KEEP_IN_MEMORY | eStreamingFlags::STREAMING_MISSION_REQUIRED);
+    SpecialCharacterModelsUsed.insert(id);
+    AddToResourceManager(ScriptResourceManager, id, 2, (CRunningScript*)handle);
 }
 CLEO_Fn(UNLOAD_SPECIAL_CHARACTER_FROM_ID)
 {
