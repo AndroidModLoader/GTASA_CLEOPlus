@@ -25,6 +25,8 @@ CPool<CVehicle, CHeli> **ms_pVehiclePool;
 CPool<CObject, CCutsceneObject> **ms_pObjectPool;
 CScriptResourceManager *ScriptResourceManager;
 CColModel *ms_colModelPed1;
+CDirectory **ms_pExtraObjectsDir;
+CStreamingInfo *ms_aInfoForModel;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -62,6 +64,7 @@ CPlayerInfo* (*GetPlayerInfoForThisPlayerPed)(CPlayerPed*);
 char (*GetWeaponSkill)(CPed*, eWeaponType);
 void (*ObjectDamage)(CObject *,float,CVector *,CVector *,CEntity *,eWeaponType);
 void (*AddToResourceManager)(CScriptResourceManager *,int,uint,CRunningScript *);
+bool (*RemoveFromResourceManager)(CScriptResourceManager *,int,uint,CRunningScript *);
 void (*RequestModel)(int,int);
 void (*LoadAllRequestedModels)(bool);
 void (*TimerSuspend)();
@@ -69,6 +72,13 @@ void (*TimerResume)();
 CPedModelInfo* (*AddPedModel)(int id);
 void (*SetColModel)(CBaseModelInfo *,CColModel *,bool);
 void (*RequestSpecialModel)(int,char const*,int);
+void (*SetMissionDoesntRequireModel)(int);
+void (*RemoveModel)(int);
+CBaseModelInfo* (*GetModelInfoByName)(const char *, int *);
+CDirectory::DirectoryInfo* (*FindItem)(CDirectory*,char const*,uint &,uint &);
+bool (*IsObjectInCdImage)(int);
+void (*RemoveAllUnusedModels)();
+void (*RwV3dTransformPoint)(CVector&,CVector&,CMatrix&);
 
 // int main
 void ResolveExternals()
@@ -109,6 +119,8 @@ void ResolveExternals()
     SET_TO(ms_pObjectPool, aml->GetSym(hGTASA, "_ZN6CPools14ms_pObjectPoolE"));
     SET_TO(ScriptResourceManager, aml->GetSym(hGTASA, "_ZN11CTheScripts21ScriptResourceManagerE"));
     SET_TO(ms_colModelPed1, aml->GetSym(hGTASA, "_ZN14CTempColModels15ms_colModelPed1E"));
+    SET_TO(ms_pExtraObjectsDir, aml->GetSym(hGTASA, "_ZN10CStreaming19ms_pExtraObjectsDirE"));
+    SET_TO(ms_aInfoForModel, aml->GetSym(hGTASA, "_ZN10CStreaming16ms_aInfoForModelE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -146,6 +158,7 @@ void ResolveExternals()
     SET_TO(GetWeaponSkill, aml->GetSym(hGTASA, "_ZN4CPed14GetWeaponSkillE11eWeaponType"));
     SET_TO(ObjectDamage, aml->GetSym(hGTASA, "_ZN7CObject12ObjectDamageEfP7CVectorS1_P7CEntity11eWeaponType"));
     SET_TO(AddToResourceManager, aml->GetSym(hGTASA, "_ZN22CScriptResourceManager20AddToResourceManagerEijP14CRunningScript"));
+    SET_TO(RemoveFromResourceManager, aml->GetSym(hGTASA, "_ZN22CScriptResourceManager25RemoveFromResourceManagerEijP14CRunningScript"));
     SET_TO(RequestModel, aml->GetSym(hGTASA, "_ZN10CStreaming12RequestModelEii"));
     SET_TO(LoadAllRequestedModels, aml->GetSym(hGTASA, "_ZN10CStreaming22LoadAllRequestedModelsEb"));
     SET_TO(TimerSuspend, aml->GetSym(hGTASA, "_ZN6CTimer7SuspendEv"));
@@ -153,4 +166,11 @@ void ResolveExternals()
     SET_TO(AddPedModel, aml->GetSym(hGTASA, "_ZN10CModelInfo11AddPedModelEi"));
     SET_TO(SetColModel, aml->GetSym(hGTASA, "_ZN14CBaseModelInfo11SetColModelEP9CColModelb"));
     SET_TO(RequestSpecialModel, aml->GetSym(hGTASA, "_ZN10CStreaming19RequestSpecialModelEiPKci"));
+    SET_TO(SetMissionDoesntRequireModel, aml->GetSym(hGTASA, "_ZN10CStreaming28SetMissionDoesntRequireModelEi"));
+    SET_TO(RemoveModel, aml->GetSym(hGTASA, "_ZN10CStreaming11RemoveModelEi"));
+    SET_TO(GetModelInfoByName, aml->GetSym(hGTASA, "_ZN10CModelInfo12GetModelInfoEPKcPi"));
+    SET_TO(FindItem, aml->GetSym(hGTASA, "_ZN10CDirectory8FindItemEPKcRjS2_"));
+    SET_TO(IsObjectInCdImage, aml->GetSym(hGTASA, "_ZN10CStreaming17IsObjectInCdImageEi"));
+    SET_TO(RemoveAllUnusedModels, aml->GetSym(hGTASA, "_ZN10CStreaming21RemoveAllUnusedModelsEv"));
+    SET_TO(RwV3dTransformPoint, aml->GetSym(hGTASA, "_Z19RwV3dTransformPointP5RwV3dPKS_PK11RwMatrixTag"));
 }

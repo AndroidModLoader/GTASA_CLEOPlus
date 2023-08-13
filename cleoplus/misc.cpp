@@ -482,31 +482,64 @@ CLEO_Fn(LOAD_SPECIAL_CHARACTER_FOR_ID)
 }
 CLEO_Fn(UNLOAD_SPECIAL_CHARACTER_FROM_ID)
 {
-    
+    int id = cleo->ReadParam(handle)->i;
+    if(RemoveFromResourceManager(ScriptResourceManager, id, 2, (CRunningScript*)handle))
+    {
+        SetMissionDoesntRequireModel(id);
+    }
+    CBaseModelInfo *baseModelInfo = ms_modelInfoPtrs[id];
+    if(baseModelInfo && baseModelInfo->m_nRefCount == 0) RemoveModel(id);
 }
 CLEO_Fn(GET_MODEL_BY_NAME)
 {
-    
+    char buf[128];
+    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+    int id = -1;
+    CBaseModelInfo *baseModelInfo = GetModelInfoByName(name, &id);
+    cleo->GetPointerToScriptVar(handle)->i = id;
+    UpdateCompareFlag((CRunningScript*)handle, id > -1 && baseModelInfo);
 }
 CLEO_Fn(IS_MODEL_AVAILABLE_BY_NAME)
 {
-    
+    char buf[128];
+    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+    unsigned int offset, size;
+    CDirectory::DirectoryInfo* dir = FindItem(*ms_pExtraObjectsDir, (const char*)name, offset, size);
+    UpdateCompareFlag((CRunningScript*)handle, dir != NULL);
 }
 CLEO_Fn(GET_MODEL_DOESNT_EXIST_IN_RANGE)
 {
-    
+    bool bResult = false;
+    int start = cleo->ReadParam(handle)->i;
+    int end = cleo->ReadParam(handle)->i;
+    int id;
+
+    for (id = start; id <= end; ++id)
+    {
+        if(!IsObjectInCdImage(id) || (ms_aInfoForModel[id].m_status != 1 && SpecialCharacterModelsUsed.find(id) != SpecialCharacterModelsUsed.end()))
+        {
+            bResult = true;
+            break;
+        }
+    }
+    if (!bResult) id = -1;
+    cleo->GetPointerToScriptVar(handle)->i = id;
+    UpdateCompareFlag((CRunningScript*)handle, bResult);
 }
 CLEO_Fn(REMOVE_ALL_UNUSED_MODELS)
 {
-    
+    RemoveAllUnusedModels();
 }
 CLEO_Fn(REMOVE_MODEL_IF_UNUSED)
 {
-    
+    int id = cleo->ReadParam(handle)->i;
+    CBaseModelInfo *baseModelInfo = ms_modelInfoPtrs[id];
+    if(baseModelInfo && baseModelInfo->m_nRefCount == 0) RemoveModel(id);
 }
 CLEO_Fn(IS_CHAR_ON_FIRE)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    UpdateCompareFlag((CRunningScript*)handle, ped && ped->m_pFire != NULL);
 }
 CLEO_Fn(GET_CLOSEST_COP_NEAR_CHAR)
 {
@@ -530,43 +563,86 @@ CLEO_Fn(GET_ANY_OBJECT_NO_SAVE_RECURSIVE)
 }
 CLEO_Fn(SET_CHAR_ARRESTED)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    ped->m_nPedState = ePedState::PEDSTATE_ARRESTED;
 }
 CLEO_Fn(GET_CHAR_PEDSTATE)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->i = ped->m_nPedState;
 }
 CLEO_Fn(GET_CHAR_PROOFS)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->i = ped->physicalFlags.bBulletProof;
+    cleo->GetPointerToScriptVar(handle)->i = ped->physicalFlags.bFireProof;
+    cleo->GetPointerToScriptVar(handle)->i = ped->physicalFlags.bExplosionProof;
+    cleo->GetPointerToScriptVar(handle)->i = ped->physicalFlags.bCollisionProof;
+    cleo->GetPointerToScriptVar(handle)->i = ped->physicalFlags.bMeleeProof;
 }
 CLEO_Fn(GET_CAR_PROOFS)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->i = vehicle->physicalFlags.bBulletProof;
+    cleo->GetPointerToScriptVar(handle)->i = vehicle->physicalFlags.bFireProof;
+    cleo->GetPointerToScriptVar(handle)->i = vehicle->physicalFlags.bExplosionProof;
+    cleo->GetPointerToScriptVar(handle)->i = vehicle->physicalFlags.bCollisionProof;
+    cleo->GetPointerToScriptVar(handle)->i = vehicle->physicalFlags.bMeleeProof;
 }
 CLEO_Fn(GET_OBJECT_PROOFS)
 {
-    
+    CObject *object = GetObjectFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->i = object->physicalFlags.bBulletProof;
+    cleo->GetPointerToScriptVar(handle)->i = object->physicalFlags.bFireProof;
+    cleo->GetPointerToScriptVar(handle)->i = object->physicalFlags.bExplosionProof;
+    cleo->GetPointerToScriptVar(handle)->i = object->physicalFlags.bCollisionProof;
+    cleo->GetPointerToScriptVar(handle)->i = object->physicalFlags.bMeleeProof;
 }
 CLEO_Fn(IS_CHAR_WEAPON_VISIBLE_SET)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    CPlayerData* data = ped->m_pPlayerData;
+    UpdateCompareFlag((CRunningScript*)handle, data && data->m_bRenderWeapon);
 }
 CLEO_Fn(GET_CHAR_STAT_ID)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    cleo->GetPointerToScriptVar(handle)->i = (int)ped->m_pPedStat;
 }
 CLEO_Fn(GET_OFFSET_FROM_CAMERA_IN_WORLD_COORDS)
 {
-    
+    CVector offset, posReturn;
+    offset.x = cleo->ReadParam(handle)->f;
+    offset.y = cleo->ReadParam(handle)->f;
+    offset.z = cleo->ReadParam(handle)->f;
+
+    RwV3dTransformPoint(posReturn, offset, TheCamera->m_matCameraMatrix);
+
+    cleo->GetPointerToScriptVar(handle)->f = posReturn.x;
+    cleo->GetPointerToScriptVar(handle)->f = posReturn.y;
+    cleo->GetPointerToScriptVar(handle)->f = posReturn.z;
 }
 CLEO_Fn(GET_OFFSET_FROM_MATRIX_IN_WORLD_COORDS)
 {
-    
+    CMatrix* matrix = (CMatrix*)cleo->ReadParam(handle)->i;
+
+    CVector offset, posReturn;
+    offset.x = cleo->ReadParam(handle)->f;
+    offset.y = cleo->ReadParam(handle)->f;
+    offset.z = cleo->ReadParam(handle)->f;
+
+    RwV3dTransformPoint(posReturn, offset, *matrix);
+
+    cleo->GetPointerToScriptVar(handle)->f = posReturn.x;
+    cleo->GetPointerToScriptVar(handle)->f = posReturn.y;
+    cleo->GetPointerToScriptVar(handle)->f = posReturn.z;
 }
 CLEO_Fn(SET_CAR_COORDINATES_SIMPLE)
 {
-    
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    vehicle->m_matrix->pos.x = cleo->ReadParam(handle)->f;
+    vehicle->m_matrix->pos.y = cleo->ReadParam(handle)->f;
+    vehicle->m_matrix->pos.z = cleo->ReadParam(handle)->f;
 }
 CLEO_Fn(GET_CHAR_DAMAGE_LAST_FRAME)
 {
@@ -578,7 +654,7 @@ CLEO_Fn(GET_CAR_WEAPON_DAMAGE_LAST_FRAME)
 }
 CLEO_Fn(IS_ON_SCRIPTED_CUTSCENE)
 {
-    
+    UpdateCompareFlag((CRunningScript*)handle, TheCamera->m_WideScreenOn);
 }
 CLEO_Fn(GET_MODEL_PED_TYPE_AND_STAT)
 {

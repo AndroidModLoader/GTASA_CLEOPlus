@@ -112,6 +112,8 @@ extern CPool<CVehicle, CHeli> **ms_pVehiclePool;
 extern CPool<CObject, CCutsceneObject> **ms_pObjectPool;
 extern CScriptResourceManager *ScriptResourceManager;
 extern CColModel *ms_colModelPed1;
+extern CDirectory **ms_pExtraObjectsDir;
+extern CStreamingInfo *ms_aInfoForModel;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -149,6 +151,7 @@ extern CPlayerInfo* (*GetPlayerInfoForThisPlayerPed)(CPlayerPed*);
 extern char (*GetWeaponSkill)(CPed*, eWeaponType);
 extern void (*ObjectDamage)(CObject *,float,CVector *,CVector *,CEntity *,eWeaponType);
 extern void (*AddToResourceManager)(CScriptResourceManager *,int,uint,CRunningScript *);
+extern bool (*RemoveFromResourceManager)(CScriptResourceManager *,int,uint,CRunningScript *);
 extern void (*RequestModel)(int,int);
 extern void (*LoadAllRequestedModels)(bool);
 extern void (*TimerSuspend)();
@@ -156,6 +159,13 @@ extern void (*TimerResume)();
 extern CPedModelInfo* (*AddPedModel)(int id);
 extern void (*SetColModel)(CBaseModelInfo *, CColModel *, bool);
 extern void (*RequestSpecialModel)(int,char const*,int);
+extern void (*SetMissionDoesntRequireModel)(int);
+extern void (*RemoveModel)(int);
+extern CBaseModelInfo* (*GetModelInfoByName)(const char *, int *);
+extern CDirectory::DirectoryInfo* (*FindItem)(CDirectory*,char const*,uint &,uint &);
+extern bool (*IsObjectInCdImage)(int);
+extern void (*RemoveAllUnusedModels)();
+extern void (*RwV3dTransformPoint)(CVector&,CVector&,CMatrix&);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
