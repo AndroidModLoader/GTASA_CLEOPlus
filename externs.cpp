@@ -2,6 +2,7 @@
 #include "externs.h"
 
 std::set<int> SpecialCharacterModelsUsed;
+int g_nCurrentSaveSlot = -2;
 
 // Vars
 CCamera* TheCamera;
@@ -27,6 +28,8 @@ CScriptResourceManager *ScriptResourceManager;
 CColModel *ms_colModelPed1;
 CDirectory **ms_pExtraObjectsDir;
 CStreamingInfo *ms_aInfoForModel;
+script_effect_struct *ScriptEffectSystemArray;
+FxManager_c *g_fxMan;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -79,6 +82,15 @@ CDirectory::DirectoryInfo* (*FindItem)(CDirectory*,char const*,uint &,uint &);
 bool (*IsObjectInCdImage)(int);
 void (*RemoveAllUnusedModels)();
 void (*RwV3dTransformPoint)(CVector&,CVector&,CMatrix&);
+void (*TransformPoint)(RwV3d& point, const CSimpleTransform& placement, const RwV3d& vecPos);
+void (*PassTime)(unsigned int);
+void (*SetRwObjectAlpha)(CEntity*, int);
+void (*SetWindowOpenFlag)(CVehicle*, uint8_t);
+void (*ClearWindowOpenFlag)(CVehicle*, uint8_t);
+int (*GetActualScriptThingIndex)(int, uint8_t);
+void (*AddParticle)(FxSystem_c *, RwV3d *,RwV3d *,float,FxPrtMult_c *,float,float,float,uint8_t);
+FxSystemBP_c* (*FindFxSystemBP)(FxManager_c *, const char *);
+void (*ProcessScript)(CRunningScript*);
 
 // int main
 void ResolveExternals()
@@ -121,6 +133,8 @@ void ResolveExternals()
     SET_TO(ms_colModelPed1, aml->GetSym(hGTASA, "_ZN14CTempColModels15ms_colModelPed1E"));
     SET_TO(ms_pExtraObjectsDir, aml->GetSym(hGTASA, "_ZN10CStreaming19ms_pExtraObjectsDirE"));
     SET_TO(ms_aInfoForModel, aml->GetSym(hGTASA, "_ZN10CStreaming16ms_aInfoForModelE"));
+    SET_TO(ScriptEffectSystemArray, aml->GetSym(hGTASA, "_ZN11CTheScripts23ScriptEffectSystemArrayE"));
+    SET_TO(g_fxMan, aml->GetSym(hGTASA, "g_fxMan"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -173,4 +187,13 @@ void ResolveExternals()
     SET_TO(IsObjectInCdImage, aml->GetSym(hGTASA, "_ZN10CStreaming17IsObjectInCdImageEi"));
     SET_TO(RemoveAllUnusedModels, aml->GetSym(hGTASA, "_ZN10CStreaming21RemoveAllUnusedModelsEv"));
     SET_TO(RwV3dTransformPoint, aml->GetSym(hGTASA, "_Z19RwV3dTransformPointP5RwV3dPKS_PK11RwMatrixTag"));
+    SET_TO(TransformPoint, aml->GetSym(hGTASA, "_Z14TransformPointR5RwV3dRK16CSimpleTransformRKS_"));
+    SET_TO(PassTime, aml->GetSym(hGTASA, "_ZN10CGameLogic8PassTimeEj"));
+    SET_TO(SetRwObjectAlpha, aml->GetSym(hGTASA, "_ZN7CEntity16SetRwObjectAlphaEi"));
+    SET_TO(SetWindowOpenFlag, aml->GetSym(hGTASA, "_ZN8CVehicle17SetWindowOpenFlagEh"));
+    SET_TO(ClearWindowOpenFlag, aml->GetSym(hGTASA, "_ZN8CVehicle19ClearWindowOpenFlagEh"));
+    SET_TO(GetActualScriptThingIndex, aml->GetSym(hGTASA, "_ZN11CTheScripts25GetActualScriptThingIndexEih"));
+    SET_TO(AddParticle, aml->GetSym(hGTASA, "_ZN10FxSystem_c11AddParticleEP5RwV3dS1_fP11FxPrtMult_cfffh"));
+    SET_TO(FindFxSystemBP, aml->GetSym(hGTASA, "_ZN11FxManager_c14FindFxSystemBPEPc"));
+    SET_TO(ProcessScript, aml->GetSym(hGTASA, "_ZN14CRunningScript7ProcessEv"));
 }

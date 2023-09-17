@@ -2,6 +2,8 @@
 
 #include <list>
 #include <cctype>
+#include <string>
+#include <vector>
 #include <set>
 #include <mod/amlmod.h>
 #include <mod/logger.h>
@@ -35,7 +37,7 @@ inline int GetPCOffset()
 }
 inline char* CLEO_ReadStringEx(void* handle, char* buf, size_t size)
 {
-    uint8_t byte = **(uint8_t**)((int)handle + GetPCOffset());
+    uint8_t& byte = **(uint8_t**)((int)handle + GetPCOffset());
     if(byte <= 8) return NULL; // Not a string
 
     static char newBuf[128];
@@ -45,6 +47,7 @@ inline char* CLEO_ReadStringEx(void* handle, char* buf, size_t size)
     {
         case 0x9:
             cleo->ReadParam(handle); // Need to collect results before that
+            //byte += 1; // the same here
             return cleo->ReadString8byte(handle, buf, size) ? buf : NULL;
 
         case 0xA:
@@ -89,6 +92,13 @@ inline void toupper(char *s)
 }
 
 extern std::set<int> SpecialCharacterModelsUsed;
+extern int g_nCurrentSaveSlot;
+
+enum ScriptEventList
+{
+    SaveConfirmation, CharDelete, CharCreate, CarDelete, CarCreate, ObjectDelete, ObjectCreate, OnMenu, CharProcess, CarProcess, ObjectProcess,
+    BuildingProcess, CharDamage, CarWeaponDamage, BulletImpact, TOTAL_SCRIPT_EVENTS
+};
 
 // Game vars
 extern CCamera* TheCamera;
@@ -114,6 +124,8 @@ extern CScriptResourceManager *ScriptResourceManager;
 extern CColModel *ms_colModelPed1;
 extern CDirectory **ms_pExtraObjectsDir;
 extern CStreamingInfo *ms_aInfoForModel;
+extern script_effect_struct *ScriptEffectSystemArray;
+extern FxManager_c *g_fxMan;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -166,6 +178,15 @@ extern CDirectory::DirectoryInfo* (*FindItem)(CDirectory*,char const*,uint &,uin
 extern bool (*IsObjectInCdImage)(int);
 extern void (*RemoveAllUnusedModels)();
 extern void (*RwV3dTransformPoint)(CVector&,CVector&,CMatrix&);
+extern void (*TransformPoint)(RwV3d& point, const CSimpleTransform& placement, const RwV3d& vecPos);
+extern void (*PassTime)(unsigned int);
+extern void (*SetRwObjectAlpha)(CEntity*, int);
+extern void (*SetWindowOpenFlag)(CVehicle*, uint8_t);
+extern void (*ClearWindowOpenFlag)(CVehicle*, uint8_t);
+extern int (*GetActualScriptThingIndex)(int, uint8_t);
+extern void (*AddParticle)(FxSystem_c *, RwV3d *,RwV3d *,float,FxPrtMult_c *,float,float,float,uint8_t);
+extern FxSystemBP_c* (*FindFxSystemBP)(FxManager_c *, const char *);
+extern void (*ProcessScript)(CRunningScript*);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE); // 0xE01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
@@ -458,3 +479,6 @@ CLEO_Fn(REVERSE_LIST); // 0xE7E=1,reverse_list %1d%
 
 void RadarBlip_Patch();
 void Misc_Patch();
+void Events_Patch();
+
+extern bool g_bForceInterrupt;

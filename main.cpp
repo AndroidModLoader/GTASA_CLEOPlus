@@ -15,6 +15,19 @@ cleo_ifs_t* cleo;
 // - 3 = dont take money less than 0
 // - 4 = dont take money if they are negative
 
+// Hooks
+bool g_bForceInterrupt = false;
+DECL_HOOK(int8_t, ProcessOneCommand, CRunningScript* self)
+{
+    int8_t retCode = ProcessOneCommand(self);
+    if(g_bForceInterrupt)
+    {
+        g_bForceInterrupt = false;
+        return 1;
+    }
+    return retCode;
+}
+
 // int main!
 extern "C" void OnModLoad()
 {
@@ -24,6 +37,9 @@ extern "C" void OnModLoad()
     cleo = (cleo_ifs_t*)GetInterface("CLEO");
 
     ResolveExternals();
+
+    //Patches?
+    HOOK(ProcessOneCommand, aml->GetSym(hGTASA, "_ZN14CRunningScript17ProcessOneCommandEv"));
 
     //NoSave
     CLEO_RegisterOpcode(0xE01, CREATE_OBJECT_NO_SAVE); // 0E01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
@@ -71,7 +87,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE6E, IS_SELECT_MENU_JUST_PRESSED); // 0E6E=0,is_select_menu_just_pressed
 
     //Events
-    /*CLEO_RegisterOpcode(0xED0, RETURN_SCRIPT_EVENT); // 0ED0=0,return_script_event
+    CLEO_RegisterOpcode(0xED0, RETURN_SCRIPT_EVENT); // 0ED0=0,return_script_event
     CLEO_RegisterOpcode(0xED1, SET_SCRIPT_EVENT_SAVE_CONFIRMATION); // 0ED1=3,set_script_event_save_confirmation %1d% label %2p% args %3d%
     CLEO_RegisterOpcode(0xED2, SET_SCRIPT_EVENT_CHAR_DELETE); // 0ED2=3,set_script_event_char_delete %1d% label %2p% args %3d%
     CLEO_RegisterOpcode(0xED3, SET_SCRIPT_EVENT_CHAR_CREATE); // 0ED3=3,set_script_event_char_create %1d% label %2p% args %3d%
@@ -87,7 +103,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEDE, SET_SCRIPT_EVENT_CHAR_DAMAGE); // 0EDE=3,set_script_event_char_damage %1d% label %2p% args %3d%
     CLEO_RegisterOpcode(0xEDF, SET_SCRIPT_EVENT_CAR_WEAPON_DAMAGE); // 0EDF=3,set_script_event_car_weapon_damage %1d% label %2p% args %3d%
     CLEO_RegisterOpcode(0xEE0, SET_SCRIPT_EVENT_BULLET_IMPACT); // 0EE0=6,set_script_event_bullet_impact %1d% label %2p% args %3d% %4d% %5d% %6d%
-*/
+
     //Types
     CLEO_RegisterOpcode(0xE12, GET_VEHICLE_SUBCLASS); // 0E12=2,get_vehicle %1d% subclass_to %2d%
     CLEO_RegisterOpcode(0xE13, GET_ENTITY_TYPE); // 0E13=2,get_entity %1d% type_to %2d%
@@ -164,7 +180,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE99, LOAD_ALL_PRIORITY_MODELS_NOW); // 0E99=0,load_all_priority_models_now
     CLEO_RegisterOpcode(0xE9A, LOAD_SPECIAL_CHARACTER_FOR_ID); // 0E9A=2,load_special_character_for_id %1d% name %2d%
     CLEO_RegisterOpcode(0xE9B, UNLOAD_SPECIAL_CHARACTER_FROM_ID); // 0E9B=1,unload_special_character_from_id %1d%
-    CLEO_RegisterOpcode(0xE9C, GET_MODEL_BY_NAME); //  0E9C=1,get_model_by_name %1d% store_id %2d%
+    CLEO_RegisterOpcode(0xE9C, GET_MODEL_BY_NAME); //  0E9C=2,get_model_by_name %1d% store_id %2d%
     CLEO_RegisterOpcode(0xE9D, IS_MODEL_AVAILABLE_BY_NAME); // 0E9D=1,get_model_available_by_name %1d%
     CLEO_RegisterOpcode(0xE9E, GET_MODEL_DOESNT_EXIST_IN_RANGE); // 0E9E=3,get_model_available_by_name %1d% to %2d% store_to %3d%
     CLEO_RegisterOpcode(0xE9F, REMOVE_ALL_UNUSED_MODELS); // 0E9F=0,remove_all_unused_models
