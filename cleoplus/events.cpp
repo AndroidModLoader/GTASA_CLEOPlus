@@ -201,6 +201,14 @@ CLEO_Fn(SET_SCRIPT_EVENT_BULLET_IMPACT)
     HookBulletImpact();
     ScriptEvent::AddEvent(handle, scriptEvents[ScriptEventList::BulletImpact], 4);
 }
+CLEO_Fn(SET_SCRIPT_EVENT_BEFORE_GAME_PROCESS)
+{
+    ScriptEvent::AddEvent(handle, scriptEvents[ScriptEventList::BeforeGameProcess], 0);
+}
+CLEO_Fn(SET_SCRIPT_EVENT_AFTER_GAME_PROCESS)
+{
+    ScriptEvent::AddEvent(handle, scriptEvents[ScriptEventList::AfterGameProcess], 0);
+}
 
 // --------------------------------------------------------------- //
 

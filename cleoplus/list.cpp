@@ -372,3 +372,19 @@ CLEO_Fn(REVERSE_LIST)
         logger->Error("REVERSE_LIST failed: list type unknown %d", scriptList->type);
     }
 }
+CLEO_Fn(REPLACE_LIST_VALUE_BY_INDEX)
+{
+    
+}
+CLEO_Fn(REPLACE_LIST_STRING_VALUE_BY_INDEX)
+{
+    
+}
+CLEO_Fn(INSERT_LIST_VALUE_BY_INDEX)
+{
+    
+}
+CLEO_Fn(INSERT_LIST_STRING_VALUE_BY_INDEX)
+{
+    
+}

@@ -1085,6 +1085,46 @@ CLEO_Fn(GET_LOADED_LIBRARY)
     cleo->GetPointerToScriptVar(handle)->i = (int)library;
     UpdateCompareFlag((CRunningScript*)handle, library != NULL);
 }
+CLEO_Fn(RETURN_TIMES)
+{
+
+}
+CLEO_Fn(GET_THIRD_PERSON_CAMERA_TARGET)
+{
+    
+}
+CLEO_Fn(GET_DISTANCE_MULTIPLIER)
+{
+    
+}
+CLEO_Fn(GET_ACTIVE_CAMERA_ROTATION)
+{
+    
+}
+CLEO_Fn(GET_CLOSEST_WATER_DISTANCE)
+{
+    
+}
+CLEO_Fn(GET_CAMERA_STRUCT)
+{
+    
+}
+CLEO_Fn(GET_CAMERA_ROTATION_INPUT_VALUES)
+{
+    
+}
+CLEO_Fn(SET_CAMERA_ROTATION_INPUT_VALUES)
+{
+    
+}
+CLEO_Fn(SET_ON_MISSION)
+{
+    
+}
+CLEO_Fn(GET_MODEL_NAME_POINTER)
+{
+    
+}
 CLEO_Fn(SET_CAR_MODEL_ALPHA)
 {
     CEntity *ent = GetVehicleFromRef(cleo->ReadParam(handle)->i);

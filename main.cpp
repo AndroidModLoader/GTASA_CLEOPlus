@@ -43,7 +43,7 @@ extern "C" void OnModLoad()
 
     //NoSave
     CLEO_RegisterOpcode(0xE01, CREATE_OBJECT_NO_SAVE); // 0E01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
-    CLEO_RegisterOpcode(0xE02, SET_CAR_GENERATOR_NO_SAVE); // 0E02=1,set_car_generator %1d% no_save
+    CLEO_RegisterOpcode(0xE02, SET_CAR_GENERATOR_NO_SAVE); // 0E02=1,set_car_generator_no_save %1d%
 
     //Environment
     CLEO_RegisterOpcode(0xD59, GET_CURRENT_WEATHER);
@@ -79,30 +79,33 @@ extern "C" void OnModLoad()
     //CLEO_RegisterOpcode(0xE23, GET_MOUSE_SENSIBILITY); // 0E23=1,get_mouse_sensibility_to %1d%
     //CLEO_RegisterOpcode(0xE3D, IS_KEY_JUST_PRESSED); // 0E3D=1,is_key_just_pressed %1d%
     //CLEO_RegisterOpcode(0xE3E, IS_BUTTON_JUST_PRESSED); // 0E3E=2,is_button_just_pressed %1d% button %2d%
-    CLEO_RegisterOpcode(0xE60, SET_CAMERA_CONTROL); // 0E60=2,set_camera_control %1d% %2d% 
+    CLEO_RegisterOpcode(0xE60, SET_CAMERA_CONTROL); // 0E60=1,set_camera_control %1d%
     CLEO_RegisterOpcode(0xE67, IS_AIM_BUTTON_PRESSED); // 0E67=1,is_aim_button_pressed %1d%
     CLEO_RegisterOpcode(0xE68, SET_PLAYER_CONTROL_PAD); // 0E68=2,set_player_control_pad %1d% %2d% 
     CLEO_RegisterOpcode(0xE69, SET_PLAYER_CONTROL_PAD_MOVEMENT); // 0E69=2,set_player_control_pad_movement %1d% %2d% 
     CLEO_RegisterOpcode(0xE8D, IS_ANY_FIRE_BUTTON_PRESSED); // 0E8D=1,is_any_fire_button_pressed %1d%
     CLEO_RegisterOpcode(0xE6E, IS_SELECT_MENU_JUST_PRESSED); // 0E6E=0,is_select_menu_just_pressed
+    CLEO_RegisterOpcode(0xF13, GET_TIME_NOT_TOUCHING_PAD); // 0F13=2,get_time_not_touching_pad %1d% store_to %2d%
 
     //Events
     CLEO_RegisterOpcode(0xED0, RETURN_SCRIPT_EVENT); // 0ED0=0,return_script_event
-    CLEO_RegisterOpcode(0xED1, SET_SCRIPT_EVENT_SAVE_CONFIRMATION); // 0ED1=3,set_script_event_save_confirmation %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xED2, SET_SCRIPT_EVENT_CHAR_DELETE); // 0ED2=3,set_script_event_char_delete %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xED3, SET_SCRIPT_EVENT_CHAR_CREATE); // 0ED3=3,set_script_event_char_create %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xED4, SET_SCRIPT_EVENT_CAR_DELETE); // 0ED4=3,set_script_event_car_delete %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xED5, SET_SCRIPT_EVENT_CAR_CREATE); // 0ED5=3,set_script_event_car_create %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xED6, SET_SCRIPT_EVENT_OBJECT_DELETE); // 0ED6=3,set_script_event_object_delete %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xED7, SET_SCRIPT_EVENT_OBJECT_CREATE); // 0ED7=3,set_script_event_object_create %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xED8, SET_SCRIPT_EVENT_ON_MENU); // 0ED8=3,set_script_event_on_menu %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xEDA, SET_SCRIPT_EVENT_CHAR_PROCESS); // 0EDA=3,set_script_event_char_process %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xEDB, SET_SCRIPT_EVENT_CAR_PROCESS); // 0EDB=3,set_script_event_car_process %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xEDC, SET_SCRIPT_EVENT_OBJECT_PROCESS); // 0EDC=3,set_script_event_object_process %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xEDD, SET_SCRIPT_EVENT_BUILDING_PROCESS); // 0EDD=3,set_script_event_building_process %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xEDE, SET_SCRIPT_EVENT_CHAR_DAMAGE); // 0EDE=3,set_script_event_char_damage %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xEDF, SET_SCRIPT_EVENT_CAR_WEAPON_DAMAGE); // 0EDF=3,set_script_event_car_weapon_damage %1d% label %2p% args %3d%
-    CLEO_RegisterOpcode(0xEE0, SET_SCRIPT_EVENT_BULLET_IMPACT); // 0EE0=6,set_script_event_bullet_impact %1d% label %2p% args %3d% %4d% %5d% %6d%
+    CLEO_RegisterOpcode(0xED1, SET_SCRIPT_EVENT_SAVE_CONFIRMATION); // 0ED1=3,set_script_event_save_confirmation %1d% label %2p% var_slot %3d%
+    CLEO_RegisterOpcode(0xED2, SET_SCRIPT_EVENT_CHAR_DELETE); // 0ED2=3,set_script_event_char_delete %1d% label %2p% var_char %3d%
+    CLEO_RegisterOpcode(0xED3, SET_SCRIPT_EVENT_CHAR_CREATE); // 0ED3=3,set_script_event_char_create %1d% label %2p% var_char %3d%
+    CLEO_RegisterOpcode(0xED4, SET_SCRIPT_EVENT_CAR_DELETE); // 0ED4=3,set_script_event_car_delete %1d% label %2p% var_car %3d%
+    CLEO_RegisterOpcode(0xED5, SET_SCRIPT_EVENT_CAR_CREATE); // 0ED5=3,set_script_event_car_create %1d% label %2p% var_car %3d%
+    CLEO_RegisterOpcode(0xED6, SET_SCRIPT_EVENT_OBJECT_DELETE); // 0ED6=3,set_script_event_object_delete %1d% label %2p% var_object %3d%
+    CLEO_RegisterOpcode(0xED7, SET_SCRIPT_EVENT_OBJECT_CREATE); // 0ED7=3,set_script_event_object_create %1d% label %2p% var_object %3d%
+    CLEO_RegisterOpcode(0xED8, SET_SCRIPT_EVENT_ON_MENU); // 0ED8=3,set_script_event_on_menu %1d% label %2p% var_just_paused %3d%
+    CLEO_RegisterOpcode(0xEDA, SET_SCRIPT_EVENT_CHAR_PROCESS); // 0EDA=3,set_script_event_char_process %1d% label %2p% var_char %3d%
+    CLEO_RegisterOpcode(0xEDB, SET_SCRIPT_EVENT_CAR_PROCESS); // 0EDB=3,set_script_event_car_process %1d% label %2p% var_car %3d%
+    CLEO_RegisterOpcode(0xEDC, SET_SCRIPT_EVENT_OBJECT_PROCESS); // 0EDC=3,set_script_event_object_process %1d% label %2p% var_object %3d%
+    CLEO_RegisterOpcode(0xEDD, SET_SCRIPT_EVENT_BUILDING_PROCESS); // 0EDD=3,set_script_event_building_process %1d% label %2p% var_building %3d%
+    CLEO_RegisterOpcode(0xEDE, SET_SCRIPT_EVENT_CHAR_DAMAGE); // 0EDE=3,set_script_event_char_damage %1d% label %2p% var_char %3d%
+    CLEO_RegisterOpcode(0xEDF, SET_SCRIPT_EVENT_CAR_WEAPON_DAMAGE); // 0EDF=3,set_script_event_car_weapon_damage %1d% label %2p% var_car %3d%
+    CLEO_RegisterOpcode(0xEE0, SET_SCRIPT_EVENT_BULLET_IMPACT); // 0EE0=6,set_script_event_bullet_impact %1d% label %2p% var_owner %3d% var_victim %4d% var_weapon %5d% var_colpoint %6d%
+    CLEO_RegisterOpcode(0xF0B, SET_SCRIPT_EVENT_BEFORE_GAME_PROCESS); // 0F0B=2,set_script_event_before_game_process %1d% label %2p%
+    CLEO_RegisterOpcode(0xF0C, SET_SCRIPT_EVENT_AFTER_GAME_PROCESS); // 0F0C=2,set_script_event_after_game_process %1d% label %2p%
 
     //Types
     CLEO_RegisterOpcode(0xE12, GET_VEHICLE_SUBCLASS); // 0E12=2,get_vehicle %1d% subclass_to %2d%
@@ -181,8 +184,8 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE9A, LOAD_SPECIAL_CHARACTER_FOR_ID); // 0E9A=2,load_special_character_for_id %1d% name %2d%
     CLEO_RegisterOpcode(0xE9B, UNLOAD_SPECIAL_CHARACTER_FROM_ID); // 0E9B=1,unload_special_character_from_id %1d%
     CLEO_RegisterOpcode(0xE9C, GET_MODEL_BY_NAME); //  0E9C=2,get_model_by_name %1d% store_id %2d%
-    CLEO_RegisterOpcode(0xE9D, IS_MODEL_AVAILABLE_BY_NAME); // 0E9D=1,get_model_available_by_name %1d%
-    CLEO_RegisterOpcode(0xE9E, GET_MODEL_DOESNT_EXIST_IN_RANGE); // 0E9E=3,get_model_available_by_name %1d% to %2d% store_to %3d%
+    CLEO_RegisterOpcode(0xE9D, IS_MODEL_AVAILABLE_BY_NAME); // 0E9D=1,is_model_available_by_name %1d%
+    CLEO_RegisterOpcode(0xE9E, GET_MODEL_DOESNT_EXIST_IN_RANGE); // 0E9E=3,get_model_doesnt_exist_in_range %1d% to %2d% store_to %3d%
     CLEO_RegisterOpcode(0xE9F, REMOVE_ALL_UNUSED_MODELS); // 0E9F=0,remove_all_unused_models
     CLEO_RegisterOpcode(0xEA3, REMOVE_MODEL_IF_UNUSED); // 0EA3=1,remove_model_if_unused %1d%
     CLEO_RegisterOpcode(0xEA4, IS_CHAR_ON_FIRE); // 0EA4=1,is_char_on_fire %1d%
@@ -216,7 +219,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEC3, SET_STRING_LOWER); // 0EC3=1,set_string_lower %1s%
     CLEO_RegisterOpcode(0xEC4, STRING_FIND); // 0EC4=4,string_find %1d% %2s% %3s% store_to %4d%
     CLEO_RegisterOpcode(0xEC5, CUT_STRING_AT); // 0EC5=2,cut_string_at %1d% %2d%
-    CLEO_RegisterOpcode(0xEC6, IS_STRING_CHARACTER_AT); // 0EC6=3,is_string_character_at %1d% character %2d% index %2d%
+    CLEO_RegisterOpcode(0xEC6, IS_STRING_CHARACTER_AT); // 0EC6=3,is_string_character_at %1s% character %2s% index %3s%
     CLEO_RegisterOpcode(0xEC8, GET_CHAR_RANDOM_SEED); // 0EC8=2,get_char_random_seed %1d% store_to %2d%
     CLEO_RegisterOpcode(0xEC9, GET_CAR_RANDOM_SEED); // 0EC9=2,get_car_random_seed %1d% store_to %2d%
     CLEO_RegisterOpcode(0xECA, GET_OBJECT_RANDOM_SEED); // 0ECA=2,get_object_random_seed %1d% store_to %2d%
@@ -235,7 +238,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEEA, LOCATE_CHAR_DISTANCE_TO_COORDINATES); // 0EEA=5,locate_char_distance_to_coordinates %1d% pos %2d% %3d% %4d% radius %5d%
     CLEO_RegisterOpcode(0xEEB, LOCATE_CAR_DISTANCE_TO_COORDINATES); // 0EEB=5,locate_car_distance_to_coordinates %1d% pos %2d% %3d% %4d% radius %5d%
     CLEO_RegisterOpcode(0xEEC, LOCATE_OBJECT_DISTANCE_TO_COORDINATES); // 0EEC=5,locate_object_distance_to_coordinates %1d% pos %2d% %3d% %4d% radius %5d%
-    CLEO_RegisterOpcode(0xEED, LOCATE_ENTITY_DISTANCE_TO_ENTITY); // 0EED=5,locate_object_distance_to_coordinates %1d% pos %2d% %3d% %4d% radius %5d%
+    CLEO_RegisterOpcode(0xEED, LOCATE_ENTITY_DISTANCE_TO_ENTITY); // 0EED=3,locate_entity_distance_to_entity %1d% entityB %2d% radius %3d%
     CLEO_RegisterOpcode(0xEEE, GET_ENTITY_COORDINATES); // 0EEE=4,get_entity_coordinates %1d% store_to %2d% %3d% %4d%
     CLEO_RegisterOpcode(0xEEF, GET_ENTITY_HEADING); // 0EEF=2,get_entity_heading %1d% store_to %2d%
     CLEO_RegisterOpcode(0xEF5, IS_CAR_OWNED_BY_PLAYER); // 0EF5=1,is_car_owned_by_player %1d%
@@ -247,6 +250,16 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEFC, GET_CAR_VALUE); // 0EFC=2,get_car_value %1d% store_to %2d%
     CLEO_RegisterOpcode(0xEFD, GET_CAR_PEDALS); // 0EFD=3,get_car_pedals %1d% gas_to %2d% break_to %3d% 
     CLEO_RegisterOpcode(0xEFE, GET_LOADED_LIBRARY); // 0EFE=2,get_loaded_library %1d% store_to %2d%
+    CLEO_RegisterOpcode(0xF0A, RETURN_TIMES); // 0F0A=1,return_times %1d%
+    CLEO_RegisterOpcode(0xF0E, GET_THIRD_PERSON_CAMERA_TARGET); // 0F0E=10,get_third_person_camera_target %1d% from %2d% %3d% %4d% start_to %5d% %6d% %7d% end_to %8d% %9d% %10d%
+    CLEO_RegisterOpcode(0xF0F, GET_DISTANCE_MULTIPLIER); // 0F0F=2,get_distance_multiplier %1d% %2d%
+    CLEO_RegisterOpcode(0xF10, GET_ACTIVE_CAMERA_ROTATION); // 0F10=3,get_active_camera_rotation %1d% %2d% %3d%
+    CLEO_RegisterOpcode(0xF11, GET_CLOSEST_WATER_DISTANCE); // 0F11=2,get_closest_water_distance %1d% %2d%
+    CLEO_RegisterOpcode(0xF12, GET_CAMERA_STRUCT); // 0F12=2,get_camera_struct %1d% %2d%
+    CLEO_RegisterOpcode(0xF14, GET_CAMERA_ROTATION_INPUT_VALUES); // 0F14=2,get_camera_rotation_input_values %1d% %2d%
+    CLEO_RegisterOpcode(0xF15, SET_CAMERA_ROTATION_INPUT_VALUES); // 0F15=2,set_camera_rotation_input_values %1d% %2d%
+    CLEO_RegisterOpcode(0xF16, SET_ON_MISSION); // 0F16=1,set_on_mission %1d%
+    CLEO_RegisterOpcode(0xF17, GET_MODEL_NAME_POINTER); // 0F17=2,get_model_name_pointer %1d% to %2s%
     CLEO_RegisterOpcode(0xD0F, SET_CAR_MODEL_ALPHA); // 0D0F=2,set_car_model_alpha %1d% alpha %2d%
     CLEO_RegisterOpcode(0xD10, SET_CHAR_MODEL_ALPHA); // 0D10=2,set_char_model_alpha %1d% alpha %2d%
     CLEO_RegisterOpcode(0xD11, SET_OBJECT_MODEL_ALPHA); // 0D11=2,set_object_model_alpha %1d% alpha %2d%
@@ -285,6 +298,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEF7, CLAMP_INT); // 0EF7=4,clamp_int %1d% min %2d% max %3d% store_to %4d%
     CLEO_RegisterOpcode(0xEB3, CONVERT_DIRECTION_TO_QUAT); // 0EB3=4,convert_direction_to_quat %1d% dir %2d% %3d% %4d%
     CLEO_RegisterOpcode(0xEF3, LERP); // 0EF3=4,lerp %1d% %2d% %3d% store_to %4d%
+    CLEO_RegisterOpcode(0xF0D, SET_MATRIX_LOOK_DIRECTION); // 0F0D=7,set_matrix_look_direction %1d% origin %2d% %3d% %4d% dir %5d% %6d% %7d%
 
     // Audio
     CLEO_RegisterOpcode(0xE21, GET_AUDIO_SFX_VOLUME); // 0E21=1,get_audio_sfx_volume %1d%
@@ -310,7 +324,9 @@ extern "C" void OnModLoad()
 
     // Render object
     /*CLEO_RegisterOpcode(0xE2E, CREATE_RENDER_OBJECT_TO_CHAR_BONE); // 0E2E=10,create_render_object_to_char_bone %1d% model %2d% bone %3d% offset %4d% %5d% %6d% rotation %7d% %8d% %9d% store_to %10d%
-    //CLEO_RegisterOpcode(0xF02, CREATE_RENDER_OBJECT_TO_CHAR_BONE_FROM_SPECIAL); // 0F02=10,create_render_object_to_char_bone_from_special %1d% special_model %2d% bone %3d% offset %4d% %5d% %6d% rotation %7d% %8d% %9d% scale %10d% %11d% %12d% store_to %13d%
+    CLEO_RegisterOpcode(0xF02, CREATE_RENDER_OBJECT_TO_CHAR_BONE_FROM_SPECIAL); // 0F02=10,create_render_object_to_char_bone_from_special %1d% special_model %2d% bone %3d% offset %4d% %5d% %6d% rotation %7d% %8d% %9d% scale %10d% %11d% %12d% store_to %13d%
+    CLEO_RegisterOpcode(0xF03, CREATE_RENDER_OBJECT_TO_OBJECT); // 0F03=9,create_render_object_to_object %1d% model %2d% offset %3d% %4d% %5d% rotation %6d% %7d% %8d% store_to %9d%
+    CLEO_RegisterOpcode(0xF04, CREATE_RENDER_OBJECT_TO_OBJECT_FROM_SPECIAL); // 0F04=9,create_render_object_to_object_from_special %1d% special_model %2d% offset %3d% %4d% %5d% rotation %6d% %7d% %8d% store_to %9d%
     CLEO_RegisterOpcode(0xE2F, DELETE_RENDER_OBJECT); // 0E2F=1,delete_render_object %1d%
     CLEO_RegisterOpcode(0xE30, SET_RENDER_OBJECT_AUTO_HIDE); // 0E30=4,set_render_object_auto_hide %1d% dead %2d% weapon %3d% car %4d%
     CLEO_RegisterOpcode(0xE31, SET_RENDER_OBJECT_VISIBLE); // 0E31=2,set_render_object_visible %1d% %2d%
@@ -358,7 +374,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xD3B, GET_COLPOINT_NORMAL_VECTOR); // 0D3B=4,get_colpoint_normal_vector %1d% store_to %2d% %3d% %4d%
     CLEO_RegisterOpcode(0xD3C, GET_COLPOINT_SURFACE); // 0D3C=2,get_colpoint_surface %1d% store_to %2d%
     CLEO_RegisterOpcode(0xD3E, GET_COLPOINT_DEPTH); // 0D3E=2,get_colpoint_depth %1d% store_to %2d%
-    CLEO_RegisterOpcode(0xE6B, GET_COLPOINT_LIGHTING); // 0E6B=2,get_colpoint_lighting %1d% from_night %2d% store_to %3d%
+    CLEO_RegisterOpcode(0xE6B, GET_COLPOINT_LIGHTING); // 0E6B=3,get_colpoint_lighting %1d% from_night %2d% store_to %3d%
     CLEO_RegisterOpcode(0xEE1, GET_COLPOINT_COORDINATES); // 0EE1=4,get_colpoint_coordinates %1d% store_to %2d% %3d% %4d%
 
     // List
@@ -375,4 +391,19 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE7C, LIST_REMOVE_STRING_VALUE); // 0E7C=2,list_remove_string_value %1d% value %2d%
     CLEO_RegisterOpcode(0xE7D, LIST_REMOVE_INDEX_RANGE); // 0E7D=3,list_remove_index %1d% start %2d% end %3d%
     CLEO_RegisterOpcode(0xE7E, REVERSE_LIST); // 0E7E=1,reverse_list %1d%
+    CLEO_RegisterOpcode(0xF06, REPLACE_LIST_VALUE_BY_INDEX); // 0F06=3,replace_list_value_by_index %1d% index %2d% value %3d%
+    CLEO_RegisterOpcode(0xF07, REPLACE_LIST_STRING_VALUE_BY_INDEX); // 0F07=3,replace_list_string_value_by_index %1d% index %2d% value %3d%
+    CLEO_RegisterOpcode(0xF08, INSERT_LIST_VALUE_BY_INDEX); // 0F08=3,insert_list_value_by_index %1d% index %2d% value %3d%
+    CLEO_RegisterOpcode(0xF09, INSERT_LIST_STRING_VALUE_BY_INDEX); // 0F09=3,insert_list_string_value_by_index %1d% index %2d% value %3d%
+
+    // Bones
+    CLEO_RegisterOpcode(0xD0B, GET_CHAR_BONE_MATRIX); // 0D0B=3,get_actor %1d% bone %2d% matrix_to %3d% // IF and SET    
+    CLEO_RegisterOpcode(0xD30, GET_CHAR_BONE); // 0D30=3,%3d% = actor %1d% bone %2d% // IF and SET  
+    CLEO_RegisterOpcode(0xD31, GET_BONE_OFFSET_VECTOR); // 0D31=2,%2d% = bone %1d% offset_vector     
+    CLEO_RegisterOpcode(0xD32, GET_BONE_QUAT); // 0D32=2,%2d% = bone %1d% quat
+
+    // Special Models
+    CLEO_RegisterOpcode(0xF00, LOAD_SPECIAL_MODEL); // 0F00=3,load_special_model_dff %1s% txd %2s% store_to %3d%
+    CLEO_RegisterOpcode(0xF01, REMOVE_SPECIAL_MODEL); // 0F01=1,remove_special_model %1d%
+    CLEO_RegisterOpcode(0xF05, GET_SPECIAL_MODEL_DATA); // 0F05=4,get_special_model_data %1d% clump_to %2d% atomic_to %3d% txd_index_to %4d%
 }

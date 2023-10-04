@@ -615,3 +615,7 @@ CLEO_Fn(LERP)
     float t = cleo->ReadParam(handle)->f;
     cleo->GetPointerToScriptVar(handle)->f = a * (1 - t) + b * t;
 }
+CLEO_Fn(SET_MATRIX_LOOK_DIRECTION)
+{
+    
+}
