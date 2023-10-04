@@ -98,7 +98,7 @@ CLEO_Fn(LIST_ADD)
     else
     {
         logger->Error("LIST_ADD failed: list type unknown %d", scriptList->type);
-        int value = cleo->ReadParam(handle)->i; // fallback
+        cleo->ReadParam(handle); // FallBack
     }
 }
 CLEO_Fn(LIST_REMOVE_VALUE)
@@ -119,7 +119,7 @@ CLEO_Fn(LIST_REMOVE_VALUE)
     else
     {
         logger->Error("LIST_REMOVE_VALUE failed: list type unknown %d", scriptList->type);
-        int value = cleo->ReadParam(handle)->i; //fallback
+        cleo->ReadParam(handle); // FallBack
     }
 }
 CLEO_Fn(LIST_REMOVE_INDEX)
@@ -229,7 +229,7 @@ CLEO_Fn(GET_LIST_VALUE_BY_INDEX)
     else
     {
         logger->Error("GET_LIST_VALUE_BY_INDEX failed: list type unknown %d", scriptList->type);
-        int value = cleo->ReadParam(handle)->i; //fallback
+        cleo->ReadParam(handle); // FallBack
     }
 }
 CLEO_Fn(RESET_LIST)
@@ -283,12 +283,12 @@ CLEO_Fn(GET_LIST_STRING_VALUE_BY_INDEX)
 }
 CLEO_Fn(LIST_ADD_STRING)
 {
-    char value[128] {0};
     ScriptList *scriptList = (ScriptList*)cleo->ReadParam(handle)->i;
+    char value[128]; CLEO_ReadStringEx(handle, value, sizeof(value));
     if(scriptList->type == 2) // string
     {
         std::list<std::string> *l = (std::list<std::string>*)scriptList->listPointer;
-        l->push_back(CLEO_ReadStringEx(handle, value, sizeof(value)));
+        l->push_back(value);
     }
     else
     {
@@ -297,12 +297,12 @@ CLEO_Fn(LIST_ADD_STRING)
 }
 CLEO_Fn(LIST_REMOVE_STRING_VALUE)
 {
-    char value[128] {0};
     ScriptList *scriptList = (ScriptList*)cleo->ReadParam(handle)->i;
+    char value[128]; CLEO_ReadStringEx(handle, value, sizeof(value));
     if (scriptList->type == 2) // string
     {
         std::list<std::string> *l = (std::list<std::string>*)scriptList->listPointer;
-        l->remove(CLEO_ReadStringEx(handle, value, sizeof(value)));
+        l->remove(value);
     }
     else
     {
@@ -374,17 +374,135 @@ CLEO_Fn(REVERSE_LIST)
 }
 CLEO_Fn(REPLACE_LIST_VALUE_BY_INDEX)
 {
-    
+    ScriptList *scriptList = (ScriptList*)cleo->ReadParam(handle)->i;
+    unsigned int index = cleo->ReadParam(handle)->u;
+    if (scriptList->type == 0) // int
+    {
+        int value = cleo->ReadParam(handle)->i;
+        std::list<int> *l = (std::list<int>*)scriptList->listPointer;
+        std::list<int>::iterator it = l->begin();
+        if (index >= l->size())
+        {
+            // hello
+        }
+        else
+        {
+            std::advance(it, index);
+            it = l->erase(it);
+            l->insert(it, value);
+        }
+    }
+    else if (scriptList->type == 1) // float
+    {
+        float value = cleo->ReadParam(handle)->f;
+        std::list<float> *l = (std::list<float>*)scriptList->listPointer;
+        std::list<float>::iterator it = l->begin();
+        if (index >= l->size())
+        {
+            // hello
+        }
+        else
+        {
+            std::advance(it, index);
+            it = l->erase(it);
+            l->insert(it, value);
+        }
+    }
+    else
+    {
+        logger->Error("REPLACE_LIST_VALUE_BY_INDEX failed: list type unknown %d", scriptList->type);
+        cleo->ReadParam(handle); // FallBack
+    }
 }
 CLEO_Fn(REPLACE_LIST_STRING_VALUE_BY_INDEX)
 {
-    
+    ScriptList *scriptList = (ScriptList*)cleo->ReadParam(handle)->i;
+    unsigned int index = cleo->ReadParam(handle)->u;
+    char value[128];
+    CLEO_ReadStringEx(handle, value, sizeof(value));
+    if (scriptList->type == 2) // string
+    {
+        std::list<std::string> *l = (std::list<std::string>*)scriptList->listPointer;
+        std::list<std::string>::iterator it = l->begin();
+        if (index >= l->size())
+        {
+            // hello
+        }
+        else
+        {
+            std::advance(it, index);
+            it = l->erase(it);
+            l->insert(it, value);
+        }
+    }
+    else
+    {
+        logger->Error("REPLACE_LIST_STRING_VALUE_BY_INDEX failed: list type unknown %d", scriptList->type);
+        cleo->ReadParam(handle); // FallBack
+    }
 }
 CLEO_Fn(INSERT_LIST_VALUE_BY_INDEX)
 {
-    
+    ScriptList *scriptList = (ScriptList*)cleo->ReadParam(handle)->i;
+    unsigned int index = cleo->ReadParam(handle)->u;
+    if (scriptList->type == 0) // int
+    {
+        int value = cleo->ReadParam(handle)->i;
+        std::list<int> *l = (std::list<int>*)scriptList->listPointer;
+        std::list<int>::iterator it = l->begin();
+        if (index >= l->size())
+        {
+            // hello
+        }
+        else
+        {
+            std::advance(it, index);
+            l->insert(it, value);
+        }
+    }
+    else if (scriptList->type == 1) // float
+    {
+        float value = cleo->ReadParam(handle)->f;
+        std::list<float> *l = (std::list<float>*)scriptList->listPointer;
+        std::list<float>::iterator it = l->begin();
+        if (index >= l->size())
+        {
+            // hello
+        }
+        else
+        {
+            std::advance(it, index);
+            l->insert(it, value);
+        }
+    }
+    else
+    {
+        logger->Error("INSERT_LIST_VALUE_BY_INDEX failed: list type unknown %d", scriptList->type);
+        cleo->ReadParam(handle); // FallBack
+    }
 }
 CLEO_Fn(INSERT_LIST_STRING_VALUE_BY_INDEX)
 {
-    
+    ScriptList *scriptList = (ScriptList*)cleo->ReadParam(handle)->i;
+    unsigned int index = cleo->ReadParam(handle)->u;
+    char value[128];
+    CLEO_ReadStringEx(handle, value, sizeof(value));
+    if (scriptList->type == 2) // string
+    {
+        std::list<std::string> *l = (std::list<std::string>*)scriptList->listPointer;
+        std::list<std::string>::iterator it = l->begin();
+        if (index >= l->size())
+        {
+            // hello
+        }
+        else
+        {
+            std::advance(it, index);
+            l->insert(it, value);
+        }
+    }
+    else
+    {
+        logger->Error("INSERT_LIST_STRING_VALUE_BY_INDEX failed: list type unknown %d", scriptList->type);
+    }
 }

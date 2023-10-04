@@ -35,7 +35,7 @@ inline int GetPCOffset()
         default: return 16;
     }
 }
-inline char* CLEO_ReadStringEx(void* handle, char* buf, size_t size)
+inline char* CLEO_ReadStringEx(void* handle, char* buf = NULL, size_t size = 0)
 {
     uint8_t& byte = **(uint8_t**)((int)handle + GetPCOffset());
     if(byte <= 8) return NULL; // Not a string
