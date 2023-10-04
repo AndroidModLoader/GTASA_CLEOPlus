@@ -16,7 +16,8 @@ cleo_ifs_t* cleo;
 // - 4 = dont take money if they are negative
 
 // Hooks
-bool g_bForceInterrupt = false;
+bool g_bForceInterrupt = false, pausedLastFrame = true;
+
 DECL_HOOK(int8_t, ProcessOneCommand, CRunningScript* self)
 {
     int8_t retCode = ProcessOneCommand(self);
@@ -26,6 +27,34 @@ DECL_HOOK(int8_t, ProcessOneCommand, CRunningScript* self)
         return 1;
     }
     return retCode;
+}
+DECL_HOOKv(OnGameProcess)
+{
+    if(!*m_UserPause && !*m_CodePause) pausedLastFrame = false;
+    for (auto scriptEvent : scriptEvents[ScriptEventList::BeforeGameProcess]) scriptEvent->RunScriptEvent();
+    OnGameProcess();
+    for (auto scriptEvent : scriptEvents[ScriptEventList::AfterGameProcess]) scriptEvent->RunScriptEvent();
+}
+DECL_HOOKv(DoGameSpecificStuffBeforeSave)
+{
+    g_nCurrentSaveSlot = gMobileMenu->m_nGenericGameStorageSlot;
+    for (auto scriptEvent : scriptEvents[ScriptEventList::SaveConfirmation]) scriptEvent->RunScriptEvent(g_nCurrentSaveSlot + 1);
+    DoGameSpecificStuffBeforeSave();
+}
+DECL_HOOKv(MobileMenuRender, void* self)
+{
+    MobileMenuRender(self);
+    for (auto scriptEvent : scriptEvents[ScriptEventList::OnMenu]) scriptEvent->RunScriptEvent(!pausedLastFrame);
+    if (!pausedLastFrame) pausedLastFrame = true;
+}
+DECL_HOOKv(ComputePedDamageResponse, void* self, CPed* ped, uintptr_t response, bool bSpeak)
+{
+    if(!*(bool*)(response + 10))
+    {
+        int pedref = (*ms_pPedPool)->GetRef(ped);
+        for (auto scriptEvent : scriptEvents[ScriptEventList::CharDamage]) scriptEvent->RunScriptEvent(pedref);
+    }
+    ComputePedDamageResponse(self, ped, response, bSpeak);
 }
 
 // int main!
@@ -38,14 +67,18 @@ extern "C" void OnModLoad()
 
     ResolveExternals();
 
-    //Patches?
+    // Hooks
     HOOK(ProcessOneCommand, aml->GetSym(hGTASA, "_ZN14CRunningScript17ProcessOneCommandEv"));
+    HOOKPLT(OnGameProcess, pGTASA + 0x66FE58);
+    HOOKPLT(DoGameSpecificStuffBeforeSave, pGTASA + 0x66EC5C);
+    HOOKPLT(MobileMenuRender, pGTASA + 0x674254);
+    HOOKPLT(ComputePedDamageResponse, pGTASA + 0x66F0EC);
 
-    //NoSave
+    // NoSave
     CLEO_RegisterOpcode(0xE01, CREATE_OBJECT_NO_SAVE); // 0E01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
     CLEO_RegisterOpcode(0xE02, SET_CAR_GENERATOR_NO_SAVE); // 0E02=1,set_car_generator_no_save %1d%
 
-    //Environment
+    // Environment
     CLEO_RegisterOpcode(0xD59, GET_CURRENT_WEATHER);
     CLEO_RegisterOpcode(0xE04, GET_NEXT_WEATHER); // 0E04=1,get_next_weather_to %1d%
     CLEO_RegisterOpcode(0xE05, SET_NEXT_WEATHER); // 0E05=1,set_next_weather_to %1d%
@@ -57,7 +90,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE6D, GET_UNDERWATERNESS); // 0E6D=1,get_underwaterness %1d%
     CLEO_RegisterOpcode(0xEB0, GET_FORCED_WEATHER); // 0EB0=1,get_forced_weather %1d%
 
-    //ScriptEntities
+    // ScriptEntities
     CLEO_RegisterOpcode(0xE08, IS_CAR_SCRIPT_CONTROLLED); // 0E08=1,is_car_script_controlled %1d%
     CLEO_RegisterOpcode(0xE09, MARK_CAR_AS_NEEDED); // 0E09=1,mark_car_as_needed %1d%
     CLEO_RegisterOpcode(0xE0A, IS_CHAR_SCRIPT_CONTROLLED); // 0E0A=1,is_char_script_controlled %1d%
@@ -65,7 +98,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE0C, IS_OBJECT_SCRIPT_CONTROLLED); // 0E0C=1,is_object_script_controlled %1d%
     CLEO_RegisterOpcode(0xE0D, MARK_OBJECT_AS_NEEDED); // 0E0D=1,mark_object_as_needed %1d%
 
-    //Screen
+    // Screen
     CLEO_RegisterOpcode(0xE0E, GET_CURRENT_RESOLUTION); // 0E0E=2,get_current_resolution_to %1d% %2d%
     CLEO_RegisterOpcode(0xE0F, GET_FIXED_XY_ASPECT_RATIO); // 0E0F=4,get_fixed_xy_aspect_ratio %1d% %2d% to %3d% %4d%
     CLEO_RegisterOpcode(0xE3F, CONVERT_3D_TO_SCREEN_2D); // 0E3F=9,convert_3d_to_screen_2d %1d% %2d% %3d% checkNearClip %4d% checkFarClip %5d% store_2d_to %6d% %7d% size_to %8d% %9d%
@@ -73,7 +106,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEB9, IS_HUD_VISIBLE); // 0EB9=0,is_hud_visible
     CLEO_RegisterOpcode(0xEC7, GET_FADE_ALPHA); // 0EC7=1,get_fade_alpha %1d%
 
-    //Input
+    // Input
     //CLEO_RegisterOpcode(0xE10, IS_MOUSE_WHEEL_UP); // 0E10=0,is_mouse_wheel_up
     //CLEO_RegisterOpcode(0xE11, IS_MOUSE_WHEEL_DOWN); // 0E11=0,is_mouse_wheel_down 
     //CLEO_RegisterOpcode(0xE23, GET_MOUSE_SENSIBILITY); // 0E23=1,get_mouse_sensibility_to %1d%
@@ -87,7 +120,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xE6E, IS_SELECT_MENU_JUST_PRESSED); // 0E6E=0,is_select_menu_just_pressed
     CLEO_RegisterOpcode(0xF13, GET_TIME_NOT_TOUCHING_PAD); // 0F13=2,get_time_not_touching_pad %1d% store_to %2d%
 
-    //Events
+    // Events
     CLEO_RegisterOpcode(0xED0, RETURN_SCRIPT_EVENT); // 0ED0=0,return_script_event
     CLEO_RegisterOpcode(0xED1, SET_SCRIPT_EVENT_SAVE_CONFIRMATION); // 0ED1=3,set_script_event_save_confirmation %1d% label %2p% var_slot %3d%
     CLEO_RegisterOpcode(0xED2, SET_SCRIPT_EVENT_CHAR_DELETE); // 0ED2=3,set_script_event_char_delete %1d% label %2p% var_char %3d%
@@ -107,11 +140,11 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xF0B, SET_SCRIPT_EVENT_BEFORE_GAME_PROCESS); // 0F0B=2,set_script_event_before_game_process %1d% label %2p%
     CLEO_RegisterOpcode(0xF0C, SET_SCRIPT_EVENT_AFTER_GAME_PROCESS); // 0F0C=2,set_script_event_after_game_process %1d% label %2p%
 
-    //Types
+    // Types
     CLEO_RegisterOpcode(0xE12, GET_VEHICLE_SUBCLASS); // 0E12=2,get_vehicle %1d% subclass_to %2d%
     CLEO_RegisterOpcode(0xE13, GET_ENTITY_TYPE); // 0E13=2,get_entity %1d% type_to %2d%
 
-    //Extended
+    // Extended
     //CHAR
     CLEO_RegisterOpcode(0xE14, INIT_EXTENDED_CHAR_VARS); // 0E14=3,init_extended_char_vars %1d% id %2d% new_vars %3d%
     CLEO_RegisterOpcode(0xE15, SET_EXTENDED_CHAR_VAR); // 0E15=4,set_extended_char_var %1d% id %2d% var %3d% value %4d%

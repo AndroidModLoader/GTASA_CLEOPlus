@@ -30,6 +30,7 @@ CDirectory **ms_pExtraObjectsDir;
 CStreamingInfo *ms_aInfoForModel;
 script_effect_struct *ScriptEffectSystemArray;
 FxManager_c *g_fxMan;
+bool *m_UserPause ,*m_CodePause;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -135,6 +136,8 @@ void ResolveExternals()
     SET_TO(ms_aInfoForModel, aml->GetSym(hGTASA, "_ZN10CStreaming16ms_aInfoForModelE"));
     SET_TO(ScriptEffectSystemArray, aml->GetSym(hGTASA, "_ZN11CTheScripts23ScriptEffectSystemArrayE"));
     SET_TO(g_fxMan, aml->GetSym(hGTASA, "g_fxMan"));
+    SET_TO(m_UserPause, aml->GetSym(hGTASA, "_ZN6CTimer11m_UserPauseE"));
+    SET_TO(m_CodePause, aml->GetSym(hGTASA, "_ZN6CTimer11m_CodePauseE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));

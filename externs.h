@@ -99,6 +99,21 @@ enum ScriptEventList
     SaveConfirmation, CharDelete, CharCreate, CarDelete, CarCreate, ObjectDelete, ObjectCreate, OnMenu, CharProcess, CarProcess, ObjectProcess,
     BuildingProcess, CharDamage, CarWeaponDamage, BulletImpact, BeforeGameProcess, AfterGameProcess, TOTAL_SCRIPT_EVENTS
 };
+class ScriptEvent
+{
+public:
+    CRunningScript *script;
+    int eventScriptIP;
+    unsigned int varPointer[4];
+
+public:
+    void RunScriptEvent(int arg1 = 0, int arg2 = 0, int arg3 = 0, int arg4 = 0);
+    static void AddEvent(void* handle, std::vector<ScriptEvent*> &scriptEventList, unsigned int args = 1);
+    static void ClearForScriptLabelAndVar(std::vector<ScriptEvent*> &scriptEvents, CRunningScript* script, int label, unsigned int varPointer[4]);
+    static void ClearAllForScript(CRunningScript *script);
+    static void ClearAllScriptEvents();
+};
+extern std::vector<ScriptEvent*> scriptEvents[TOTAL_SCRIPT_EVENTS];
 
 // Game vars
 extern CCamera* TheCamera;
@@ -126,6 +141,7 @@ extern CDirectory **ms_pExtraObjectsDir;
 extern CStreamingInfo *ms_aInfoForModel;
 extern script_effect_struct *ScriptEffectSystemArray;
 extern FxManager_c *g_fxMan;
+extern bool *m_UserPause ,*m_CodePause;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
