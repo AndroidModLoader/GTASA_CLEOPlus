@@ -31,6 +31,7 @@ CStreamingInfo *ms_aInfoForModel;
 script_effect_struct *ScriptEffectSystemArray;
 FxManager_c *g_fxMan;
 bool *m_UserPause ,*m_CodePause;
+int *ClumpOffset;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -92,6 +93,9 @@ int (*GetActualScriptThingIndex)(int, uint8_t);
 void (*AddParticle)(FxSystem_c *, RwV3d *,RwV3d *,float,FxPrtMult_c *,float,float,float,uint8_t);
 FxSystemBP_c* (*FindFxSystemBP)(FxManager_c *, const char *);
 void (*ProcessScript)(CRunningScript*);
+void (*UpdateRpHAnim)(CEntity*);
+RpHAnimHierarchy* (*GetAnimHierarchyFromSkinClump)(RpClump*);
+int (*RpHAnimIDGetIndex)(RpHAnimHierarchy*, int);
 
 // int main
 void ResolveExternals()
@@ -138,6 +142,7 @@ void ResolveExternals()
     SET_TO(g_fxMan, aml->GetSym(hGTASA, "g_fxMan"));
     SET_TO(m_UserPause, aml->GetSym(hGTASA, "_ZN6CTimer11m_UserPauseE"));
     SET_TO(m_CodePause, aml->GetSym(hGTASA, "_ZN6CTimer11m_CodePauseE"));
+    SET_TO(ClumpOffset, aml->GetSym(hGTASA, "ClumpOffset"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -199,4 +204,7 @@ void ResolveExternals()
     SET_TO(AddParticle, aml->GetSym(hGTASA, "_ZN10FxSystem_c11AddParticleEP5RwV3dS1_fP11FxPrtMult_cfffh"));
     SET_TO(FindFxSystemBP, aml->GetSym(hGTASA, "_ZN11FxManager_c14FindFxSystemBPEPc"));
     SET_TO(ProcessScript, aml->GetSym(hGTASA, "_ZN14CRunningScript7ProcessEv"));
+    SET_TO(UpdateRpHAnim, aml->GetSym(hGTASA, "_ZN7CEntity13UpdateRpHAnimEv"));
+    SET_TO(GetAnimHierarchyFromSkinClump, aml->GetSym(hGTASA, "_Z29GetAnimHierarchyFromSkinClumpP7RpClump"));
+    SET_TO(RpHAnimIDGetIndex, aml->GetSym(hGTASA, "_Z17RpHAnimIDGetIndexP16RpHAnimHierarchyi"));
 }

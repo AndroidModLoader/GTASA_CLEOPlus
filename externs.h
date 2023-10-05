@@ -12,6 +12,7 @@
 
 #define CLEO_RegisterOpcode(x, h) cleo->RegisterOpcode(x, h); cleo->RegisterOpcodeFunction(#h, h)
 #define CLEO_Fn(h) void h (void *handle, uint32_t *ip, uint16_t opcode, const char *name)
+#define RpClumpGetAnimBlendClumpData(clump) (*(CAnimBlendClumpData**)(((unsigned int)(clump) + ClumpOffset)))
 
 extern uintptr_t pGTASA;
 extern void* hGTASA;
@@ -142,6 +143,7 @@ extern CStreamingInfo *ms_aInfoForModel;
 extern script_effect_struct *ScriptEffectSystemArray;
 extern FxManager_c *g_fxMan;
 extern bool *m_UserPause ,*m_CodePause;
+extern int *ClumpOffset;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -203,6 +205,9 @@ extern int (*GetActualScriptThingIndex)(int, uint8_t);
 extern void (*AddParticle)(FxSystem_c *, RwV3d *,RwV3d *,float,FxPrtMult_c *,float,float,float,uint8_t);
 extern FxSystemBP_c* (*FindFxSystemBP)(FxManager_c *, const char *);
 extern void (*ProcessScript)(CRunningScript*);
+extern void (*UpdateRpHAnim)(CEntity*);
+extern RpHAnimHierarchy* (*GetAnimHierarchyFromSkinClump)(RpClump*);
+extern int (*RpHAnimIDGetIndex)(RpHAnimHierarchy*, int);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);
