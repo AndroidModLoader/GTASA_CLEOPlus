@@ -208,6 +208,7 @@ extern void (*ProcessScript)(CRunningScript*);
 extern void (*UpdateRpHAnim)(CEntity*);
 extern RpHAnimHierarchy* (*GetAnimHierarchyFromSkinClump)(RpClump*);
 extern int (*RpHAnimIDGetIndex)(RpHAnimHierarchy*, int);
+extern void (*Find3rdPersonCamTargetVector)(CCamera*, float, CVector, CVector&, CVector&);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);
@@ -528,3 +529,4 @@ void Misc_Patch();
 void Events_Patch();
 
 extern bool g_bForceInterrupt;
+extern bool g_bDisableCamControl;

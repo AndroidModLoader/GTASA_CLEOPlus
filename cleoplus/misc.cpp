@@ -1087,15 +1087,37 @@ CLEO_Fn(GET_LOADED_LIBRARY)
 }
 CLEO_Fn(RETURN_TIMES)
 {
-
+    int times = cleo->ReadParam(handle)->i;
+    CRunningScript* script = (CRunningScript*)handle;
+    int curSp = (int)script->StackDepth - times;
+    if(curSp < 0) curSp = 0;
+    script->StackDepth = curSp;
+    script->PCPointer = script->PCStack[curSp];
 }
 CLEO_Fn(GET_THIRD_PERSON_CAMERA_TARGET)
 {
-    
+    CVector sourcePos;
+	CVector cameraPos = { 0.0f, 0.0f, 0.0f };
+	CVector pointPos = { 0.0f, 0.0f, 0.0f };
+    float range = cleo->ReadParam(handle)->f;
+	float sourcePos.x = cleo->ReadParam(handle)->f;
+	float sourcePos.y = cleo->ReadParam(handle)->f;
+	float sourcePos.z = cleo->ReadParam(handle)->f;
+
+    Find3rdPersonCamTargetVector(TheCamera, range, sourcePos, cameraPos, pointPos);
+
+    cleo->GetPointerToScriptVar(handle)->f = cameraPos.x;
+    cleo->GetPointerToScriptVar(handle)->f = cameraPos.y;
+    cleo->GetPointerToScriptVar(handle)->f = cameraPos.z;
+
+    cleo->GetPointerToScriptVar(handle)->f = pointPos.x;
+    cleo->GetPointerToScriptVar(handle)->f = pointPos.y;
+    cleo->GetPointerToScriptVar(handle)->f = pointPos.z;
 }
 CLEO_Fn(GET_DISTANCE_MULTIPLIER)
 {
-    
+    cleo->GetPointerToScriptVar(handle)->f = TheCamera->m_fLODDistMultiplier;
+    cleo->GetPointerToScriptVar(handle)->f = TheCamera->m_fGenerationDistMultiplier;
 }
 CLEO_Fn(GET_ACTIVE_CAMERA_ROTATION)
 {
@@ -1103,23 +1125,29 @@ CLEO_Fn(GET_ACTIVE_CAMERA_ROTATION)
 }
 CLEO_Fn(GET_CLOSEST_WATER_DISTANCE)
 {
-    
+    cleo->GetPointerToScriptVar(handle)->f = TheCamera->DistanceToWater;
+    cleo->GetPointerToScriptVar(handle)->f = TheCamera->HeightOfNearestWater;
 }
 CLEO_Fn(GET_CAMERA_STRUCT)
 {
-    
+    cleo->GetPointerToScriptVar(handle)->i = (int)TheCamera;
+    cleo->GetPointerToScriptVar(handle)->i = (int)&TheCamera->m_apCams[TheCamera->m_nCurrentActiveCam];
 }
 CLEO_Fn(GET_CAMERA_ROTATION_INPUT_VALUES)
 {
-    
+    CCam* cam = &TheCamera->m_apCams[TheCamera->m_nCurrentActiveCam];
+    cleo->GetPointerToScriptVar(handle)->f = cam->Beta * -57.295776f;
+    cleo->GetPointerToScriptVar(handle)->f = cam->Alpha * 57.295776f;
 }
 CLEO_Fn(SET_CAMERA_ROTATION_INPUT_VALUES)
 {
-    
+    CCam* cam = &TheCamera->m_apCams[TheCamera->m_nCurrentActiveCam];
+    cam->Beta = cleo->ReadParam(handle)->f * -0.01745329252f;
+    cam->Alpha = cleo->ReadParam(handle)->f * 0.01745329252f;
 }
 CLEO_Fn(SET_ON_MISSION)
 {
-    
+    *(ScriptSpace + *OnAMissionFlag) = cleo->ReadParam(handle)->i;
 }
 CLEO_Fn(GET_MODEL_NAME_POINTER)
 {
@@ -1183,11 +1211,16 @@ CLEO_Fn(GET_LOCAL_TIME)
 }
 CLEO_Fn(SET_SCRIPT_VAR)
 {
-    
+    CRunningScript* script = (CRunningScript*)cleo->ReadParam(handle)->i;
+    int varnum = cleo->ReadParam(handle)->i;
+    int val = cleo->ReadParam(handle)->i; // not only integer, any value
+    script->Locals[varnum] = val;
 }
 CLEO_Fn(GET_SCRIPT_VAR)
 {
-    
+    CRunningScript* script = (CRunningScript*)cleo->ReadParam(handle)->i;
+    int varnum = cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = script->Locals[varnum]; // not only integer, any value
 }
 CLEO_Fn(SET_CAR_DOOR_WINDOW_STATE)
 {

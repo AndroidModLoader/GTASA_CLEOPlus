@@ -96,6 +96,7 @@ void (*ProcessScript)(CRunningScript*);
 void (*UpdateRpHAnim)(CEntity*);
 RpHAnimHierarchy* (*GetAnimHierarchyFromSkinClump)(RpClump*);
 int (*RpHAnimIDGetIndex)(RpHAnimHierarchy*, int);
+void (*Find3rdPersonCamTargetVector)(CCamera*, float, CVector, CVector&, CVector&);
 
 // int main
 void ResolveExternals()
@@ -207,4 +208,5 @@ void ResolveExternals()
     SET_TO(UpdateRpHAnim, aml->GetSym(hGTASA, "_ZN7CEntity13UpdateRpHAnimEv"));
     SET_TO(GetAnimHierarchyFromSkinClump, aml->GetSym(hGTASA, "_Z29GetAnimHierarchyFromSkinClumpP7RpClump"));
     SET_TO(RpHAnimIDGetIndex, aml->GetSym(hGTASA, "_Z17RpHAnimIDGetIndexP16RpHAnimHierarchyi"));
+    SET_TO(Find3rdPersonCamTargetVector, aml->GetSym(hGTASA, "_ZN7CCamera28Find3rdPersonCamTargetVectorEf7CVectorRS0_S1_"));
 }
