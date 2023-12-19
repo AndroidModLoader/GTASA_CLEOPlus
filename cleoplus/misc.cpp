@@ -1298,5 +1298,5 @@ DECL_HOOKv(MIAccel_LoadCdDir, void* gModelInfoAccelerator, CBaseModelInfo **mi, 
 void Misc_Patch()
 {
     HOOKPLT(InitialiseWhenRestarting, pGTASA + 0x672014);
-    HOOKBLX(MIAccel_LoadCdDir, pGTASA + 0x46C11C);
+    HOOKPLT(MIAccel_LoadCdDir, pGTASA + 0x6730D0);
 }
