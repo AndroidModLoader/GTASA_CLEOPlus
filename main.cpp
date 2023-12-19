@@ -107,11 +107,11 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEC7, GET_FADE_ALPHA); // 0EC7=1,get_fade_alpha %1d%
 
     // Input
-    //CLEO_RegisterOpcode(0xE10, IS_MOUSE_WHEEL_UP); // 0E10=0,is_mouse_wheel_up
-    //CLEO_RegisterOpcode(0xE11, IS_MOUSE_WHEEL_DOWN); // 0E11=0,is_mouse_wheel_down 
-    //CLEO_RegisterOpcode(0xE23, GET_MOUSE_SENSIBILITY); // 0E23=1,get_mouse_sensibility_to %1d%
-    //CLEO_RegisterOpcode(0xE3D, IS_KEY_JUST_PRESSED); // 0E3D=1,is_key_just_pressed %1d%
-    //CLEO_RegisterOpcode(0xE3E, IS_BUTTON_JUST_PRESSED); // 0E3E=2,is_button_just_pressed %1d% button %2d%
+    CLEO_RegisterOpcode(0xE10, IS_MOUSE_WHEEL_UP); // 0E10=0,is_mouse_wheel_up
+    CLEO_RegisterOpcode(0xE11, IS_MOUSE_WHEEL_DOWN); // 0E11=0,is_mouse_wheel_down 
+    CLEO_RegisterOpcode(0xE23, GET_MOUSE_SENSIBILITY); // 0E23=1,get_mouse_sensibility_to %1d%
+    CLEO_RegisterOpcode(0xE3D, IS_KEY_JUST_PRESSED); // 0E3D=1,is_key_just_pressed %1d%
+    CLEO_RegisterOpcode(0xE3E, IS_BUTTON_JUST_PRESSED); // 0E3E=2,is_button_just_pressed %1d% button %2d%
     CLEO_RegisterOpcode(0xE60, SET_CAMERA_CONTROL); // 0E60=1,set_camera_control %1d%
     CLEO_RegisterOpcode(0xE67, IS_AIM_BUTTON_PRESSED); // 0E67=1,is_aim_button_pressed %1d%
     CLEO_RegisterOpcode(0xE68, SET_PLAYER_CONTROL_PAD); // 0E68=2,set_player_control_pad %1d% %2d% 
@@ -350,10 +350,10 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0xEE3, WRITE_STRUCT_OFFSET_MULTI); // 0EE3=-1,write_struct_offset_multi %1d% offset %2d% count %3d% size %4d%
     
     // Radar blips
-    CLEO_RegisterOpcode(0xE2A, ADD_CLEO_BLIP); // 0E2A=9,add_cleo_blip %1d% position %2d% %3d% is_short %4d% RGBA %5d% %6d% %7d% %8d% store_to %9d%
-    CLEO_RegisterOpcode(0xE2B, REMOVE_CLEO_BLIP); // 0E2B=1,remove_cleo_blip %1d%
+    //CLEO_RegisterOpcode(0xE2A, ADD_CLEO_BLIP); // 0E2A=9,add_cleo_blip %1d% position %2d% %3d% is_short %4d% RGBA %5d% %6d% %7d% %8d% store_to %9d%
+    //CLEO_RegisterOpcode(0xE2B, REMOVE_CLEO_BLIP); // 0E2B=1,remove_cleo_blip %1d%
     //CLEO_RegisterOpcode(0x, CLEO_BLIP_FOLLOW_ENTITY); // 0000=2,cleo_blip %1d% follow_entity %2d% // custom opcode, no opcode yet
-    RadarBlip_Patch();
+    //RadarBlip_Patch();
 
     // Render object
     /*CLEO_RegisterOpcode(0xE2E, CREATE_RENDER_OBJECT_TO_CHAR_BONE); // 0E2E=10,create_render_object_to_char_bone %1d% model %2d% bone %3d% offset %4d% %5d% %6d% rotation %7d% %8d% %9d% store_to %10d%

@@ -1,35 +1,5 @@
 #include "externs.h"
 
-
-class ExtendedVars
-{
-public:
-    uint32_t id;
-    void *data;
-    ExtendedVars(ExtendedVars *) : id(0), data(NULL) {}
-    ExtendedVars(uint32_t newId, uint32_t totalVars)
-    {
-        id = newId;
-        data = malloc(totalVars * 4);
-        memset(data, 0, (totalVars * 4));
-    }
-};
-class PedExtVars
-{
-public:
-    std::list<ExtendedVars*> extendedVarsList;
-};
-class VehicleExtVars
-{
-public:
-    std::list<ExtendedVars*> extendedVarsList;
-};
-class ObjectExtVars
-{
-public:
-    std::list<ExtendedVars*> extendedVarsList;
-};
-
 CPool<PedExtVars> *ms_pPedExtVarsPool = NULL;
 CPool<VehicleExtVars> *ms_pVehicleExtVarsPool = NULL;
 CPool<ObjectExtVars> *ms_pObjectExtVarsPool = NULL;

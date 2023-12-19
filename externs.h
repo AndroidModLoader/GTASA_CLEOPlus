@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#define AML32
 #include <mod/amlmod.h>
 #include <mod/logger.h>
 #include "GTASA_STRUCTS.h"
@@ -116,6 +117,75 @@ public:
 };
 extern std::vector<ScriptEvent*> scriptEvents[TOTAL_SCRIPT_EVENTS];
 
+
+// Render Objects
+class RenderObject;
+
+
+// Extended Vars
+class ExtendedVars
+{
+public:
+    uint32_t id;
+    void *data;
+    ExtendedVars(ExtendedVars *) : id(0), data(NULL) {}
+    ExtendedVars(uint32_t newId, uint32_t totalVars)
+    {
+        id = newId;
+        data = malloc(totalVars * 4);
+        memset(data, 0, (totalVars * 4));
+    }
+};
+class PedExtVars
+{
+public:
+    int activeTasks[32];
+    CEntity *killTargetPed;
+    CEntity *lastDamageEntity;
+    int lastDamageWeapon;
+    int lastDamagePart;
+    float lastDamageIntensity;
+    bool ignoreDamageAnims;
+
+    union
+    {
+        unsigned int aiFlagsIntValue;
+        struct
+        {
+            unsigned char bKillingSomething : 1;
+            unsigned char bUsingGun : 1;
+            unsigned char bFighting : 1;
+            unsigned char bFallenOnGround : 1;
+            unsigned char bEnteringAnyCar : 1;
+            unsigned char bExitingAnyCar : 1;
+            unsigned char bPlayingAnyPrimaryScriptAnimation : 1;
+            unsigned char bPlayingAnySecondaryScriptAnimation : 1;
+            unsigned char bRootTaskIsntImportant : 1;
+        } aiFlags;
+    };
+
+    std::vector<RenderObject*> renderObjects;
+    std::list<ExtendedVars*> extendedVarsList;
+};
+class VehicleExtVars
+{
+public:
+    std::list<ExtendedVars*> extendedVarsList;
+};
+class ObjectExtVars
+{
+public:
+    std::list<ExtendedVars*> extendedVarsList;
+};
+extern CPool<PedExtVars> *ms_pPedExtVarsPool;
+extern CPool<VehicleExtVars> *ms_pVehicleExtVarsPool;
+extern CPool<ObjectExtVars> *ms_pObjectExtVarsPool;
+
+PedExtVars* GetExtData(CPed* ped);
+VehicleExtVars* GetExtData(CVehicle* ped);
+ObjectExtVars* GetExtData(CObject* ped);
+
+
 // Game vars
 extern CCamera* TheCamera;
 extern tUsedObject* UsedObjectArray;
@@ -144,6 +214,8 @@ extern script_effect_struct *ScriptEffectSystemArray;
 extern FxManager_c *g_fxMan;
 extern bool *m_UserPause ,*m_CodePause;
 extern int *ClumpOffset;
+extern CMouseControllerState *NewMouseControllerState;
+extern float *m_fMouseAccelHorzntl;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -209,6 +281,9 @@ extern void (*UpdateRpHAnim)(CEntity*);
 extern RpHAnimHierarchy* (*GetAnimHierarchyFromSkinClump)(RpClump*);
 extern int (*RpHAnimIDGetIndex)(RpHAnimHierarchy*, int);
 extern void (*Find3rdPersonCamTargetVector)(CCamera*, float, CVector, CVector&, CVector&);
+extern CPad* (*GetPad)(int);
+extern bool (*PadGetTarget)(CPad*, bool);
+extern void (*CreateMatFromVec)(void* unused, CMatrix*, CVector*, CVector*);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);
@@ -530,3 +605,5 @@ void Events_Patch();
 
 extern bool g_bForceInterrupt;
 extern bool g_bDisableCamControl;
+extern bool g_bDisablePadControl[3];
+extern bool g_bDisablePadControlMovement[3];

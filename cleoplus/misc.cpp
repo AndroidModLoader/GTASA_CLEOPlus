@@ -1,6 +1,8 @@
 #include "externs.h"
 
 int timesGameRestarted = 0;
+const int maxDffFiles = 50000;
+char modelNames[maxDffFiles][32];
 
 inline void TransformFromObjectSpace(CEntity* self, CVector& outPos, const CVector& offset)
 {
@@ -926,7 +928,14 @@ CLEO_Fn(GET_TIME_CAR_IS_DEAD)
 }
 CLEO_Fn(SET_CHAR_IGNORE_DAMAGE_ANIMS)
 {
-    
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    PedExtVars* data = GetExtData(ped);
+
+    bool set = (cleo->ReadParam(handle)->i == 1);
+    if(data)
+    {
+        data->ignoreDamageAnims = set;
+    }
 }
 CLEO_Fn(LOCATE_CHAR_DISTANCE_TO_CHAR)
 {
@@ -1098,11 +1107,11 @@ CLEO_Fn(GET_THIRD_PERSON_CAMERA_TARGET)
 {
     CVector sourcePos;
 	CVector cameraPos = { 0.0f, 0.0f, 0.0f };
-	CVector pointPos = { 0.0f, 0.0f, 0.0f };
+	CVector pointPos =  { 0.0f, 0.0f, 0.0f };
     float range = cleo->ReadParam(handle)->f;
-	float sourcePos.x = cleo->ReadParam(handle)->f;
-	float sourcePos.y = cleo->ReadParam(handle)->f;
-	float sourcePos.z = cleo->ReadParam(handle)->f;
+	sourcePos.x = cleo->ReadParam(handle)->f;
+	sourcePos.y = cleo->ReadParam(handle)->f;
+	sourcePos.z = cleo->ReadParam(handle)->f;
 
     Find3rdPersonCamTargetVector(TheCamera, range, sourcePos, cameraPos, pointPos);
 
@@ -1121,7 +1130,33 @@ CLEO_Fn(GET_DISTANCE_MULTIPLIER)
 }
 CLEO_Fn(GET_ACTIVE_CAMERA_ROTATION)
 {
-    
+    CMatrix* matrix = TheCamera->GetMatrix();
+    if(!matrix)
+    {
+        cleo->GetPointerToScriptVar(handle)->f = 0.0f;
+        cleo->GetPointerToScriptVar(handle)->f = 0.0f;
+        cleo->GetPointerToScriptVar(handle)->f = 0.0f;
+        return;
+    }
+
+    float x = matrix->right.x;
+    float y = matrix->right.y;
+    float z = matrix->right.z;
+    float angleX = GetATanOfXY(z, sqrtf(x * x + y * y)) * -57.295776f - 270.0f;
+    float angleZ = GetATanOfXY(x, y) * -57.295776f - 180.0f;
+
+    x = matrix->up.x;
+    y = matrix->up.y;
+    z = matrix->up.z;
+    float angleY = GetATanOfXY(z, sqrtf(x * x + y * y)) * -57.295776f - 270.0f;
+
+    while (angleX < 0.0f) angleX += 360.0f;
+    while (angleY < 0.0f) angleY += 360.0f;
+    while (angleZ < 0.0f) angleZ += 360.0f;
+
+    cleo->GetPointerToScriptVar(handle)->f = angleX;
+    cleo->GetPointerToScriptVar(handle)->f = angleY;
+    cleo->GetPointerToScriptVar(handle)->f = angleZ;
 }
 CLEO_Fn(GET_CLOSEST_WATER_DISTANCE)
 {
@@ -1151,7 +1186,15 @@ CLEO_Fn(SET_ON_MISSION)
 }
 CLEO_Fn(GET_MODEL_NAME_POINTER)
 {
-    
+    int id = cleo->ReadParam(handle)->i;
+    if(id >= 0 && id < maxDffFiles)
+    {
+        cleo->GetPointerToScriptVar(handle)->i = (int)&modelNames[id][0];
+    }
+    else
+    {
+        cleo->GetPointerToScriptVar(handle)->i = 0;
+    }
 }
 CLEO_Fn(SET_CAR_MODEL_ALPHA)
 {
@@ -1243,7 +1286,17 @@ DECL_HOOKv(InitialiseWhenRestarting)
 
     ++timesGameRestarted;
 }
+DECL_HOOKv(MIAccel_LoadCdDir, void* gModelInfoAccelerator, CBaseModelInfo **mi, int* id, char* dffname)
+{
+    MIAccel_LoadCdDir(gModelInfoAccelerator, mi, id, dffname);
+    if(mi && *mi)
+    {
+        int len = strnlen(dffname, 32);
+        if(len > 0) strncpy(modelNames[*id], dffname, 32);
+    }
+}
 void Misc_Patch()
 {
     HOOKPLT(InitialiseWhenRestarting, pGTASA + 0x672014);
+    HOOKBLX(MIAccel_LoadCdDir, pGTASA + 0x46C11C);
 }

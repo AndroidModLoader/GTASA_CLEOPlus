@@ -86,38 +86,6 @@ CLEO_Fn(ROTATE_MATRIX_ON_AXIS)
     combineOp = cleo->ReadParam(handle)->i;
     RwMatrixRotate(matrix, &axis, angle, (RwOpCombineType)combineOp);
 }
-
-inline float GetATanOfXY(float x, float y)
-{
-    if (x == 0.0f && y == 0.0f) return 0.0f;
-    float xabs = fabsf(x), yabs = fabsf(y);
-    if (xabs < yabs)
-    {
-        if (y > 0.0f)
-        {
-            if (x > 0.0f) return 0.5f * PI - atan2(x / y, 1.0f);
-            else return 0.5f * PI + atan2(-x / y, 1.0f);
-        }
-        else
-        {
-            if (x > 0.0f) return 1.5f * PI + atan2(x / -y, 1.0f);
-            else return 1.5f * PI - atan2(-x / -y, 1.0f);
-        }
-    }
-    else
-    {
-        if (y > 0.0f)
-        {
-            if (x > 0.0f) return atan2(y / x, 1.0f);
-            else return PI - atan2(y / -x, 1.0f);
-        }
-        else
-        {
-            if (x > 0.0f) return 2.0f * PI - atan2(-y / x, 1.0f);
-            else return PI + atan2(-y / -x, 1.0f);
-        }
-    }
-}
 CLEO_Fn(GET_MATRIX_X_ANGLE)
 {
     RwMatrix *matrix = (RwMatrix *)cleo->ReadParam(handle)->i;
@@ -145,6 +113,7 @@ CLEO_Fn(GET_MATRIX_Z_ANGLE)
     while (angle < 0.0) angle += 360.0;
     cleo->GetPointerToScriptVar(handle)->f = angle;
 }
+#pragma clang diagnostic ignored "-Wunsequenced" // warning: unsequenced modification and access to 'k'
 inline float EaseBounceOut(float k)
 {
     if (k < (1.0f / 2.75f)) return 7.5625f * k * k;
@@ -617,5 +586,15 @@ CLEO_Fn(LERP)
 }
 CLEO_Fn(SET_MATRIX_LOOK_DIRECTION)
 {
-    
+    CMatrix *matrix = (CMatrix *)cleo->ReadParam(handle)->i;
+    CVector origin;
+    CVector direction;
+    origin.x = cleo->ReadParam(handle)->i;
+    origin.y = cleo->ReadParam(handle)->i;
+    origin.z = cleo->ReadParam(handle)->i;
+    direction.x = cleo->ReadParam(handle)->i;
+    direction.y = cleo->ReadParam(handle)->i;
+    direction.z = cleo->ReadParam(handle)->i;
+
+    CreateMatFromVec(NULL, matrix, &origin, &direction);
 }

@@ -32,6 +32,8 @@ script_effect_struct *ScriptEffectSystemArray;
 FxManager_c *g_fxMan;
 bool *m_UserPause ,*m_CodePause;
 int *ClumpOffset;
+CMouseControllerState *NewMouseControllerState;
+float *m_fMouseAccelHorzntl;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -97,6 +99,9 @@ void (*UpdateRpHAnim)(CEntity*);
 RpHAnimHierarchy* (*GetAnimHierarchyFromSkinClump)(RpClump*);
 int (*RpHAnimIDGetIndex)(RpHAnimHierarchy*, int);
 void (*Find3rdPersonCamTargetVector)(CCamera*, float, CVector, CVector&, CVector&);
+CPad* (*GetPad)(int);
+bool (*PadGetTarget)(CPad*, bool);
+void (*CreateMatFromVec)(void* unused, CMatrix*, CVector*, CVector*);
 
 // int main
 void ResolveExternals()
@@ -144,6 +149,8 @@ void ResolveExternals()
     SET_TO(m_UserPause, aml->GetSym(hGTASA, "_ZN6CTimer11m_UserPauseE"));
     SET_TO(m_CodePause, aml->GetSym(hGTASA, "_ZN6CTimer11m_CodePauseE"));
     SET_TO(ClumpOffset, aml->GetSym(hGTASA, "ClumpOffset"));
+    SET_TO(NewMouseControllerState, aml->GetSym(hGTASA, "_ZN4CPad23NewMouseControllerStateE"));
+    SET_TO(m_fMouseAccelHorzntl, aml->GetSym(hGTASA, "_ZN7CCamera20m_fMouseAccelHorzntlE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -209,4 +216,7 @@ void ResolveExternals()
     SET_TO(GetAnimHierarchyFromSkinClump, aml->GetSym(hGTASA, "_Z29GetAnimHierarchyFromSkinClumpP7RpClump"));
     SET_TO(RpHAnimIDGetIndex, aml->GetSym(hGTASA, "_Z17RpHAnimIDGetIndexP16RpHAnimHierarchyi"));
     SET_TO(Find3rdPersonCamTargetVector, aml->GetSym(hGTASA, "_ZN7CCamera28Find3rdPersonCamTargetVectorEf7CVectorRS0_S1_"));
+    SET_TO(GetPad, aml->GetSym(hGTASA, "_ZN4CPad6GetPadEi"));
+    SET_TO(PadGetTarget, aml->GetSym(hGTASA, "_ZN4CPad9GetTargetEb"));
+    SET_TO(CreateMatFromVec, aml->GetSym(hGTASA, "_ZN4Fx_c16CreateMatFromVecEP11RwMatrixTagP7CVectorS3_"));
 }
