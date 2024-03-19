@@ -47,6 +47,16 @@ inline char* CLEO_ReadStringEx(void* handle, char* buf = NULL, size_t size = 0)
 
     switch(byte)
     {
+        case 0x01:
+        case 0x02:
+        case 0x03:
+        case 0x04:
+        case 0x05:
+        case 0x06:
+        case 0x07:
+        case 0x08:
+            return (char*)cleo->ReadParam(handle)->i;
+
         case 0x9:
             //cleo->ReadParam(handle); // Need to collect results before that
             byte += 1; // the same here
