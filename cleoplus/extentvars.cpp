@@ -9,7 +9,7 @@ CLEO_Fn(INIT_EXTENDED_CHAR_VARS)
     char buf[100];
     bool bResult = false;
     CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
-    uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
+    uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int totalVars = cleo->ReadParam(handle)->i;
     if(totalVars > 0)
     {
@@ -34,7 +34,7 @@ CLEO_Fn(SET_EXTENDED_CHAR_VAR)
     char buf[100];
     bool bResult = false;
     CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
-    uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
+    uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = cleo->ReadParam(handle)->i;
     if(varId >= 0)
@@ -57,7 +57,7 @@ CLEO_Fn(GET_EXTENDED_CHAR_VAR)
     char buf[100];
     bool bResult = false;
     CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
-    uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
+    uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = 0;
     if(varId >= 0)
@@ -82,7 +82,7 @@ CLEO_Fn(INIT_EXTENDED_CAR_VARS)
     char buf[100];
     bool bResult = false;
     CVehicle *ped = GetVehicleFromRef(cleo->ReadParam(handle)->i);
-    uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
+    uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int totalVars = cleo->ReadParam(handle)->i;
     if(totalVars > 0)
     {
@@ -107,7 +107,7 @@ CLEO_Fn(SET_EXTENDED_CAR_VAR)
     char buf[100];
     bool bResult = false;
     CVehicle *ped = GetVehicleFromRef(cleo->ReadParam(handle)->i);
-    uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
+    uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = cleo->ReadParam(handle)->i;
     if(varId >= 0)
@@ -130,7 +130,7 @@ CLEO_Fn(GET_EXTENDED_CAR_VAR)
     char buf[100];
     bool bResult = false;
     CVehicle *ped = GetVehicleFromRef(cleo->ReadParam(handle)->i);
-    uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
+    uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = 0;
     if(varId >= 0)
@@ -155,7 +155,7 @@ CLEO_Fn(INIT_EXTENDED_OBJECT_VARS)
     char buf[100];
     bool bResult = false;
     CObject *ped = GetObjectFromRef(cleo->ReadParam(handle)->i);
-    uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
+    uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int totalVars = cleo->ReadParam(handle)->i;
     if(totalVars > 0)
     {
@@ -180,7 +180,7 @@ CLEO_Fn(SET_EXTENDED_OBJECT_VAR)
     char buf[100];
     bool bResult = false;
     CObject *ped = GetObjectFromRef(cleo->ReadParam(handle)->i);
-    uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
+    uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = cleo->ReadParam(handle)->i;
     if(varId >= 0)
@@ -203,7 +203,7 @@ CLEO_Fn(GET_EXTENDED_OBJECT_VAR)
     char buf[100];
     bool bResult = false;
     CObject *ped = GetObjectFromRef(cleo->ReadParam(handle)->i);
-    uint32_t findId = GetUppercaseKey(CLEO_ReadStringEx(handle, buf, sizeof(buf)));
+    uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = 0;
     if(varId >= 0)

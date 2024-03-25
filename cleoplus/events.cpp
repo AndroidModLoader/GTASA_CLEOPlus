@@ -122,7 +122,7 @@ void ScriptEvent::ClearAllScriptEvents()
 
 CLEO_Fn(RETURN_SCRIPT_EVENT)
 {
-    g_bForceInterrupt = true;
+    cleoaddon->Interrupt(handle);
 }
 CLEO_Fn(SET_SCRIPT_EVENT_SAVE_CONFIRMATION)
 {

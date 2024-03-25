@@ -8,7 +8,8 @@ NEEDGAME(com.rockstargames.gtasa)
 // Savings
 uintptr_t pGTASA;
 void* hGTASA;
-cleo_ifs_t* cleo;
+cleo_ifs_t* cleo = nullptr;
+cleo_addon_ifs_t* cleoaddon = nullptr;
 
 // Some opcodes changes compared to PC version:
 // CHANGE_PLAYER_MONEY has 2 additional modes:
@@ -16,18 +17,8 @@ cleo_ifs_t* cleo;
 // - 4 = dont take money if they are negative
 
 // Hooks
-bool g_bForceInterrupt = false, pausedLastFrame = true;
+bool pausedLastFrame = true;
 
-DECL_HOOK(int8_t, ProcessOneCommand, CRunningScript* self)
-{
-    int8_t retCode = ProcessOneCommand(self);
-    if(g_bForceInterrupt)
-    {
-        g_bForceInterrupt = false;
-        return 1;
-    }
-    return retCode;
-}
 DECL_HOOKv(OnGameProcess)
 {
     if(!*m_UserPause && !*m_CodePause) pausedLastFrame = false;
@@ -64,11 +55,11 @@ extern "C" void OnModLoad()
     pGTASA = aml->GetLib("libGTASA.so");
     hGTASA = aml->GetLibHandle("libGTASA.so");
     cleo = (cleo_ifs_t*)GetInterface("CLEO");
+    cleoaddon = (cleo_addon_ifs_t*)GetInterface("CLEOAddon");
 
     ResolveExternals();
 
     // Hooks
-    HOOK(ProcessOneCommand, aml->GetSym(hGTASA, "_ZN14CRunningScript17ProcessOneCommandEv"));
     HOOKPLT(OnGameProcess, pGTASA + 0x66FE58);
     HOOKPLT(DoGameSpecificStuffBeforeSave, pGTASA + 0x66EC5C);
     HOOKPLT(MobileMenuRender, pGTASA + 0x674254);

@@ -266,25 +266,25 @@ CLEO_Fn(GET_LIST_STRING_VALUE_BY_INDEX)
         it = l->begin();
         if (index >= l->size())
         {
-            CLEO_WriteStringEx(handle, "");
+            cleoaddon->WriteString(handle, "");
         }
         else
         {
             advance(it, index);
             std::string str = *it;
-            CLEO_WriteStringEx(handle, &str[0]);
+            cleoaddon->WriteString(handle, &str[0]);
         }
     }
     else
     {
         logger->Error("GET_LIST_VALUE_BY_INDEX failed: list type unknown %d", scriptList->type);
-        CLEO_WriteStringEx(handle, "");//fallback
+        cleoaddon->WriteString(handle, "");//fallback
     }
 }
 CLEO_Fn(LIST_ADD_STRING)
 {
     ScriptList *scriptList = (ScriptList*)cleo->ReadParam(handle)->i;
-    char value[128]; CLEO_ReadStringEx(handle, value, sizeof(value));
+    char value[0xFF]; cleoaddon->ReadString(handle, value, sizeof(value));
     if(scriptList->type == 2) // string
     {
         std::list<std::string> *l = (std::list<std::string>*)scriptList->listPointer;
@@ -298,7 +298,7 @@ CLEO_Fn(LIST_ADD_STRING)
 CLEO_Fn(LIST_REMOVE_STRING_VALUE)
 {
     ScriptList *scriptList = (ScriptList*)cleo->ReadParam(handle)->i;
-    char value[128]; CLEO_ReadStringEx(handle, value, sizeof(value));
+    char value[0xFF]; cleoaddon->ReadString(handle, value, sizeof(value));
     if (scriptList->type == 2) // string
     {
         std::list<std::string> *l = (std::list<std::string>*)scriptList->listPointer;
@@ -418,8 +418,8 @@ CLEO_Fn(REPLACE_LIST_STRING_VALUE_BY_INDEX)
 {
     ScriptList *scriptList = (ScriptList*)cleo->ReadParam(handle)->i;
     unsigned int index = cleo->ReadParam(handle)->u;
-    char value[128];
-    CLEO_ReadStringEx(handle, value, sizeof(value));
+    char value[0xFF];
+    cleoaddon->ReadString(handle, value, sizeof(value));
     if (scriptList->type == 2) // string
     {
         std::list<std::string> *l = (std::list<std::string>*)scriptList->listPointer;
@@ -485,8 +485,8 @@ CLEO_Fn(INSERT_LIST_STRING_VALUE_BY_INDEX)
 {
     ScriptList *scriptList = (ScriptList*)cleo->ReadParam(handle)->i;
     unsigned int index = cleo->ReadParam(handle)->u;
-    char value[128];
-    CLEO_ReadStringEx(handle, value, sizeof(value));
+    char value[0xFF];
+    cleoaddon->ReadString(handle, value, sizeof(value));
     if (scriptList->type == 2) // string
     {
         std::list<std::string> *l = (std::list<std::string>*)scriptList->listPointer;

@@ -228,17 +228,18 @@ CLEO_Fn(CAR_HORN)
 }
 CLEO_Fn(GET_STRING_LENGTH)
 {
-    char buf[128];
-    CLEO_ReadStringEx(handle, buf, sizeof(buf));
-    int len = strnlen(buf, 128);
+    char buf[0xFF];
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
+    int len = strnlen(buf, sizeof(buf));
     cleo->GetPointerToScriptVar(handle)->i = len;
     UpdateCompareFlag((CRunningScript*)handle, len > 0);
 }
 CLEO_Fn(COPY_STRING)
 {
-    char buf[128];
-    CLEO_ReadStringEx(handle, buf, sizeof(buf));
-    int len = strnlen(buf, 128);
+    char buf[0xFF];
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
+    cleoaddon->WriteString(handle, buf);
+    /*int len = strnlen(buf, sizeof(buf));
 
     uint8_t paramType = **(uint8_t**)((int)handle + GetPCOffset());
     char* pointer;
@@ -251,7 +252,7 @@ CLEO_Fn(COPY_STRING)
         pointer = (char*)cleo->GetPointerToScriptVar(handle);
     }
     memcpy(pointer, buf, len);
-    pointer[len] = 0;
+    pointer[len] = 0;*/
 }
 CLEO_Fn(GET_CAR_ALARM)
 {
@@ -358,12 +359,12 @@ CLEO_Fn(GET_MODEL_TYPE)
 CLEO_Fn(IS_STRING_EQUAL)
 {
     bool bResult = true;
-    char stringA[128], stringB[128], ignoreChar[2];
-    CLEO_ReadStringEx(handle, stringA, sizeof(stringA));
-    CLEO_ReadStringEx(handle, stringB, sizeof(stringB));
+    char stringA[0xFF], stringB[0xFF], ignoreChar[2];
+    cleoaddon->ReadString(handle, stringA, sizeof(stringA));
+    cleoaddon->ReadString(handle, stringB, sizeof(stringB));
     int maxSize = cleo->ReadParam(handle)->i;
     int caseSensitive = cleo->ReadParam(handle)->i;
-    CLEO_ReadStringEx(handle, ignoreChar, sizeof(ignoreChar));
+    cleoaddon->ReadString(handle, ignoreChar, sizeof(ignoreChar));
 
     if(!caseSensitive)
     {
@@ -389,8 +390,8 @@ CLEO_Fn(IS_STRING_EQUAL)
 CLEO_Fn(IS_STRING_COMMENT)
 {
     bool bResult = false;
-    char buf[128];
-    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+    char buf[0xFF];
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
 
     unsigned int i = 0;
     while (buf[i] == ' ' && i <= 127) ++i;
@@ -541,8 +542,8 @@ CLEO_Fn(LOAD_SPECIAL_CHARACTER_FOR_ID)
             pedModelInfo->m_NextVoice = basePedModelInfo->m_NextVoice;
         }
     }
-    char buf[128];
-    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+    char buf[0xFF];
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
     RequestSpecialModel(id, buf, eStreamingFlags::STREAMING_KEEP_IN_MEMORY | eStreamingFlags::STREAMING_MISSION_REQUIRED);
     SpecialCharacterModelsUsed.insert(id);
     AddToResourceManager(ScriptResourceManager, id, 2, (CRunningScript*)handle);
@@ -559,8 +560,8 @@ CLEO_Fn(UNLOAD_SPECIAL_CHARACTER_FROM_ID)
 }
 CLEO_Fn(GET_MODEL_BY_NAME)
 {
-    char buf[128];
-    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+    char buf[0xFF];
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
     int id = -1;
     CBaseModelInfo *baseModelInfo = GetModelInfoByName(buf, &id);
     cleo->GetPointerToScriptVar(handle)->i = id;
@@ -568,8 +569,8 @@ CLEO_Fn(GET_MODEL_BY_NAME)
 }
 CLEO_Fn(IS_MODEL_AVAILABLE_BY_NAME)
 {
-    char buf[128];
-    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+    char buf[0xFF];
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
     unsigned int offset, size;
     CDirectory::DirectoryInfo* dir = FindItem(*ms_pExtraObjectsDir, (const char*)buf, offset, size);
     UpdateCompareFlag((CRunningScript*)handle, dir != NULL);
@@ -831,8 +832,8 @@ CLEO_Fn(ADD_FX_SYSTEM_PARTICLE)
 }
 CLEO_Fn(IS_FX_SYSTEM_AVAILABLE_WITH_NAME)
 {
-    char buf[128];
-    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+    char buf[0xFF];
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
     UpdateCompareFlag((CRunningScript*)handle, FindFxSystemBP(g_fxMan, buf) != NULL);
 }
 CLEO_Fn(SET_STRING_UPPER)
@@ -850,9 +851,9 @@ CLEO_Fn(SET_STRING_LOWER)
 CLEO_Fn(STRING_FIND)
 {
     int mode = cleo->ReadParam(handle)->i;
-    char buf[128];
-    CLEO_ReadStringEx(handle, buf, sizeof(buf)); std::string str = buf;
-    CLEO_ReadStringEx(handle, buf, sizeof(buf)); std::string strFind = buf;
+    char buf[0xFF];
+    cleoaddon->ReadString(handle, buf, sizeof(buf)); std::string str = buf;
+    cleoaddon->ReadString(handle, buf, sizeof(buf)); std::string strFind = buf;
     
     size_t found = std::string::npos;
     if (mode == 0) found = str.find(strFind);
@@ -876,9 +877,9 @@ CLEO_Fn(CUT_STRING_AT)
 }
 CLEO_Fn(IS_STRING_CHARACTER_AT)
 {
-    char str[128], cha[4];
-    CLEO_ReadStringEx(handle, str, sizeof(str));
-    CLEO_ReadStringEx(handle, cha, sizeof(cha));
+    char str[0xFF], cha[4];
+    cleoaddon->ReadString(handle, str, sizeof(str));
+    cleoaddon->ReadString(handle, cha, sizeof(cha));
     int index = cleo->ReadParam(handle)->i;
     UpdateCompareFlag((CRunningScript*)handle, (str[index] == cha[0]));
 }
@@ -1089,7 +1090,7 @@ CLEO_Fn(GET_CAR_PEDALS)
 CLEO_Fn(GET_LOADED_LIBRARY)
 {
     char buf[64];
-    CLEO_ReadStringEx(handle, buf, sizeof(buf));
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
     void* library = dlopen(buf, RTLD_LAZY);
     cleo->GetPointerToScriptVar(handle)->i = (int)library;
     UpdateCompareFlag((CRunningScript*)handle, library != NULL);

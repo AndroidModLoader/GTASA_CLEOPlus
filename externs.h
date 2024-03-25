@@ -10,6 +10,7 @@
 #include <mod/logger.h>
 #include "GTASA_STRUCTS.h"
 #include "cleo.h"
+#include "cleoaddon.h"
 
 #define CLEO_RegisterOpcode(x, h) cleo->RegisterOpcode(x, h); cleo->RegisterOpcodeFunction(#h, h)
 #define CLEO_Fn(h) void h (void *handle, uint32_t *ip, uint16_t opcode, const char *name)
@@ -18,6 +19,7 @@
 extern uintptr_t pGTASA;
 extern void* hGTASA;
 extern cleo_ifs_t* cleo;
+extern cleo_addon_ifs_t* cleoaddon;
 
 struct tUsedObject
 {
@@ -27,72 +29,6 @@ struct tUsedObject
 
 void ResolveExternals();
 
-inline int GetPCOffset()
-{
-    switch(cleo->GetGameIdentifier())
-    {
-        case GTASA: return 20;
-        case GTALCS: return 24;
-
-        default: return 16;
-    }
-}
-inline char* CLEO_ReadStringEx(void* handle, char* buf = NULL, size_t size = 0)
-{
-    uint8_t& byte = **(uint8_t**)((int)handle + GetPCOffset());
-    if(byte <= 8) return NULL; // Not a string
-
-    static char newBuf[128];
-    if(!buf || size < 1) buf = (char*)newBuf;
-
-    switch(byte)
-    {
-        case 0x01:
-        case 0x02:
-        case 0x03:
-        case 0x04:
-        case 0x05:
-        case 0x06:
-        case 0x07:
-        case 0x08:
-            return (char*)cleo->ReadParam(handle)->i;
-
-        case 0x9:
-            //cleo->ReadParam(handle); // Need to collect results before that
-            byte += 1; // the same here
-            return cleo->ReadString8byte(handle, buf, size) ? buf : NULL;
-
-        case 0xA:
-        case 0xB:
-        case 0x10:
-        case 0x11:
-        {
-            size = (size > 16) ? 16 : size;
-            memcpy(buf, (char*)cleo->GetPointerToScriptVar(handle), size);
-            buf[size-1] = 0;
-            return buf;
-        }
-
-        default:
-        {
-            return cleo->ReadStringLong(handle, buf, size) ? buf : NULL;
-        }
-    }
-    return buf;
-}
-inline void CLEO_WriteStringEx(void* handle, const char* buf)
-{
-    if(**(uint8_t**)((int)handle + GetPCOffset()) > 8)
-    {
-        char* dst = (char*)cleo->GetPointerToScriptVar(handle);
-        memcpy(dst, buf, 15); dst[15] = 0;
-    }
-    else
-    {
-        char* dst = (char*)cleo->ReadParam(handle)->i;
-        strcpy(dst, buf);
-    }
-}
 inline void toupper(char *s)
 {
     char *p = s;
@@ -609,7 +545,6 @@ void RadarBlip_Patch();
 void Misc_Patch();
 void Events_Patch();
 
-extern bool g_bForceInterrupt;
 extern bool g_bDisableCamControl;
 extern bool g_bDisablePadControl[3];
 extern bool g_bDisablePadControlMovement[3];
