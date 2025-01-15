@@ -37,6 +37,9 @@ CLEO_Fn(CONVERT_3D_TO_SCREEN_2D)
 
     bool result = CalcScreenCoors(pos3D, &screenPos2D, &sizeX, &sizeY, checkFarClip, checkNearClip);
 
+    sizeX = (sizeX / RsGlobal->maximumWidth) * 8.0f;
+    sizeY = (sizeY / RsGlobal->maximumHeight) * 8.0f;
+
     cleo->GetPointerToScriptVar(handle)->f = screenPos2D.x;
     cleo->GetPointerToScriptVar(handle)->f = screenPos2D.y;
     cleo->GetPointerToScriptVar(handle)->f = sizeX;
