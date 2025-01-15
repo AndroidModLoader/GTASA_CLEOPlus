@@ -49,7 +49,7 @@ CLEO_Fn(GET_COLLISION_BETWEEN_POINTS)
         cleo->GetPointerToScriptVar(handle)->i = 0;
     }
     if(deleteColPointAfter) delete colPoint;
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(GET_COLPOINT_NORMAL_VECTOR)
 {

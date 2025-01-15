@@ -28,17 +28,17 @@ inline CVector TransformFromObjectSpace(CEntity* ent, const CVector& offset)
 
 CLEO_Fn(IS_ON_MISSION)
 {
-    UpdateCompareFlag((CRunningScript*)handle, *OnAMissionFlag && *(ScriptSpace + *OnAMissionFlag));
+    cleoaddon->UpdateCompareFlag(handle, *OnAMissionFlag && *(ScriptSpace + *OnAMissionFlag));
 }
 CLEO_Fn(IS_ON_SAMP)
 {
-    UpdateCompareFlag((CRunningScript*)handle, (
+    cleoaddon->UpdateCompareFlag(handle, (
         aml->GetLibHandle("libsamp.so") != NULL || aml->GetLibHandle("libvoice.so") != NULL || aml->GetLibHandle("libAlyn_SAMPMOBILE.so") != NULL || aml->HasMod("net.rusjj.resamp")
     ));
 }
 CLEO_Fn(IS_ON_CUTSCENE)
 {
-    UpdateCompareFlag((CRunningScript*)handle, *ms_running);
+    cleoaddon->UpdateCompareFlag(handle, *ms_running);
 }
 CLEO_Fn(FIX_CHAR_GROUND_BRIGHTNESS_AND_FADE_IN)
 {
@@ -93,7 +93,7 @@ CLEO_Fn(IS_WEAPON_FIRE_TYPE)
     auto weaponInfo = GetWeaponInfo(weaponType, 1);
     if (!weaponInfo) GetWeaponInfo(weaponType, 0);
     if (weaponInfo) ok = weaponInfo->m_nWeaponFire == fireType;
-    UpdateCompareFlag((CRunningScript*)handle, ok);
+    cleoaddon->UpdateCompareFlag(handle, ok);
 }
 CLEO_Fn(GET_CURRENT_SAVE_SLOT)
 {
@@ -101,7 +101,7 @@ CLEO_Fn(GET_CURRENT_SAVE_SLOT)
 }
 CLEO_Fn(IS_GAME_FIRST_START)
 {
-    UpdateCompareFlag((CRunningScript*)handle, timesGameRestarted == 0);
+    cleoaddon->UpdateCompareFlag(handle, timesGameRestarted == 0);
 }
 CLEO_Fn(SET_CHAR_COORDINATES_SIMPLE)
 {
@@ -113,13 +113,13 @@ CLEO_Fn(SET_CHAR_COORDINATES_SIMPLE)
 CLEO_Fn(FRAME_MOD)
 {
     int frame = cleo->ReadParam(handle)->i;
-    UpdateCompareFlag((CRunningScript*)handle, *m_FrameCounter % frame == 0);
+    cleoaddon->UpdateCompareFlag(handle, *m_FrameCounter % frame == 0);
 }
 CLEO_Fn(RANDOM_PERCENT)
 {
     int percent = cleo->ReadParam(handle)->i;
     int random = rand() % 101;
-    UpdateCompareFlag((CRunningScript*)handle, random <= percent);
+    cleoaddon->UpdateCompareFlag(handle, random <= percent);
 }
 CLEO_Fn(GET_TRAILER_FROM_CAR)
 {
@@ -131,7 +131,7 @@ CLEO_Fn(GET_TRAILER_FROM_CAR)
         if(trailer) trailerRef = GetVehicleRef(trailer);
     }
     cleo->GetPointerToScriptVar(handle)->i = trailerRef;
-    UpdateCompareFlag((CRunningScript*)handle, trailerRef != -1);
+    cleoaddon->UpdateCompareFlag(handle, trailerRef != -1);
 }
 CLEO_Fn(GET_CAR_FROM_TRAILER)
 {
@@ -143,7 +143,7 @@ CLEO_Fn(GET_CAR_FROM_TRAILER)
         if(vehicle) vehicleRef = GetVehicleRef(vehicle);
     }
     cleo->GetPointerToScriptVar(handle)->i = vehicleRef;
-    UpdateCompareFlag((CRunningScript*)handle, vehicleRef != -1);
+    cleoaddon->UpdateCompareFlag(handle, vehicleRef != -1);
 }
 CLEO_Fn(GET_CAR_DUMMY_COORD)
 {
@@ -175,12 +175,12 @@ CLEO_Fn(GET_CAR_DUMMY_COORD)
     cleo->GetPointerToScriptVar(handle)->f = posn.x;
     cleo->GetPointerToScriptVar(handle)->f = posn.y;
     cleo->GetPointerToScriptVar(handle)->f = posn.z;
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(IS_CHEAT_ACTIVE)
 {
     int i = cleo->ReadParam(handle)->i;
-    UpdateCompareFlag((CRunningScript*)handle, m_aCheatsActive[i]);
+    cleoaddon->UpdateCompareFlag(handle, m_aCheatsActive[i]);
 }
 CLEO_Fn(CHANGE_PLAYER_MONEY)
 {
@@ -232,27 +232,13 @@ CLEO_Fn(GET_STRING_LENGTH)
     cleoaddon->ReadString(handle, buf, sizeof(buf));
     int len = strnlen(buf, sizeof(buf));
     cleo->GetPointerToScriptVar(handle)->i = len;
-    UpdateCompareFlag((CRunningScript*)handle, len > 0);
+    cleoaddon->UpdateCompareFlag(handle, len > 0);
 }
 CLEO_Fn(COPY_STRING)
 {
     char buf[0xFF];
     cleoaddon->ReadString(handle, buf, sizeof(buf));
     cleoaddon->WriteString(handle, buf);
-    /*int len = strnlen(buf, sizeof(buf));
-
-    uint8_t paramType = **(uint8_t**)((int)handle + GetPCOffset());
-    char* pointer;
-    if(paramType >= 1 && paramType <= 8)
-    {
-        pointer = (char*)cleo->ReadParam(handle)->i;
-    }
-    else
-    {
-        pointer = (char*)cleo->GetPointerToScriptVar(handle);
-    }
-    memcpy(pointer, buf, len);
-    pointer[len] = 0;*/
 }
 CLEO_Fn(GET_CAR_ALARM)
 {
@@ -318,7 +304,7 @@ CLEO_Fn(GET_CAR_COLLISION_INTENSITY)
     float intensity = 0.0f;
     if(vehicle) intensity = vehicle->m_fDamageIntensity;
     cleo->GetPointerToScriptVar(handle)->f = intensity;
-    UpdateCompareFlag((CRunningScript*)handle, intensity > 0);
+    cleoaddon->UpdateCompareFlag(handle, intensity > 0);
 }
 CLEO_Fn(GET_CAR_COLLISION_COORDINATES)
 {
@@ -343,7 +329,7 @@ CLEO_Fn(GET_OBJECT_CENTRE_OF_MASS_TO_BASE_OF_MODEL)
     float dist = 999999.0f;
     if(object) dist = GetDistanceFromCentreOfMassToBaseOfModel(object);
     cleo->GetPointerToScriptVar(handle)->f = dist;
-    UpdateCompareFlag((CRunningScript*)handle, dist != 999999.0f);
+    cleoaddon->UpdateCompareFlag(handle, dist != 999999.0f);
 }
 CLEO_Fn(GET_MODEL_TYPE)
 {
@@ -385,7 +371,7 @@ CLEO_Fn(IS_STRING_EQUAL)
         }
         ++i;
     }
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(IS_STRING_COMMENT)
 {
@@ -396,7 +382,7 @@ CLEO_Fn(IS_STRING_COMMENT)
     unsigned int i = 0;
     while (buf[i] == ' ' && i <= 127) ++i;
     if (buf[i] == '#' || buf[i] == ';' || (buf[i] == '/' && buf[i + 1] == '/')) bResult = true;
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(DOES_CAR_HAVE_PART_NODE)
 {
@@ -404,7 +390,7 @@ CLEO_Fn(DOES_CAR_HAVE_PART_NODE)
     int nodeId = cleo->ReadParam(handle)->i;
     bool bResult = false;
     if(vehicle) bResult = ((CAutomobile*)vehicle)->m_CarNodes[nodeId] != NULL;
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(GET_CURRENT_CHAR_WEAPONINFO)
 {
@@ -412,7 +398,7 @@ CLEO_Fn(GET_CURRENT_CHAR_WEAPONINFO)
     eWeaponType weaponType = ped->m_Weapons[ped->m_byteCurrentWeaponSlot].m_nType;
     CWeaponInfo *weaponInfo = GetWeaponInfo(weaponType, GetWeaponSkill(ped, weaponType));
     cleo->GetPointerToScriptVar(handle)->i = (int)weaponInfo;
-    UpdateCompareFlag((CRunningScript*)handle, weaponInfo != NULL);
+    cleoaddon->UpdateCompareFlag(handle, weaponInfo != NULL);
 }
 CLEO_Fn(GET_WEAPONINFO)
 {
@@ -420,7 +406,7 @@ CLEO_Fn(GET_WEAPONINFO)
     int skill = cleo->ReadParam(handle)->i;
     CWeaponInfo *weaponInfo = GetWeaponInfo((eWeaponType)weaponId, skill);
     cleo->GetPointerToScriptVar(handle)->i = (int)weaponInfo;
-    UpdateCompareFlag((CRunningScript*)handle, weaponInfo != NULL);
+    cleoaddon->UpdateCompareFlag(handle, weaponInfo != NULL);
 }
 CLEO_Fn(GET_WEAPONINFO_MODELS)
 {
@@ -486,17 +472,17 @@ CLEO_Fn(GET_CAR_COLLISION_LIGHTING)
 CLEO_Fn(IS_CHAR_REALLY_IN_AIR)
 {
     CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
-    UpdateCompareFlag((CRunningScript*)handle, !ped->physicalFlags.bOnSolidSurface && !ped->physicalFlags.bSubmergedInWater);
+    cleoaddon->UpdateCompareFlag(handle, !ped->physicalFlags.bOnSolidSurface && !ped->physicalFlags.bSubmergedInWater);
 }
 CLEO_Fn(IS_CAR_REALLY_IN_AIR)
 {
     CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
-    UpdateCompareFlag((CRunningScript*)handle, !vehicle->physicalFlags.bOnSolidSurface && !vehicle->physicalFlags.bSubmergedInWater);
+    cleoaddon->UpdateCompareFlag(handle, !vehicle->physicalFlags.bOnSolidSurface && !vehicle->physicalFlags.bSubmergedInWater);
 }
 CLEO_Fn(IS_OBJECT_REALLY_IN_AIR)
 {
     CObject *object = GetObjectFromRef(cleo->ReadParam(handle)->i);
-    UpdateCompareFlag((CRunningScript*)handle, !object->physicalFlags.bOnSolidSurface && !object->physicalFlags.bSubmergedInWater);
+    cleoaddon->UpdateCompareFlag(handle, !object->physicalFlags.bOnSolidSurface && !object->physicalFlags.bSubmergedInWater);
 }
 CLEO_Fn(SIMULATE_OBJECT_DAMAGE)
 {
@@ -565,7 +551,7 @@ CLEO_Fn(GET_MODEL_BY_NAME)
     int id = -1;
     CBaseModelInfo *baseModelInfo = GetModelInfoByName(buf, &id);
     cleo->GetPointerToScriptVar(handle)->i = id;
-    UpdateCompareFlag((CRunningScript*)handle, id > -1 && baseModelInfo);
+    cleoaddon->UpdateCompareFlag(handle, id > -1 && baseModelInfo);
 }
 CLEO_Fn(IS_MODEL_AVAILABLE_BY_NAME)
 {
@@ -573,7 +559,7 @@ CLEO_Fn(IS_MODEL_AVAILABLE_BY_NAME)
     cleoaddon->ReadString(handle, buf, sizeof(buf));
     unsigned int offset, size;
     CDirectory::DirectoryInfo* dir = FindItem(*ms_pExtraObjectsDir, (const char*)buf, offset, size);
-    UpdateCompareFlag((CRunningScript*)handle, dir != NULL);
+    cleoaddon->UpdateCompareFlag(handle, dir != NULL);
 }
 CLEO_Fn(GET_MODEL_DOESNT_EXIST_IN_RANGE)
 {
@@ -592,7 +578,7 @@ CLEO_Fn(GET_MODEL_DOESNT_EXIST_IN_RANGE)
     }
     if (!bResult) id = -1;
     cleo->GetPointerToScriptVar(handle)->i = id;
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(REMOVE_ALL_UNUSED_MODELS)
 {
@@ -607,7 +593,7 @@ CLEO_Fn(REMOVE_MODEL_IF_UNUSED)
 CLEO_Fn(IS_CHAR_ON_FIRE)
 {
     CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
-    UpdateCompareFlag((CRunningScript*)handle, ped && ped->m_pFire != NULL);
+    cleoaddon->UpdateCompareFlag(handle, ped && ped->m_pFire != NULL);
 }
 CLEO_Fn(GET_CLOSEST_COP_NEAR_CHAR)
 {
@@ -670,7 +656,7 @@ CLEO_Fn(IS_CHAR_WEAPON_VISIBLE_SET)
 {
     CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
     CPlayerData* data = ped->m_pPlayerData;
-    UpdateCompareFlag((CRunningScript*)handle, data && data->m_bRenderWeapon);
+    cleoaddon->UpdateCompareFlag(handle, data && data->m_bRenderWeapon);
 }
 CLEO_Fn(GET_CHAR_STAT_ID)
 {
@@ -722,7 +708,7 @@ CLEO_Fn(GET_CAR_WEAPON_DAMAGE_LAST_FRAME)
 }
 CLEO_Fn(IS_ON_SCRIPTED_CUTSCENE)
 {
-    UpdateCompareFlag((CRunningScript*)handle, TheCamera->m_WideScreenOn);
+    cleoaddon->UpdateCompareFlag(handle, TheCamera->m_WideScreenOn);
 }
 CLEO_Fn(GET_MODEL_PED_TYPE_AND_STAT)
 {
@@ -738,7 +724,7 @@ CLEO_Fn(GET_MODEL_PED_TYPE_AND_STAT)
     }
     cleo->GetPointerToScriptVar(handle)->i = type;
     cleo->GetPointerToScriptVar(handle)->i = stat;
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(PASS_TIME)
 {
@@ -776,7 +762,7 @@ CLEO_Fn(LOCATE_CAMERA_DISTANCE_TO_COORDINATES)
     pos.z = cleo->ReadParam(handle)->f;
     float radius = cleo->ReadParam(handle)->f;
     if ((TheCamera->m_apCams[TheCamera->m_nCurrentActiveCam].Source - pos).MagnitudeSqr() <= radius * radius) bResult = true;
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(GET_FX_SYSTEM_POINTER)
 {
@@ -787,12 +773,12 @@ CLEO_Fn(GET_FX_SYSTEM_POINTER)
         if(hndl >= 0)
         {
             cleo->GetPointerToScriptVar(handle)->i = (int)(ScriptEffectSystemArray[hndl].pFXSystem);
-            UpdateCompareFlag((CRunningScript*)handle, true);
+            cleoaddon->UpdateCompareFlag(handle, true);
             return;
         }
     }
     cleo->GetPointerToScriptVar(handle)->i = 0;
-    UpdateCompareFlag((CRunningScript*)handle, false);
+    cleoaddon->UpdateCompareFlag(handle, false);
 }
 CLEO_Fn(ADD_FX_SYSTEM_PARTICLE)
 {
@@ -834,7 +820,7 @@ CLEO_Fn(IS_FX_SYSTEM_AVAILABLE_WITH_NAME)
 {
     char buf[0xFF];
     cleoaddon->ReadString(handle, buf, sizeof(buf));
-    UpdateCompareFlag((CRunningScript*)handle, FindFxSystemBP(g_fxMan, buf) != NULL);
+    cleoaddon->UpdateCompareFlag(handle, FindFxSystemBP(g_fxMan, buf) != NULL);
 }
 CLEO_Fn(SET_STRING_UPPER)
 {
@@ -862,12 +848,12 @@ CLEO_Fn(STRING_FIND)
     if (found != std::string::npos)
     {
         cleo->GetPointerToScriptVar(handle)->i = found;
-        UpdateCompareFlag((CRunningScript*)handle, true);
+        cleoaddon->UpdateCompareFlag(handle, true);
     }
     else
     {
         cleo->GetPointerToScriptVar(handle)->i = -1;
-        UpdateCompareFlag((CRunningScript*)handle, false);
+        cleoaddon->UpdateCompareFlag(handle, false);
     }
 }
 CLEO_Fn(CUT_STRING_AT)
@@ -881,7 +867,7 @@ CLEO_Fn(IS_STRING_CHARACTER_AT)
     cleoaddon->ReadString(handle, str, sizeof(str));
     cleoaddon->ReadString(handle, cha, sizeof(cha));
     int index = cleo->ReadParam(handle)->i;
-    UpdateCompareFlag((CRunningScript*)handle, (str[index] == cha[0]));
+    cleoaddon->UpdateCompareFlag(handle, (str[index] == cha[0]));
 }
 CLEO_Fn(GET_CHAR_RANDOM_SEED)
 {
@@ -944,7 +930,7 @@ CLEO_Fn(LOCATE_CHAR_DISTANCE_TO_CHAR)
     CEntity *ent2 = GetPedFromRef(cleo->ReadParam(handle)->i);
     float radius = cleo->ReadParam(handle)->f;
 
-    UpdateCompareFlag((CRunningScript*)handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
+    cleoaddon->UpdateCompareFlag(handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
 }
 CLEO_Fn(LOCATE_CHAR_DISTANCE_TO_CAR)
 {
@@ -952,7 +938,7 @@ CLEO_Fn(LOCATE_CHAR_DISTANCE_TO_CAR)
     CEntity *ent2 = GetVehicleFromRef(cleo->ReadParam(handle)->i);
     float radius = cleo->ReadParam(handle)->f;
 
-    UpdateCompareFlag((CRunningScript*)handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
+    cleoaddon->UpdateCompareFlag(handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
 }
 CLEO_Fn(LOCATE_CHAR_DISTANCE_TO_OBJECT)
 {
@@ -960,7 +946,7 @@ CLEO_Fn(LOCATE_CHAR_DISTANCE_TO_OBJECT)
     CEntity *ent2 = GetObjectFromRef(cleo->ReadParam(handle)->i);
     float radius = cleo->ReadParam(handle)->f;
 
-    UpdateCompareFlag((CRunningScript*)handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
+    cleoaddon->UpdateCompareFlag(handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
 }
 CLEO_Fn(LOCATE_CAR_DISTANCE_TO_OBJECT)
 {
@@ -968,7 +954,7 @@ CLEO_Fn(LOCATE_CAR_DISTANCE_TO_OBJECT)
     CEntity *ent2 = GetObjectFromRef(cleo->ReadParam(handle)->i);
     float radius = cleo->ReadParam(handle)->f;
 
-    UpdateCompareFlag((CRunningScript*)handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
+    cleoaddon->UpdateCompareFlag(handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
 }
 CLEO_Fn(LOCATE_CAR_DISTANCE_TO_CAR)
 {
@@ -976,7 +962,7 @@ CLEO_Fn(LOCATE_CAR_DISTANCE_TO_CAR)
     CEntity *ent2 = GetVehicleFromRef(cleo->ReadParam(handle)->i);
     float radius = cleo->ReadParam(handle)->f;
 
-    UpdateCompareFlag((CRunningScript*)handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
+    cleoaddon->UpdateCompareFlag(handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
 }
 CLEO_Fn(LOCATE_OBJECT_DISTANCE_TO_OBJECT)
 {
@@ -984,7 +970,7 @@ CLEO_Fn(LOCATE_OBJECT_DISTANCE_TO_OBJECT)
     CEntity *ent2 = GetObjectFromRef(cleo->ReadParam(handle)->i);
     float radius = cleo->ReadParam(handle)->f;
 
-    UpdateCompareFlag((CRunningScript*)handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
+    cleoaddon->UpdateCompareFlag(handle, (ent1->GetPosition() - ent2->GetPosition()).MagnitudeSqr() <= radius * radius);
 }
 CLEO_Fn(LOCATE_CHAR_DISTANCE_TO_COORDINATES)
 {
@@ -995,7 +981,7 @@ CLEO_Fn(LOCATE_CHAR_DISTANCE_TO_COORDINATES)
     pos.z = cleo->ReadParam(handle)->f;
     float radius = cleo->ReadParam(handle)->f;
 
-    UpdateCompareFlag((CRunningScript*)handle, (ent1->GetPosition() - pos).MagnitudeSqr() <= radius * radius);
+    cleoaddon->UpdateCompareFlag(handle, (ent1->GetPosition() - pos).MagnitudeSqr() <= radius * radius);
 }
 CLEO_Fn(LOCATE_CAR_DISTANCE_TO_COORDINATES)
 {
@@ -1006,7 +992,7 @@ CLEO_Fn(LOCATE_CAR_DISTANCE_TO_COORDINATES)
     pos.z = cleo->ReadParam(handle)->f;
     float radius = cleo->ReadParam(handle)->f;
 
-    UpdateCompareFlag((CRunningScript*)handle, (ent1->GetPosition() - pos).MagnitudeSqr() <= radius * radius);
+    cleoaddon->UpdateCompareFlag(handle, (ent1->GetPosition() - pos).MagnitudeSqr() <= radius * radius);
 }
 CLEO_Fn(LOCATE_OBJECT_DISTANCE_TO_COORDINATES)
 {
@@ -1017,7 +1003,7 @@ CLEO_Fn(LOCATE_OBJECT_DISTANCE_TO_COORDINATES)
     pos.z = cleo->ReadParam(handle)->f;
     float radius = cleo->ReadParam(handle)->f;
 
-    UpdateCompareFlag((CRunningScript*)handle, (ent1->GetPosition() - pos).MagnitudeSqr() <= radius * radius);
+    cleoaddon->UpdateCompareFlag(handle, (ent1->GetPosition() - pos).MagnitudeSqr() <= radius * radius);
 }
 CLEO_Fn(LOCATE_ENTITY_DISTANCE_TO_ENTITY)
 {
@@ -1028,7 +1014,7 @@ CLEO_Fn(LOCATE_ENTITY_DISTANCE_TO_ENTITY)
     pos.z = cleo->ReadParam(handle)->f;
     float radius = cleo->ReadParam(handle)->f;
 
-    UpdateCompareFlag((CRunningScript*)handle, (ent1->GetPosition() - pos).MagnitudeSqr() <= radius * radius);
+    cleoaddon->UpdateCompareFlag(handle, (ent1->GetPosition() - pos).MagnitudeSqr() <= radius * radius);
 }
 CLEO_Fn(GET_ENTITY_COORDINATES)
 {
@@ -1046,7 +1032,7 @@ CLEO_Fn(GET_ENTITY_HEADING)
 CLEO_Fn(IS_CAR_OWNED_BY_PLAYER)
 {
     CVehicle *vehicle = (CVehicle*)(cleo->ReadParam(handle)->i);
-    UpdateCompareFlag((CRunningScript*)handle, vehicle->vehicleFlags.bHasBeenOwnedByPlayer);
+    cleoaddon->UpdateCompareFlag(handle, vehicle->vehicleFlags.bHasBeenOwnedByPlayer);
 }
 CLEO_Fn(SET_CAR_OWNED_BY_PLAYER)
 {
@@ -1059,7 +1045,7 @@ CLEO_Fn(GET_MODEL_INFO)
     CBaseModelInfo* modelInfo = NULL;
     if(model >= 0) modelInfo = ms_modelInfoPtrs[model];
     cleo->GetPointerToScriptVar(handle)->i = (int)modelInfo;
-    UpdateCompareFlag((CRunningScript*)handle, modelInfo != NULL);
+    cleoaddon->UpdateCompareFlag(handle, modelInfo != NULL);
 }
 CLEO_Fn(GET_CAR_ANIMGROUP)
 {
@@ -1074,7 +1060,7 @@ CLEO_Fn(GET_CHAR_FEAR)
 CLEO_Fn(IS_CAR_CONVERTIBLE)
 {
     CVehicle *vehicle = (CVehicle*)(cleo->ReadParam(handle)->i);
-    UpdateCompareFlag((CRunningScript*)handle, vehicle->m_pHandling->m_bConvertible);
+    cleoaddon->UpdateCompareFlag(handle, vehicle->m_pHandling->m_bConvertible);
 }
 CLEO_Fn(GET_CAR_VALUE)
 {
@@ -1093,7 +1079,7 @@ CLEO_Fn(GET_LOADED_LIBRARY)
     cleoaddon->ReadString(handle, buf, sizeof(buf));
     void* library = dlopen(buf, RTLD_LAZY);
     cleo->GetPointerToScriptVar(handle)->i = (int)library;
-    UpdateCompareFlag((CRunningScript*)handle, library != NULL);
+    cleoaddon->UpdateCompareFlag(handle, library != NULL);
 }
 CLEO_Fn(RETURN_TIMES)
 {
@@ -1203,11 +1189,11 @@ CLEO_Fn(SET_CAR_MODEL_ALPHA)
     if (ent->m_pRwObject)
     {
         SetRwObjectAlpha(ent, cleo->ReadParam(handle)->i);
-        UpdateCompareFlag((CRunningScript*)handle, true);
+        cleoaddon->UpdateCompareFlag(handle, true);
     }
     else
     {
-        UpdateCompareFlag((CRunningScript*)handle, false);
+        cleoaddon->UpdateCompareFlag(handle, false);
     }
 }
 CLEO_Fn(SET_CHAR_MODEL_ALPHA)
@@ -1216,11 +1202,11 @@ CLEO_Fn(SET_CHAR_MODEL_ALPHA)
     if (ent->m_pRwObject)
     {
         SetRwObjectAlpha(ent, cleo->ReadParam(handle)->i);
-        UpdateCompareFlag((CRunningScript*)handle, true);
+        cleoaddon->UpdateCompareFlag(handle, true);
     }
     else
     {
-        UpdateCompareFlag((CRunningScript*)handle, false);
+        cleoaddon->UpdateCompareFlag(handle, false);
     }
 }
 CLEO_Fn(SET_OBJECT_MODEL_ALPHA)
@@ -1229,11 +1215,11 @@ CLEO_Fn(SET_OBJECT_MODEL_ALPHA)
     if (ent->m_pRwObject)
     {
         SetRwObjectAlpha(ent, cleo->ReadParam(handle)->i);
-        UpdateCompareFlag((CRunningScript*)handle, true);
+        cleoaddon->UpdateCompareFlag(handle, true);
     }
     else
     {
-        UpdateCompareFlag((CRunningScript*)handle, false);
+        cleoaddon->UpdateCompareFlag(handle, false);
     }
 }
 CLEO_Fn(GET_LOCAL_TIME)

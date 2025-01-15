@@ -36,32 +36,28 @@ CLEO_Fn(CONVERT_3D_TO_SCREEN_2D)
     float sizeX, sizeY;
 
     bool result = CalcScreenCoors(pos3D, &screenPos2D, &sizeX, &sizeY, checkFarClip, checkNearClip);
-    x = (screenPos2D.x / RsGlobal->maximumWidth) * 640.0f;
-    y = (screenPos2D.y / RsGlobal->maximumHeight) * 448.0f;
-    sizeX = (sizeX / RsGlobal->maximumWidth) * 8.0f;
-    sizeY = (sizeY / RsGlobal->maximumHeight) * 8.0f;
 
-    cleo->GetPointerToScriptVar(handle)->f = x;
-    cleo->GetPointerToScriptVar(handle)->f = y;
+    cleo->GetPointerToScriptVar(handle)->f = screenPos2D.x;
+    cleo->GetPointerToScriptVar(handle)->f = screenPos2D.y;
     cleo->GetPointerToScriptVar(handle)->f = sizeX;
     cleo->GetPointerToScriptVar(handle)->f = sizeY;
 
-    UpdateCompareFlag((CRunningScript*)handle, result);
+    cleoaddon->UpdateCompareFlag(handle, result);
 }
 CLEO_Fn(IS_RADAR_VISIBLE) // Pretty inacurate tho...
 {
-    UpdateCompareFlag((CRunningScript*)handle, 
+    cleoaddon->UpdateCompareFlag(handle, 
         *gbCineyCamProcessedOnFrame != *m_FrameCounter && !*ms_bTakePhoto && (!gMobileMenu->m_nScreensCount || !gMobileMenu->m_pTopScreen) && *ms_exitEnterState > 2 && (*m_ItemToFlash != 8 || *m_snTimeInMilliseconds % 350 > 150)
     );
 }
 CLEO_Fn(IS_HUD_VISIBLE)
 {
-    UpdateCompareFlag((CRunningScript*)handle, 
+    cleoaddon->UpdateCompareFlag(handle, 
         *bDisplayHud && *gbCineyCamProcessedOnFrame != *m_FrameCounter && !*ms_bTakePhoto && (!gMobileMenu->m_nScreensCount || !gMobileMenu->m_pTopScreen)
     );
 }
 CLEO_Fn(GET_FADE_ALPHA)
 {
     cleo->GetPointerToScriptVar(handle)->f = TheCamera->m_fFloatingFade;
-    UpdateCompareFlag((CRunningScript*)handle, TheCamera->m_fFloatingFade > 0);
+    cleoaddon->UpdateCompareFlag(handle, TheCamera->m_fFloatingFade > 0);
 }

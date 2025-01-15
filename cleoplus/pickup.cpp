@@ -29,7 +29,7 @@ CLEO_Fn(GET_PICKUP_THIS_COORD)
         }
     }
     cleo->GetPointerToScriptVar(handle)->i = pickupRefResult;
-    UpdateCompareFlag((CRunningScript*)handle, result);
+    cleoaddon->UpdateCompareFlag(handle, result);
 }
 CLEO_Fn(GET_PICKUP_MODEL)
 {
@@ -44,7 +44,7 @@ CLEO_Fn(GET_PICKUP_MODEL)
         result = true;
     }
     cleo->GetPointerToScriptVar(handle)->i = model;
-    UpdateCompareFlag((CRunningScript*)handle, result);
+    cleoaddon->UpdateCompareFlag(handle, result);
 }
 CLEO_Fn(GET_PICKUP_POINTER)
 {
@@ -58,7 +58,7 @@ CLEO_Fn(GET_PICKUP_POINTER)
         result = true;
     }
     cleo->GetPointerToScriptVar(handle)->i = (int)pickup;
-    UpdateCompareFlag((CRunningScript*)handle, result);
+    cleoaddon->UpdateCompareFlag(handle, result);
 }
 CLEO_Fn(GET_PICKUP_TYPE)
 {
@@ -73,5 +73,5 @@ CLEO_Fn(GET_PICKUP_TYPE)
         result = true;
     }
     cleo->GetPointerToScriptVar(handle)->i = type;
-    UpdateCompareFlag((CRunningScript*)handle, result);
+    cleoaddon->UpdateCompareFlag(handle, result);
 }

@@ -27,7 +27,7 @@ CLEO_Fn(INIT_EXTENDED_CHAR_VARS)
         xdata.extendedVarsList.push_back(new ExtendedVars(findId, totalVars));
         bResult = true;
     }
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(SET_EXTENDED_CHAR_VAR)
 {
@@ -50,7 +50,7 @@ CLEO_Fn(SET_EXTENDED_CHAR_VAR)
             bResult = true;
         }
     }
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(GET_EXTENDED_CHAR_VAR)
 {
@@ -74,7 +74,7 @@ CLEO_Fn(GET_EXTENDED_CHAR_VAR)
         }
     }
     cleo->GetPointerToScriptVar(handle)->i = varValue;
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 
 CLEO_Fn(INIT_EXTENDED_CAR_VARS)
@@ -100,7 +100,7 @@ CLEO_Fn(INIT_EXTENDED_CAR_VARS)
         xdata.extendedVarsList.push_back(new ExtendedVars(findId, totalVars));
         bResult = true;
     }
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(SET_EXTENDED_CAR_VAR)
 {
@@ -123,7 +123,7 @@ CLEO_Fn(SET_EXTENDED_CAR_VAR)
             bResult = true;
         }
     }
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(GET_EXTENDED_CAR_VAR)
 {
@@ -147,7 +147,7 @@ CLEO_Fn(GET_EXTENDED_CAR_VAR)
         }
     }
     cleo->GetPointerToScriptVar(handle)->i = varValue;
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 
 CLEO_Fn(INIT_EXTENDED_OBJECT_VARS)
@@ -173,7 +173,7 @@ CLEO_Fn(INIT_EXTENDED_OBJECT_VARS)
         xdata.extendedVarsList.push_back(new ExtendedVars(findId, totalVars));
         bResult = true;
     }
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(SET_EXTENDED_OBJECT_VAR)
 {
@@ -196,7 +196,7 @@ CLEO_Fn(SET_EXTENDED_OBJECT_VAR)
             bResult = true;
         }
     }
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }
 CLEO_Fn(GET_EXTENDED_OBJECT_VAR)
 {
@@ -220,5 +220,5 @@ CLEO_Fn(GET_EXTENDED_OBJECT_VAR)
         }
     }
     cleo->GetPointerToScriptVar(handle)->i = varValue;
-    UpdateCompareFlag((CRunningScript*)handle, bResult);
+    cleoaddon->UpdateCompareFlag(handle, bResult);
 }

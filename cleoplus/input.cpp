@@ -6,11 +6,11 @@ bool g_bDisablePadControlMovement[3] = {false};
 
 CLEO_Fn(IS_MOUSE_WHEEL_UP)
 {
-    UpdateCompareFlag((CRunningScript*)handle, NewMouseControllerState->m_bWheelMovedUp);
+    cleoaddon->UpdateCompareFlag(handle, NewMouseControllerState->m_bWheelMovedUp);
 }
 CLEO_Fn(IS_MOUSE_WHEEL_DOWN)
 {
-    UpdateCompareFlag((CRunningScript*)handle, NewMouseControllerState->m_bWheelMovedDown);
+    cleoaddon->UpdateCompareFlag(handle, NewMouseControllerState->m_bWheelMovedDown);
 }
 CLEO_Fn(GET_MOUSE_SENSIBILITY)
 {
@@ -31,7 +31,7 @@ CLEO_Fn(SET_CAMERA_CONTROL)
 CLEO_Fn(IS_AIM_BUTTON_PRESSED)
 {
     int pad = cleo->ReadParam(handle)->i;
-    UpdateCompareFlag((CRunningScript*)handle, PadGetTarget(GetPad(pad), true));
+    cleoaddon->UpdateCompareFlag(handle, PadGetTarget(GetPad(pad), true));
 }
 CLEO_Fn(SET_PLAYER_CONTROL_PAD)
 {

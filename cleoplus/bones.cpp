@@ -8,7 +8,7 @@ CLEO_Fn(GET_CHAR_BONE_MATRIX)
     if(!ped->m_pRwObject)
     {
         cleo->GetPointerToScriptVar(handle)->i = 0;
-        UpdateCompareFlag((CRunningScript*)handle, false);
+        cleoaddon->UpdateCompareFlag(handle, false);
         return;
     }
 
@@ -25,7 +25,7 @@ CLEO_Fn(GET_CHAR_BONE_MATRIX)
     }
 
     cleo->GetPointerToScriptVar(handle)->i = (int)matrix;
-    UpdateCompareFlag((CRunningScript*)handle, matrix != NULL);
+    cleoaddon->UpdateCompareFlag(handle, matrix != NULL);
 }
 CLEO_Fn(GET_CHAR_BONE)
 {
@@ -34,7 +34,7 @@ CLEO_Fn(GET_CHAR_BONE)
 
     auto bone = &RpClumpGetAnimBlendClumpData(ped->m_pRwClump)->m_pFrameDataArray[boneId];
     cleo->GetPointerToScriptVar(handle)->i = (int)bone;
-    UpdateCompareFlag((CRunningScript*)handle, bone != NULL);
+    cleoaddon->UpdateCompareFlag(handle, bone != NULL);
 }
 CLEO_Fn(GET_BONE_OFFSET_VECTOR)
 {
