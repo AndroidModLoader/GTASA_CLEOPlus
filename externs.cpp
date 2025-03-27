@@ -41,6 +41,7 @@ float (*FindGroundZForCoord)(float, float);
 float (*FindGroundZFor3DCoord)(float, float, float, bool*, CEntity**);
 void (*ClearSpaceForMissionEntity)(CVector&, CEntity*);
 void (*AddToWorld)(CEntity*);
+int (*GetPedRef)(CPed*);
 int (*GetObjectRef)(CObject*);
 int (*GetVehicleRef)(CVehicle*);
 CVehicle* (*GetVehicleFromRef)(int);
@@ -102,6 +103,8 @@ void (*Find3rdPersonCamTargetVector)(CCamera*, float, CVector, CVector&, CVector
 CPad* (*GetPad)(int);
 bool (*PadGetTarget)(CPad*, bool);
 void (*CreateMatFromVec)(void* unused, CMatrix*, CVector*, CVector*);
+bool (*OurPedCanSeeThisEntity)(CPed*, CEntity*, bool);
+bool (*GetPadState)(void*, int, int);
 
 // int main
 void ResolveExternals()
@@ -158,6 +161,7 @@ void ResolveExternals()
     SET_TO(FindGroundZFor3DCoord, aml->GetSym(hGTASA, "_ZN6CWorld21FindGroundZFor3DCoordEfffPbPP7CEntity"));
     SET_TO(ClearSpaceForMissionEntity, aml->GetSym(hGTASA, "_ZN11CTheScripts26ClearSpaceForMissionEntityERK7CVectorP7CEntity"));
     SET_TO(AddToWorld, aml->GetSym(hGTASA, "_ZN6CWorld3AddEP7CEntity"));
+    SET_TO(GetPedRef, aml->GetSym(hGTASA, "_ZN6CPools9GetPedRefEP4CPed"));
     SET_TO(GetObjectRef, aml->GetSym(hGTASA, "_ZN6CPools12GetObjectRefEP7CObject"));
     SET_TO(GetVehicleRef, aml->GetSym(hGTASA, "_ZN6CPools13GetVehicleRefEP8CVehicle"));
     SET_TO(GetVehicleFromRef, aml->GetSym(hGTASA, "_ZN6CPools10GetVehicleEi"));
@@ -219,4 +223,6 @@ void ResolveExternals()
     SET_TO(GetPad, aml->GetSym(hGTASA, "_ZN4CPad6GetPadEi"));
     SET_TO(PadGetTarget, aml->GetSym(hGTASA, "_ZN4CPad9GetTargetEb"));
     SET_TO(CreateMatFromVec, aml->GetSym(hGTASA, "_ZN4Fx_c16CreateMatFromVecEP11RwMatrixTagP7CVectorS3_"));
+    SET_TO(OurPedCanSeeThisEntity, aml->GetSym(hGTASA, "_ZN4CPed22OurPedCanSeeThisEntityEP7CEntityb"));
+    SET_TO(GetPadState, aml->GetSym(hGTASA, "_ZN14CRunningScript11GetPadStateEtt"));
 }

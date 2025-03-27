@@ -165,6 +165,7 @@ extern float (*FindGroundZForCoord)(float, float);
 extern float (*FindGroundZFor3DCoord)(float, float, float, bool*, CEntity**);
 extern void (*ClearSpaceForMissionEntity)(CVector&, CEntity*);
 extern void (*AddToWorld)(CEntity*);
+extern int (*GetPedRef)(CPed*);
 extern int (*GetObjectRef)(CObject*);
 extern int (*GetVehicleRef)(CVehicle*);
 extern CVehicle* (*GetVehicleFromRef)(int);
@@ -226,6 +227,8 @@ extern void (*Find3rdPersonCamTargetVector)(CCamera*, float, CVector, CVector&, 
 extern CPad* (*GetPad)(int);
 extern bool (*PadGetTarget)(CPad*, bool);
 extern void (*CreateMatFromVec)(void* unused, CMatrix*, CVector*, CVector*);
+extern bool (*OurPedCanSeeThisEntity)(CPed*, CEntity*, bool);
+extern bool (*GetPadState)(void*, int, int);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);

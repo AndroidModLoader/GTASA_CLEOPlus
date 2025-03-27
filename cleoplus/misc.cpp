@@ -597,11 +597,127 @@ CLEO_Fn(IS_CHAR_ON_FIRE)
 }
 CLEO_Fn(GET_CLOSEST_COP_NEAR_CHAR)
 {
-    
+    CPed *closestPed = NULL, *obj;
+    CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+    float radius = cleo->ReadParam(handle)->f;
+    bool alive = cleo->ReadParam(handle)->i;
+    bool inCar = cleo->ReadParam(handle)->i;
+    bool onFoot = cleo->ReadParam(handle)->i;
+    bool seenInFront = cleo->ReadParam(handle)->i;
+
+    float radiusSqr = radius * radius; // small opt.
+
+    CVector pos = ped->GetPosition();
+    auto size = (*ms_pPedPool)->m_nSize;
+    for(int i = 0; i < size; ++i)
+    {
+        obj = (*ms_pPedPool)->GetAt(i);
+        if(obj && obj != ped)
+        {
+            if(obj->IsInAnyVehicle())
+            {
+                if(onFoot && !inCar) continue;
+            }
+            else
+            {
+                if(!onFoot && inCar) continue;
+            }
+
+            if(!alive || obj->m_fHealth > 0.0f)
+            {
+                if(radius >= 1000.0f || (pos - obj->GetPosition()).MagnitudeSqr() <= radiusSqr)
+                {
+                    if(obj->m_nPedType == ePedType::PED_TYPE_COP || (obj->m_nModelIndex >= 280 && obj->m_nModelIndex <= 288))
+                    {
+                        if(!seenInFront || OurPedCanSeeThisEntity(obj, ped, false))
+                        {
+                            // Update closest one
+                            if(closestPed)
+                            {
+                                if((closestPed->GetPosition() - pos).MagnitudeSqr() < (obj->GetPosition() - pos).MagnitudeSqr())
+                                {
+                                    continue;
+                                }
+                            }
+                            closestPed = obj;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if(closestPed)
+    {
+        cleo->GetPointerToScriptVar(handle)->i = GetPedRef(closestPed);
+        cleoaddon->UpdateCompareFlag(handle, false);
+    }
+    else
+    {
+        cleo->GetPointerToScriptVar(handle)->i = -1;
+        cleoaddon->UpdateCompareFlag(handle, false);
+    }
 }
 CLEO_Fn(GET_CLOSEST_COP_NEAR_POS)
 {
-    
+    CPed *closestPed = NULL, *obj;
+    float x = cleo->ReadParam(handle)->f;
+    float y = cleo->ReadParam(handle)->f;
+    float z = cleo->ReadParam(handle)->f;
+    float radius = cleo->ReadParam(handle)->f;
+    bool alive = cleo->ReadParam(handle)->i;
+    bool inCar = cleo->ReadParam(handle)->i;
+    bool onFoot = cleo->ReadParam(handle)->i;
+
+    float radiusSqr = radius * radius; // small opt.
+
+    CVector pos(x, y, z);
+    auto size = (*ms_pPedPool)->m_nSize;
+    for(int i = 0; i < size; ++i)
+    {
+        obj = (*ms_pPedPool)->GetAt(i);
+        if(obj)
+        {
+            if(obj->IsInAnyVehicle())
+            {
+                if(onFoot && !inCar) continue;
+            }
+            else
+            {
+                if(!onFoot && inCar) continue;
+            }
+
+            if(!alive || obj->m_fHealth > 0.0f)
+            {
+                if(radius >= 1000.0f || (pos - obj->GetPosition()).MagnitudeSqr() <= radiusSqr)
+                {
+                    if(obj->m_nPedType == ePedType::PED_TYPE_COP || (obj->m_nModelIndex >= 280 && obj->m_nModelIndex <= 288))
+                    {
+                        // Update closest one
+                        if(closestPed)
+                        {
+                            if((closestPed->GetPosition() - pos).MagnitudeSqr() < (obj->GetPosition() - pos).MagnitudeSqr())
+                            {
+                                continue;
+                            }
+                        }
+                        closestPed = obj;
+                    }
+                }
+            }
+        }
+    }
+
+    if(closestPed)
+    {
+        cleo->GetPointerToScriptVar(handle)->i = GetPedRef(closestPed);
+        cleoaddon->UpdateCompareFlag(handle, false);
+    }
+    else
+    {
+        cleo->GetPointerToScriptVar(handle)->i = -1;
+        cleoaddon->UpdateCompareFlag(handle, false);
+    }
 }
 CLEO_Fn(GET_ANY_CHAR_NO_SAVE_RECURSIVE)
 {

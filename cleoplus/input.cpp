@@ -45,11 +45,13 @@ CLEO_Fn(SET_PLAYER_CONTROL_PAD_MOVEMENT)
 }
 CLEO_Fn(IS_ANY_FIRE_BUTTON_PRESSED)
 {
-    
+    int pad = cleo->ReadParam(handle)->i;
+    cleoaddon->UpdateCompareFlag(handle, GetPadState(NULL, pad, 4));
 }
 CLEO_Fn(IS_SELECT_MENU_JUST_PRESSED)
 {
-    
+    // We dont have that menu on Android
+    cleoaddon->UpdateCompareFlag(handle, false);
 }
 CLEO_Fn(GET_TIME_NOT_TOUCHING_PAD)
 {
