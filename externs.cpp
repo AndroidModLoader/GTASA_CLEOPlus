@@ -38,6 +38,7 @@ CVector2D *vec2DRadarOrigin;
 float *m_radarRange;
 CWidget** m_pWidgets;
 int *windowSize;
+COnscreenTimer* OnscnTimer;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -109,6 +110,14 @@ bool (*PadGetTarget)(CPad*, bool);
 void (*CreateMatFromVec)(void* unused, CMatrix*, CVector*, CVector*);
 bool (*OurPedCanSeeThisEntity)(CPed*, CEntity*, bool);
 bool (*GetPadState)(void*, int, int);
+void (*OnscreenTimerAddClock)(COnscreenTimer*, uint32_t, char*, bool);
+void (*OnscreenTimerAddCounter)(COnscreenTimer*, uint32_t, uint16_t, char*, uint16_t);
+void (*OnscreenTimerAddCounterCounter)(COnscreenTimer*, uint32_t, uint32_t, char*, uint16_t);
+void (*OnscreenTimerClearClock)(COnscreenTimer*, uint32_t);
+void (*OnscreenTimerClearCounter)(COnscreenTimer*, uint32_t);
+void (*OnscreenTimerSetCounterFlashWhenFirstDisplayed)(COnscreenTimer*, uint32_t, bool);
+void (*OnscreenTimerSetClockBeepCountdownSecs)(COnscreenTimer*, uint32_t, uint32_t);
+void (*OnscreenTimerSetCounterColourID)(COnscreenTimer*, uint32_t, uint8_t);
 
 // int main
 void ResolveExternals()
@@ -141,7 +150,7 @@ void ResolveExternals()
     SET_TO(RadarBlipSprites, aml->GetSym(hGTASA, "_ZN6CRadar16RadarBlipSpritesE"));
     SET_TO(ScriptSprites, aml->GetSym(hGTASA, "_ZN11CTheScripts13ScriptSpritesE"));
     SET_TO(OnAMissionFlag, aml->GetSym(hGTASA, "_ZN11CTheScripts14OnAMissionFlagE"));
-    SET_TO(ScriptSpace, aml->GetSym(hGTASA, "_ZN11CTheScripts11ScriptSpaceE"));
+    SET_TO(ScriptSpace, *(void**)(pGTASA + 0x676040));
     SET_TO(ms_running, aml->GetSym(hGTASA, "_ZN12CCutsceneMgr10ms_runningE"));
     SET_TO(m_aCheatsActive, aml->GetSym(hGTASA, "_ZN6CCheat15m_aCheatsActiveE"));
     SET_TO(ms_pPedPool, aml->GetSym(hGTASA, "_ZN6CPools11ms_pPedPoolE"));
@@ -162,6 +171,7 @@ void ResolveExternals()
     SET_TO(m_radarRange, aml->GetSym(hGTASA, "_ZN6CRadar12m_radarRangeE"));
     SET_TO(m_pWidgets, *(void**)(pGTASA + 0x67947C));
     SET_TO(windowSize, aml->GetSym(hGTASA, "windowSize"));
+    SET_TO(OnscnTimer, aml->GetSym(hGTASA, "_ZN12CUserDisplay10OnscnTimerE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -233,4 +243,12 @@ void ResolveExternals()
     SET_TO(CreateMatFromVec, aml->GetSym(hGTASA, "_ZN4Fx_c16CreateMatFromVecEP11RwMatrixTagP7CVectorS3_"));
     SET_TO(OurPedCanSeeThisEntity, aml->GetSym(hGTASA, "_ZN4CPed22OurPedCanSeeThisEntityEP7CEntityb"));
     SET_TO(GetPadState, aml->GetSym(hGTASA, "_ZN14CRunningScript11GetPadStateEtt"));
+    SET_TO(OnscreenTimerAddClock, aml->GetSym(hGTASA, "_ZN14COnscreenTimer8AddClockEjPcb"));
+    SET_TO(OnscreenTimerAddCounter, aml->GetSym(hGTASA, "_ZN14COnscreenTimer10AddCounterEjtPct"));
+    SET_TO(OnscreenTimerAddCounterCounter, aml->GetSym(hGTASA, "_ZN14COnscreenTimer17AddCounterCounterEjjPct"));
+    SET_TO(OnscreenTimerClearClock, aml->GetSym(hGTASA, "_ZN14COnscreenTimer10ClearClockEj"));
+    SET_TO(OnscreenTimerClearCounter, aml->GetSym(hGTASA, "_ZN14COnscreenTimer12ClearCounterEj"));
+    SET_TO(OnscreenTimerSetCounterFlashWhenFirstDisplayed, aml->GetSym(hGTASA, "_ZN14COnscreenTimer33SetCounterFlashWhenFirstDisplayedEjh"));
+    SET_TO(OnscreenTimerSetClockBeepCountdownSecs, aml->GetSym(hGTASA, "_ZN14COnscreenTimer25SetClockBeepCountdownSecsEjj"));
+    SET_TO(OnscreenTimerSetCounterColourID, aml->GetSym(hGTASA, "_ZN14COnscreenTimer18SetCounterColourIDEjh"));
 }

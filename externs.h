@@ -166,6 +166,7 @@ extern CVector2D *vec2DRadarOrigin;
 extern float *m_radarRange;
 extern CWidget** m_pWidgets;
 extern int *windowSize;
+extern COnscreenTimer* OnscnTimer;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -237,6 +238,14 @@ extern bool (*PadGetTarget)(CPad*, bool);
 extern void (*CreateMatFromVec)(void* unused, CMatrix*, CVector*, CVector*);
 extern bool (*OurPedCanSeeThisEntity)(CPed*, CEntity*, bool);
 extern bool (*GetPadState)(void*, int, int);
+extern void (*OnscreenTimerAddClock)(COnscreenTimer*, uint32_t, char*, bool);
+extern void (*OnscreenTimerAddCounter)(COnscreenTimer*, uint32_t, uint16_t, char*, uint16_t);
+extern void (*OnscreenTimerAddCounterCounter)(COnscreenTimer*, uint32_t, uint32_t, char*, uint16_t);
+extern void (*OnscreenTimerClearClock)(COnscreenTimer*, uint32_t);
+extern void (*OnscreenTimerClearCounter)(COnscreenTimer*, uint32_t);
+extern void (*OnscreenTimerSetCounterFlashWhenFirstDisplayed)(COnscreenTimer*, uint32_t, bool);
+extern void (*OnscreenTimerSetClockBeepCountdownSecs)(COnscreenTimer*, uint32_t, uint32_t);
+extern void (*OnscreenTimerSetCounterColourID)(COnscreenTimer*, uint32_t, uint8_t);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);

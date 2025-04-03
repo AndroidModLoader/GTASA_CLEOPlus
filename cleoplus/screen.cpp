@@ -40,8 +40,6 @@ CLEO_Fn(CONVERT_3D_TO_SCREEN_2D)
     float ar = (float)windowSize[0] / (float)windowSize[1];
     const float ar43 = 4.0f / 3.0f;
     float arDiff = ar43 / ar;
-    //screenPos2D.x = (screenPos2D.x / RsGlobal->maximumWidth) * 640.0f / arDiff - 0.5f * (windowSize[0] - 4 * windowSize[1] / 3);
-
 
     screenPos2D.x = (screenPos2D.x - 0.5f * (windowSize[0] - 4 * windowSize[1] / 3)) / (arDiff * RsGlobal->maximumWidth / 640.0f);
     screenPos2D.y = (screenPos2D.y / RsGlobal->maximumHeight) * 448.0f;

@@ -367,7 +367,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0E39, GET_PICKUP_TYPE); // 0E39=2,get_pickup_type %1d% store_to %2d%
     
     // Timer
-    /*CLEO_RegisterOpcode(0x0E4E, DISPLAY_ONSCREEN_TIMER_LOCAL); // 0E4E=2,display_onscreen_timer_local %1d% direction %2d%
+    CLEO_RegisterOpcode(0x0E4E, DISPLAY_ONSCREEN_TIMER_LOCAL); // 0E4E=2,display_onscreen_timer_local %1d% direction %2d%
     CLEO_RegisterOpcode(0x0E4F, DISPLAY_ONSCREEN_TIMER_WITH_STRING_LOCAL); // 0E4F=3,display_onscreen_timer_with_string_local %1d% direction %2d% GXT %3d%
     CLEO_RegisterOpcode(0x0E50, DISPLAY_ONSCREEN_COUNTER_LOCAL); // 0E50=2,display_onscreen_counter_local %1d% direction %2d%
     CLEO_RegisterOpcode(0x0E51, DISPLAY_ONSCREEN_COUNTER_WITH_STRING_LOCAL); // 0E51=3,display_onscreen_counter_with_string_local %1d% direction %2d% GXT %3d%
@@ -380,7 +380,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0E58, SET_ONSCREEN_COUNTER_COLOUR_LOCAL); // 0E58=2,set_onscreen_counter_colour_local %1d% color %2d%
 
     // Intelligence
-    CLEO_RegisterOpcode(0x0E42, IS_CHAR_DOING_TASK_ID); // 0E42=2,is_char_doing_task_id %1d% %2d%
+    /*CLEO_RegisterOpcode(0x0E42, IS_CHAR_DOING_TASK_ID); // 0E42=2,is_char_doing_task_id %1d% %2d%
     CLEO_RegisterOpcode(0x0E43, GET_CHAR_TASK_POINTER_BY_ID); // 0E43=3,get_char_task_pointer_by_id %1d% %2d% store_to %3d%
     CLEO_RegisterOpcode(0x0E44, GET_CHAR_KILL_TARGET_CHAR); // 0E44=2,get_char_kill_target_char %1d% store_to %2d%
     CLEO_RegisterOpcode(0x0E46, IS_CHAR_USING_GUN); // 0E46=1,is_char_using_gun %1d%
