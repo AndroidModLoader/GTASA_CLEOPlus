@@ -224,32 +224,30 @@ DECL_HOOKv(PedAudioInit, void* self, CPed* ped) // returns audio type but unused
     int ref = (*ms_pPedPool)->GetRef(ped);
     for (auto scriptEvent : scriptEvents[ScriptEventList::CharCreate]) scriptEvent->RunScriptEvent(ref);
 }
+
+static bool bHooked_Bullet = false, bHooked_Object = false, bHooked_CarAudio = false, bHooked_PedAudio = false;
 void HookBulletImpact()
 {
-    static bool bHooked = false;
-    if(bHooked) return;
-    bHooked = true;
+    if(bHooked_Bullet) return;
+    bHooked_Bullet = true;
     HOOKPLT(OnBulletImpact, pGTASA + 0x66E8DC);
 }
 void HookObjectInit()
 {
-    static bool bHooked = false;
-    if(bHooked) return;
-    bHooked = true;
+    if(bHooked_Object) return;
+    bHooked_Object = true;
     HOOKPLT(OnObjectInit, pGTASA + 0x67371C);
 }
 void HookCarAudioInit()
 {
-    static bool bHooked = false;
-    if(bHooked) return;
-    bHooked = true;
+    if(bHooked_CarAudio) return;
+    bHooked_CarAudio = true;
     HOOKPLT(CarAudioInit, pGTASA + 0x66F25C);
 }
 void HookPedAudioInit()
 {
-    static bool bHooked = false;
-    if(bHooked) return;
-    bHooked = true;
+    if(bHooked_PedAudio) return;
+    bHooked_PedAudio = true;
     HOOKPLT(PedAudioInit, pGTASA + 0x671E00);
 }
 void Events_Patch()

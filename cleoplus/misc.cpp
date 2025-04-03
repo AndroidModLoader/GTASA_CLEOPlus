@@ -721,15 +721,72 @@ CLEO_Fn(GET_CLOSEST_COP_NEAR_POS)
 }
 CLEO_Fn(GET_ANY_CHAR_NO_SAVE_RECURSIVE)
 {
-    
+    CPed* obj = NULL, *it;
+    bool found = false;
+    int startidx = cleo->ReadParam(handle)->i, result = -1;
+
+    auto size = (*ms_pPedPool)->m_nSize;
+    for(int i = startidx; i < size; ++i)
+    {
+        it = (*ms_pPedPool)->GetAt(i);
+        if(it)
+        {
+            startidx = i + 1;
+            found = true;
+            result = GetPedRef(it);
+            break;
+        }
+    }
+
+    cleo->GetPointerToScriptVar(handle)->i = startidx;
+    cleo->GetPointerToScriptVar(handle)->i = result;
+    cleoaddon->UpdateCompareFlag(handle, found);
 }
 CLEO_Fn(GET_ANY_CAR_NO_SAVE_RECURSIVE)
 {
-    
+    CVehicle* obj = NULL, *it;
+    bool found = false;
+    int startidx = cleo->ReadParam(handle)->i, result = -1;
+
+    auto size = (*ms_pVehiclePool)->m_nSize;
+    for(int i = startidx; i < size; ++i)
+    {
+        it = (*ms_pVehiclePool)->GetAt(i);
+        if(it)
+        {
+            startidx = i + 1;
+            found = true;
+            result = GetVehicleRef(it);
+            break;
+        }
+    }
+
+    cleo->GetPointerToScriptVar(handle)->i = startidx;
+    cleo->GetPointerToScriptVar(handle)->i = result;
+    cleoaddon->UpdateCompareFlag(handle, found);
 }
 CLEO_Fn(GET_ANY_OBJECT_NO_SAVE_RECURSIVE)
 {
-    
+    CObject* obj = NULL, *it;
+    bool found = false;
+    int startidx = cleo->ReadParam(handle)->i, result = -1;
+
+    auto size = (*ms_pObjectPool)->m_nSize;
+    for(int i = startidx; i < size; ++i)
+    {
+        it = (*ms_pObjectPool)->GetAt(i);
+        if(it)
+        {
+            startidx = i + 1;
+            found = true;
+            result = GetObjectRef(it);
+            break;
+        }
+    }
+
+    cleo->GetPointerToScriptVar(handle)->i = startidx;
+    cleo->GetPointerToScriptVar(handle)->i = result;
+    cleoaddon->UpdateCompareFlag(handle, found);
 }
 CLEO_Fn(SET_CHAR_ARRESTED)
 {
