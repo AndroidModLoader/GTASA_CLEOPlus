@@ -116,6 +116,10 @@ public:
 class VehicleExtVars
 {
 public:
+    CEntity *lastDamageEntity;
+    int lastDamageWeapon;
+    float lastDamageIntensity;
+
     std::list<ExtendedVars*> extendedVarsList;
 };
 class ObjectExtVars

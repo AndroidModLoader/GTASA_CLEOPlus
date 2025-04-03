@@ -874,10 +874,55 @@ CLEO_Fn(SET_CAR_COORDINATES_SIMPLE)
 CLEO_Fn(GET_CHAR_DAMAGE_LAST_FRAME)
 {
     CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
+
+    int ret = -1, type = -1, part = -1;
+    float damage = 0.0f;
+
+    if(ped)
+    {
+        auto xdata = GetExtData(ped);
+        if(xdata)
+        {
+            if(xdata->lastDamageEntity)
+            {
+                ret = GetPedRef((CPed*)xdata->lastDamageEntity);
+                type = xdata->lastDamageWeapon;
+                part = xdata->lastDamagePart;
+                damage = xdata->lastDamageIntensity;
+            }
+        }
+    }
+
+    cleo->GetPointerToScriptVar(handle)->i = ret;
+    cleo->GetPointerToScriptVar(handle)->i = type;
+    cleo->GetPointerToScriptVar(handle)->i = part;
+    cleo->GetPointerToScriptVar(handle)->f = damage;
+    cleoaddon->UpdateCompareFlag(handle, damage > 0);
 }
 CLEO_Fn(GET_CAR_WEAPON_DAMAGE_LAST_FRAME)
 {
-    
+    CVehicle* veh = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    int ret = -1, type = -1;
+    float damage = 0.0f;
+
+    if(veh)
+    {
+        auto xdata = GetExtData(veh);
+        if(xdata)
+        {
+            if(xdata->lastDamageEntity)
+            {
+                ret = GetPedRef((CPed*)xdata->lastDamageEntity);
+            }
+            type = xdata->lastDamageWeapon;
+            damage = xdata->lastDamageIntensity;
+        }
+    }
+
+    cleo->GetPointerToScriptVar(handle)->i = ret;
+    cleo->GetPointerToScriptVar(handle)->i = type;
+    cleo->GetPointerToScriptVar(handle)->f = damage;
+    cleoaddon->UpdateCompareFlag(handle, damage > 0);
 }
 CLEO_Fn(IS_ON_SCRIPTED_CUTSCENE)
 {

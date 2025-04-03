@@ -18,6 +18,46 @@ DECL_HOOKv(PedDamageResponse, CPedDamageResponseCalculator* self, CPed* victim, 
     PedDamageResponse(self, victim, response, react);
 }
 
+uintptr_t CarInflictDmg_BackTo;
+extern "C" uintptr_t CarInflictDmg_Patch(CVehicle* self, int type, CEntity* damager, float damage)
+{
+    if(damage > 0)
+    {
+        auto xdata = GetExtData(self);
+        if(xdata)
+        {
+            xdata->lastDamageEntity = damager;
+            xdata->lastDamageIntensity = damage;
+            xdata->lastDamageWeapon = type;
+        }
+
+        int ref = (*ms_pVehiclePool)->GetRef(self);
+        for (auto scriptEvent : scriptEvents[ScriptEventList::CarWeaponDamage]) scriptEvent->RunScriptEvent(ref);
+    }
+    return CarInflictDmg_BackTo;
+}
+__attribute__((optnone)) __attribute__((naked)) void CarInflictDmg_Inject(void)
+{
+    asm volatile(
+        "ADDW R4, R5, #0x4CC\n"
+        "VLDR S18, [R4]\n"
+        "VCMPE.F32 S18, #0.0\n"); // org
+
+    asm volatile(
+        "PUSH {R0-R11}\n"
+        "LDR R0, [SP, #0x4 * 5]\n"
+        "LDR R1, [SP, #0x4 * 8]\n"
+        "LDR R2, [SP, #0x4 * 11]\n"
+        "VMOV R3, S16\n"
+        "BL CarInflictDmg_Patch\n"
+        "MOV R12, R0\n"
+        "POP {R0-R11}\n");
+    asm volatile(
+        "BX R12\n");
+}
+
+// --------------------------------------------------------------- //
+
 bool patchesActive[TOTAL_SCRIPT_EVENTS] { false };
 std::vector<ScriptEvent*> scriptEvents[TOTAL_SCRIPT_EVENTS];
 void ScriptEvent::RunScriptEvent(int arg1, int arg2, int arg3, int arg4)
@@ -336,6 +376,8 @@ void HookBuildingProcess()
 void Events_Patch()
 {
     HOOKPLT(PedDamageResponse, pGTASA + 0x66F0EC);
+    CarInflictDmg_BackTo = pGTASA + 0x584070 + 0x1;
+    aml->Redirect(pGTASA + 0x584064 + 0x1, (uintptr_t)CarInflictDmg_Inject);
 }
 
 // --------------------------------------------------------------- //
@@ -411,7 +453,7 @@ CLEO_Fn(SET_SCRIPT_EVENT_CHAR_DAMAGE)
 }
 CLEO_Fn(SET_SCRIPT_EVENT_CAR_WEAPON_DAMAGE)
 {
-    // TODO: CVehicle::InflictDamage
+    // Events_Patch
     ScriptEvent::AddEvent(handle, scriptEvents[ScriptEventList::CarWeaponDamage]);
 }
 CLEO_Fn(SET_SCRIPT_EVENT_BULLET_IMPACT)
