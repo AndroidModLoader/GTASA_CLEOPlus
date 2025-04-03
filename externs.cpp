@@ -34,6 +34,10 @@ bool *m_UserPause ,*m_CodePause;
 int *ClumpOffset;
 CMouseControllerState *NewMouseControllerState;
 float *m_fMouseAccelHorzntl;
+CVector2D *vec2DRadarOrigin;
+float *m_radarRange;
+CWidget** m_pWidgets;
+int *windowSize;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -154,6 +158,10 @@ void ResolveExternals()
     SET_TO(ClumpOffset, aml->GetSym(hGTASA, "ClumpOffset"));
     SET_TO(NewMouseControllerState, aml->GetSym(hGTASA, "_ZN4CPad23NewMouseControllerStateE"));
     SET_TO(m_fMouseAccelHorzntl, aml->GetSym(hGTASA, "_ZN7CCamera20m_fMouseAccelHorzntlE"));
+    SET_TO(vec2DRadarOrigin, aml->GetSym(hGTASA, "_ZN6CRadar16vec2DRadarOriginE"));
+    SET_TO(m_radarRange, aml->GetSym(hGTASA, "_ZN6CRadar12m_radarRangeE"));
+    SET_TO(m_pWidgets, *(void**)(pGTASA + 0x67947C));
+    SET_TO(windowSize, aml->GetSym(hGTASA, "windowSize"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));

@@ -162,6 +162,10 @@ extern bool *m_UserPause ,*m_CodePause;
 extern int *ClumpOffset;
 extern CMouseControllerState *NewMouseControllerState;
 extern float *m_fMouseAccelHorzntl;
+extern CVector2D *vec2DRadarOrigin;
+extern float *m_radarRange;
+extern CWidget** m_pWidgets;
+extern int *windowSize;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);

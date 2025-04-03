@@ -33,7 +33,8 @@ CLEO_Fn(IS_ON_MISSION)
 CLEO_Fn(IS_ON_SAMP)
 {
     cleoaddon->UpdateCompareFlag(handle, (
-        aml->GetLibHandle("libsamp.so") != NULL || aml->GetLibHandle("libvoice.so") != NULL || aml->GetLibHandle("libAlyn_SAMPMOBILE.so") != NULL || aml->HasMod("net.rusjj.resamp")
+        aml->GetLibHandle("libsamp.so") != NULL || aml->GetLibHandle("libSAMP.so") != NULL || aml->GetLibHandle("libvoice.so") != NULL ||
+        aml->GetLibHandle("libAlyn_SAMPMOBILE.so") != NULL || aml->HasMod("net.rusjj.resamp") || aml->GetLibHandle("libmultiplayer.so") != NULL
     ));
 }
 CLEO_Fn(IS_ON_CUTSCENE)

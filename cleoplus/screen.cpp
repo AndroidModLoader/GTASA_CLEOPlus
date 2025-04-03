@@ -32,10 +32,19 @@ CLEO_Fn(CONVERT_3D_TO_SCREEN_2D)
     bool checkNearClip = cleo->ReadParam(handle)->i != 0;
     bool checkFarClip = cleo->ReadParam(handle)->i != 0;
 
-    RwV3d pos3D{ x, y, z },screenPos2D;
+    RwV3d pos3D{ x, y, z }, screenPos2D;
     float sizeX, sizeY;
 
     bool result = CalcScreenCoors(pos3D, &screenPos2D, &sizeX, &sizeY, checkFarClip, checkNearClip);
+
+    float ar = (float)windowSize[0] / (float)windowSize[1];
+    const float ar43 = 4.0f / 3.0f;
+    float arDiff = ar43 / ar;
+    //screenPos2D.x = (screenPos2D.x / RsGlobal->maximumWidth) * 640.0f / arDiff - 0.5f * (windowSize[0] - 4 * windowSize[1] / 3);
+
+
+    screenPos2D.x = (screenPos2D.x - 0.5f * (windowSize[0] - 4 * windowSize[1] / 3)) / (arDiff * RsGlobal->maximumWidth / 640.0f);
+    screenPos2D.y = (screenPos2D.y / RsGlobal->maximumHeight) * 448.0f;
 
     sizeX = (sizeX / RsGlobal->maximumWidth) * 8.0f;
     sizeY = (sizeY / RsGlobal->maximumHeight) * 8.0f;
