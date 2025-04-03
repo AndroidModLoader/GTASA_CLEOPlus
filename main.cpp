@@ -112,6 +112,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0F13, GET_TIME_NOT_TOUCHING_PAD); // 0F13=2,get_time_not_touching_pad %1d% store_to %2d%
 
     // Events
+    Events_Patch();
     CLEO_RegisterOpcode(0x0ED0, RETURN_SCRIPT_EVENT); // 0ED0=0,return_script_event
     CLEO_RegisterOpcode(0x0ED1, SET_SCRIPT_EVENT_SAVE_CONFIRMATION); // 0ED1=3,set_script_event_save_confirmation %1d% label %2p% var_slot %3d%
     CLEO_RegisterOpcode(0x0ED2, SET_SCRIPT_EVENT_CHAR_DELETE); // 0ED2=3,set_script_event_char_delete %1d% label %2p% var_char %3d%
