@@ -1,5 +1,5 @@
 #include "externs.h"
-#include <addons/SimplexPerlinNoise.h>
+#include <SimplexNoise.h>
 #include <algorithm>
 
 CLEO_Fn(QUAT_SLERP)
