@@ -322,7 +322,9 @@ CLEO_Fn(STREAM_CUSTOM_SCRIPT_FROM_LABEL)
 }
 CLEO_Fn(GET_LAST_CREATED_CUSTOM_SCRIPT)
 {
-    
+    void* lastHandle = cleoaddon->GetLastCustomScriptCreated();
+    cleo->GetPointerToScriptVar(handle)->i = (int)lastHandle;
+    cleoaddon->UpdateCompareFlag(handle, lastHandle != NULL);
 }
 CLEO_Fn(GET_OBJECT_CENTRE_OF_MASS_TO_BASE_OF_MODEL)
 {
