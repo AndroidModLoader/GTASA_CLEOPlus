@@ -39,11 +39,6 @@ extern "C" uintptr_t CarInflictDmg_Patch(CVehicle* self, int type, CEntity* dama
 __attribute__((optnone)) __attribute__((naked)) void CarInflictDmg_Inject(void)
 {
     asm volatile(
-        "ADDW R4, R5, #0x4CC\n"
-        "VLDR S18, [R4]\n"
-        "VCMPE.F32 S18, #0.0\n"); // org
-
-    asm volatile(
         "PUSH {R0-R11}\n"
         "LDR R0, [SP, #0x4 * 5]\n"
         "LDR R1, [SP, #0x4 * 8]\n"
@@ -52,6 +47,10 @@ __attribute__((optnone)) __attribute__((naked)) void CarInflictDmg_Inject(void)
         "BL CarInflictDmg_Patch\n"
         "MOV R12, R0\n"
         "POP {R0-R11}\n");
+    asm volatile(
+        "ADDW R4, R5, #0x4CC\n"
+        "VLDR S18, [R4]\n"
+        "VCMPE.F32 S18, #0.0\n"); // org
     asm volatile(
         "BX R12\n");
 }
