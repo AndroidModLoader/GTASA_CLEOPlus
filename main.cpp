@@ -27,6 +27,16 @@ DECL_HOOKv(OnGameProcess)
 {
     if(!*m_UserPause && !*m_CodePause) pausedLastFrame = false;
     for (auto scriptEvent : scriptEvents[ScriptEventList::BeforeGameProcess]) scriptEvent->RunScriptEvent();
+    auto size = (*ms_pPedPool)->m_nSize;
+    for(int i = 0; i < size; ++i)
+    {
+        CPed* ped = (*ms_pPedPool)->GetAt(i);
+        if(ped)
+        {
+            auto xdata = GetExtData(ped);
+            if(xdata) xdata->GrabTasks(ped);
+        }
+    }
     OnGameProcess();
     for (auto scriptEvent : scriptEvents[ScriptEventList::AfterGameProcess]) scriptEvent->RunScriptEvent();
 }
@@ -374,7 +384,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0E58, SET_ONSCREEN_COUNTER_COLOUR_LOCAL); // 0E58=2,set_onscreen_counter_colour_local %1d% color %2d%
 
     // Intelligence
-    /*CLEO_RegisterOpcode(0x0E42, IS_CHAR_DOING_TASK_ID); // 0E42=2,is_char_doing_task_id %1d% %2d%
+    CLEO_RegisterOpcode(0x0E42, IS_CHAR_DOING_TASK_ID); // 0E42=2,is_char_doing_task_id %1d% %2d%
     CLEO_RegisterOpcode(0x0E43, GET_CHAR_TASK_POINTER_BY_ID); // 0E43=3,get_char_task_pointer_by_id %1d% %2d% store_to %3d%
     CLEO_RegisterOpcode(0x0E44, GET_CHAR_KILL_TARGET_CHAR); // 0E44=2,get_char_kill_target_char %1d% store_to %2d%
     CLEO_RegisterOpcode(0x0E46, IS_CHAR_USING_GUN); // 0E46=1,is_char_using_gun %1d%
@@ -387,7 +397,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0E96, CLEAR_CHAR_PRIMARY_TASKS); // 0E96=1,clear_char_primary_tasks %1d%
     CLEO_RegisterOpcode(0x0E97, CLEAR_CHAR_SECONDARY_TASKS); // 0E97=1,clear_char_secondary_tasks %1d%
     CLEO_RegisterOpcode(0x0EFF, GET_CHAR_SIMPLEST_ACTIVE_TASK); // 0EFF=3,get_char_simplest_active_task %1d% id_to %2d% pointer_to %3d%
-*/
+
     // Colpoint
     CLEO_RegisterOpcode(0x0D3A, GET_COLLISION_BETWEEN_POINTS); // 0D3A=20,get_collision_between_points %1d% %2d% %3d% and %4d% %5d% %6d% flags %7d% %8d% %9d% %10d% %11d% %12d% %13d% %14d% ignore_entity %15d% store_point_to %17d% %18d% %19d% entity_to %20d% colpoint_data_to %16d% // keep NewOpcodes order
     CLEO_RegisterOpcode(0x0D3B, GET_COLPOINT_NORMAL_VECTOR); // 0D3B=4,get_colpoint_normal_vector %1d% store_to %2d% %3d% %4d%

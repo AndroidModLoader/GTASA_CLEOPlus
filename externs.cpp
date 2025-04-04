@@ -52,7 +52,6 @@ int (*GetVehicleRef)(CVehicle*);
 CVehicle* (*GetVehicleFromRef)(int);
 CPed* (*GetPedFromRef)(int);
 CObject* (*GetObjectFromRef)(int);
-void (*UpdateCompareFlag)(CRunningScript*, uint8_t);
 bool (*CalcScreenCoors)(RwV3d const&,RwV3d*,float *,float *,bool,bool);
 int (*GetActualPickupIndex)(int);
 bool (*ProcessLineOfSight)(CVector const&,CVector const&,CColPoint &,CEntity *&,bool,bool,bool,bool,bool,bool,bool,bool);
@@ -127,6 +126,8 @@ RwBool (*RwStreamFindChunk)(RwStream*, uint32_t, uint32_t*, uint32_t*);
 RpClump* (*RpClumpStreamRead)(RwStream*);
 RpAtomic* (*GetFirstAtomic)(RpClump*);
 RwBool (*RwStreamClose)(RwStream*, void*);
+void (*ClearTasks)(CPedIntelligence*, bool, bool);
+CTask* (*GetSimplestActiveTask)(CTaskManager*);
 
 // int main
 void ResolveExternals()
@@ -194,7 +195,6 @@ void ResolveExternals()
     SET_TO(GetVehicleFromRef, aml->GetSym(hGTASA, "_ZN6CPools10GetVehicleEi"));
     SET_TO(GetPedFromRef, aml->GetSym(hGTASA, "_ZN6CPools6GetPedEi"));
     SET_TO(GetObjectFromRef, aml->GetSym(hGTASA, "_ZN6CPools9GetObjectEi"));
-    SET_TO(UpdateCompareFlag, aml->GetSym(hGTASA, "_ZN14CRunningScript17UpdateCompareFlagEh"));
     SET_TO(CalcScreenCoors, aml->GetSym(hGTASA, "_ZN7CSprite15CalcScreenCoorsERK5RwV3dPS0_PfS4_bb"));
     SET_TO(GetActualPickupIndex, aml->GetSym(hGTASA, "_ZN8CPickups20GetActualPickupIndexEi"));
     SET_TO(ProcessLineOfSight, aml->GetSym(hGTASA, "_ZN6CWorld18ProcessLineOfSightERK7CVectorS2_R9CColPointRP7CEntitybbbbbbbb"));
@@ -269,4 +269,6 @@ void ResolveExternals()
     SET_TO(RpClumpStreamRead, aml->GetSym(hGTASA, "_Z17RpClumpStreamReadP8RwStream"));
     SET_TO(GetFirstAtomic, aml->GetSym(hGTASA, "_Z14GetFirstAtomicP7RpClump"));
     SET_TO(RwStreamClose, aml->GetSym(hGTASA, "_Z13RwStreamCloseP8RwStreamPv"));
+    SET_TO(ClearTasks, aml->GetSym(hGTASA, "_ZN16CPedIntelligence10ClearTasksEbb"));
+    SET_TO(GetSimplestActiveTask, aml->GetSym(hGTASA, "_ZNK12CTaskManager21GetSimplestActiveTaskEv"));
 }

@@ -98,9 +98,12 @@ public:
 class PedExtVars
 {
 public:
-    int activeTasks[32];
+    static const int g_nTasksCacheSize = 64;
+
+    int activeTasks[g_nTasksCacheSize];
     CEntity *killTargetPed;
     CEntity *lastDamageEntity;
+    CVehicle* enterExitTargetCar;
     int lastDamageWeapon;
     int lastDamagePart;
     float lastDamageIntensity;
@@ -108,7 +111,8 @@ public:
 
     union
     {
-        unsigned int aiFlagsIntValue;
+        // watch someone getting this fixed
+        uint64_t aiFlagsIntValue;
         struct
         {
             unsigned char bKillingSomething : 1;
@@ -122,6 +126,27 @@ public:
             unsigned char bRootTaskIsntImportant : 1;
         } aiFlags;
     };
+
+    void GrabTasks(CPed* ped); // ai.cpp
+    void GrabFlags(CTask* task, int type, bool secondaryTask, int idx, CPed* ped); // ai.cpp
+    inline bool HasTask(int task)
+    {
+        for(int i = 0; i < g_nTasksCacheSize; ++i)
+        {
+            if(activeTasks[i] == task) return true;
+        }
+        return false;
+    }
+    inline bool HasAnimFlags(int mode)
+    {
+        if(mode == 3)
+        {
+            return (aiFlags.bPlayingAnyPrimaryScriptAnimation || aiFlags.bPlayingAnySecondaryScriptAnimation);
+        }
+        if(mode == 2) return (aiFlags.bPlayingAnySecondaryScriptAnimation);
+        if(mode == 1) return (aiFlags.bPlayingAnyPrimaryScriptAnimation);
+        return false;
+    }
 
     std::vector<RenderObject*> renderObjects;
     std::list<ExtendedVars*> extendedVarsList;
@@ -193,7 +218,6 @@ extern int (*GetVehicleRef)(CVehicle*);
 extern CVehicle* (*GetVehicleFromRef)(int);
 extern CPed* (*GetPedFromRef)(int);
 extern CObject* (*GetObjectFromRef)(int);
-extern void (*UpdateCompareFlag)(CRunningScript*, uint8_t);
 extern bool (*CalcScreenCoors)(RwV3d const&,RwV3d*,float *,float *,bool,bool);
 extern int (*GetActualPickupIndex)(int);
 extern bool (*ProcessLineOfSight)(CVector const&,CVector const&,CColPoint &,CEntity *&,bool,bool,bool,bool,bool,bool,bool,bool);
@@ -268,6 +292,8 @@ extern RwBool (*RwStreamFindChunk)(RwStream*, uint32_t, uint32_t*, uint32_t*);
 extern RpClump* (*RpClumpStreamRead)(RwStream*);
 extern RpAtomic* (*GetFirstAtomic)(RpClump*);
 extern RwBool (*RwStreamClose)(RwStream*, void*);
+extern void (*ClearTasks)(CPedIntelligence*, bool, bool);
+extern CTask* (*GetSimplestActiveTask)(CTaskManager*);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);
