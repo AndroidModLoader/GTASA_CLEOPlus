@@ -64,6 +64,19 @@ public:
 extern std::vector<ScriptEvent*> scriptEvents[TOTAL_SCRIPT_EVENTS];
 
 
+// Special Models
+struct CSpecialModel
+{
+    RpClump* m_pClump = NULL;
+    RpAtomic* m_pAtomic = NULL;  
+    int m_nRefs = 1;
+    int m_nTxdIdx = -1;
+
+    static CSpecialModel* New(const char* dff, const char* txd);
+    void Destroy();
+};
+
+
 // Render Objects
 class RenderObject;
 
@@ -246,6 +259,15 @@ extern void (*OnscreenTimerClearCounter)(COnscreenTimer*, uint32_t);
 extern void (*OnscreenTimerSetCounterFlashWhenFirstDisplayed)(COnscreenTimer*, uint32_t, bool);
 extern void (*OnscreenTimerSetClockBeepCountdownSecs)(COnscreenTimer*, uint32_t, uint32_t);
 extern void (*OnscreenTimerSetCounterColourID)(COnscreenTimer*, uint32_t, uint8_t);
+extern int (*GetInputType)();
+extern void (*RpAtomicDestroy)(RpAtomic*);
+extern void (*RpClumpDestroy)(RpClump*);
+extern void (*TxdStoreRemoveRef)(int);
+extern RwStream* (*RwStreamOpen)(int, int, void*);
+extern RwBool (*RwStreamFindChunk)(RwStream*, uint32_t, uint32_t*, uint32_t*);
+extern RpClump* (*RpClumpStreamRead)(RwStream*);
+extern RpAtomic* (*GetFirstAtomic)(RpClump*);
+extern RwBool (*RwStreamClose)(RwStream*, void*);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);

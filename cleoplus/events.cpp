@@ -204,26 +204,11 @@ DECL_HOOKv(PedAudioInit, void* self, CPed* ped) // returns audio type but unused
     int ref = (*ms_pPedPool)->GetRef(ped);
     for (auto scriptEvent : scriptEvents[ScriptEventList::CharCreate]) scriptEvent->RunScriptEvent(ref);
 }
-DECL_HOOKv(GameSpecificStuffBeforeSave)
-{
-    for (auto scriptEvent : scriptEvents[ScriptEventList::SaveConfirmation]) scriptEvent->RunScriptEvent();
-    GameSpecificStuffBeforeSave();
-}
 DECL_HOOKv(PedDeletion, CPed* ped)
 {
     int ref = (*ms_pPedPool)->GetRef(ped);
     for (auto scriptEvent : scriptEvents[ScriptEventList::CharDelete]) scriptEvent->RunScriptEvent(ref);
     PedDeletion(ped);
-}
-DECL_HOOKv(ZonesUpdate)
-{
-    ZonesUpdate();
-    for (auto scriptEvent : scriptEvents[ScriptEventList::BeforeGameProcess]) scriptEvent->RunScriptEvent();
-}
-DECL_HOOKv(GameProcess)
-{
-    GameProcess();
-    for (auto scriptEvent : scriptEvents[ScriptEventList::AfterGameProcess]) scriptEvent->RunScriptEvent();
 }
 DECL_HOOKv(CarDeletion, CVehicle* vehicle)
 {
@@ -294,12 +279,6 @@ void HookPedAudioInit()
     patchesActive[ScriptEventList::CharCreate] = true;
     HOOKPLT(PedAudioInit, pGTASA + 0x671E00);
 }
-void HookOnSave()
-{
-    if(patchesActive[ScriptEventList::SaveConfirmation]) return;
-    patchesActive[ScriptEventList::SaveConfirmation] = true;
-    HOOKPLT(GameSpecificStuffBeforeSave, pGTASA + 0x66EC5C);
-}
 void HookPedDelete()
 {
     if(patchesActive[ScriptEventList::CharDelete]) return;
@@ -308,18 +287,6 @@ void HookPedDelete()
     HOOKPLT(PedDeletion, pGTASA + 0x66F4FC);
     HOOKPLT(PedDeletion, pGTASA + 0x668BF0);
     HOOKPLT(PedDeletion, pGTASA + 0x668C68);
-}
-void HookBeforeGameProcess()
-{
-    if(patchesActive[ScriptEventList::BeforeGameProcess]) return;
-    patchesActive[ScriptEventList::BeforeGameProcess] = true;
-    HOOKPLT(ZonesUpdate, pGTASA + 0x670DC4);
-}
-void HookAfterGameProcess()
-{
-    if(patchesActive[ScriptEventList::AfterGameProcess]) return;
-    patchesActive[ScriptEventList::AfterGameProcess] = true;
-    HOOKPLT(GameProcess, pGTASA + 0x66FE58);
 }
 void HookCarDelete()
 {
@@ -388,7 +355,6 @@ CLEO_Fn(RETURN_SCRIPT_EVENT)
 }
 CLEO_Fn(SET_SCRIPT_EVENT_SAVE_CONFIRMATION)
 {
-    HookOnSave();
     ScriptEvent::AddEvent(handle, scriptEvents[ScriptEventList::SaveConfirmation]);
 }
 CLEO_Fn(SET_SCRIPT_EVENT_CHAR_DELETE)
@@ -423,7 +389,7 @@ CLEO_Fn(SET_SCRIPT_EVENT_OBJECT_CREATE)
 }
 CLEO_Fn(SET_SCRIPT_EVENT_ON_MENU)
 {
-    // TODO: kinda dumb stuff, needs more stuff to sort out
+    // main.cpp
     ScriptEvent::AddEvent(handle, scriptEvents[ScriptEventList::OnMenu]);
 }
 CLEO_Fn(SET_SCRIPT_EVENT_CHAR_PROCESS)
@@ -463,11 +429,9 @@ CLEO_Fn(SET_SCRIPT_EVENT_BULLET_IMPACT)
 }
 CLEO_Fn(SET_SCRIPT_EVENT_BEFORE_GAME_PROCESS)
 {
-    HookBeforeGameProcess();
     ScriptEvent::AddEvent(handle, scriptEvents[ScriptEventList::BeforeGameProcess], 0);
 }
 CLEO_Fn(SET_SCRIPT_EVENT_AFTER_GAME_PROCESS)
 {
-    HookAfterGameProcess();
     ScriptEvent::AddEvent(handle, scriptEvents[ScriptEventList::AfterGameProcess], 0);
 }

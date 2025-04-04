@@ -38,15 +38,6 @@ DECL_HOOKv(MobileMenuRender, void* self)
     for (auto scriptEvent : scriptEvents[ScriptEventList::OnMenu]) scriptEvent->RunScriptEvent(!pausedLastFrame);
     if (!pausedLastFrame) pausedLastFrame = true;
 }
-DECL_HOOKv(ComputePedDamageResponse, void* self, CPed* ped, uintptr_t response, bool bSpeak)
-{
-    if(!*(bool*)(response + 10))
-    {
-        int pedref = (*ms_pPedPool)->GetRef(ped);
-        for (auto scriptEvent : scriptEvents[ScriptEventList::CharDamage]) scriptEvent->RunScriptEvent(pedref);
-    }
-    ComputePedDamageResponse(self, ped, response, bSpeak);
-}
 
 // int main!
 extern "C" void OnModLoad()
@@ -63,7 +54,6 @@ extern "C" void OnModLoad()
     HOOKPLT(OnGameProcess,                 pGTASA + 0x66FE58);
     HOOKPLT(DoGameSpecificStuffBeforeSave, pGTASA + 0x66EC5C);
     HOOKPLT(MobileMenuRender,              pGTASA + 0x674254);
-    HOOKPLT(ComputePedDamageResponse,      pGTASA + 0x66F0EC);
 
     // NoSave
     CLEO_RegisterOpcode(0x0E01, CREATE_OBJECT_NO_SAVE); // 0E01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%

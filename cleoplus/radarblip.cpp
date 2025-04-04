@@ -28,51 +28,36 @@ public:
         color.b = b;
         color.a = a;
         angle = 0.0f;
+
+        blips.push_back( this );
     }
     void Draw(float x, float y) // custom DrawCoordBlip
     {
-        float drawX = (x - vec2DRadarOrigin->x) * (1.0 / *m_radarRange);
-        float drawY = (y - vec2DRadarOrigin->y) * (1.0 / *m_radarRange);
-
         int spriteIdForDisplay = (spriteId != -1) ? spriteId : RADAR_SPRITE_PROPERTYG;
         int spriteIdForLegend = (spriteId != -1) ? spriteId : RADAR_SPRITE_NONE;
-        if(gMobileMenu->m_bDrawMenuMap)
-        {
-            drawX = gMobileMenu->m_vecMapBase.x + (drawX * gMobileMenu->m_fMapZoom);
-            drawY = gMobileMenu->m_vecMapBase.y - (drawY * gMobileMenu->m_fMapZoom);
-        }
-        else
-        {
-            CWidget* wdgt = m_pWidgets[161];
-            if(wdgt)
-            {
-                // i misplaced top and bottom in my code.
-                float top = wdgt->screenRect.bottom;
-                float right = wdgt->screenRect.right;
-                float left = wdgt->screenRect.left;
-                float bottom = wdgt->screenRect.top;
-
-                drawX = 0.5f * (drawX * fabsf(right - left)) + 0.5f * (left + right);
-                drawY = 0.5f * (top + bottom) - 0.5f * (drawY * fabsf(top - bottom));
-            }
-        }
-
         if(DisplayThisBlip(spriteIdForDisplay, -99))
         {
-            DrawBlipSprite(sprite, color, drawX, drawY);
+            DrawBlipSprite(sprite, color, x, y);
             if (spriteIdForLegend != RADAR_SPRITE_NONE) AddBlipToLegendList(0, spriteIdForLegend);
         }
     }
     void DrawBlipSprite(CSprite2d* sprite, CRGBA& color, float x, float y)
     {
         float blipScale = *(float*)(pGTASA + 0x43F990);
-        CRect drawRect;
 
         if(gMobileMenu->m_bDrawMenuMap)
         {
             x *= (float)RsGlobal->maximumHeight / 448.0f;
             y *= (float)RsGlobal->maximumHeight / 448.0f;
-            // TODO: if ( CHID::GetInputType() != HIDInputType::HID_INPUT_TYPE_JOYPAD ) stuff (later)
+            if(GetInputType() != 1)
+            {
+                float clampScale = (gMobileMenu->m_nScreensCount || gMobileMenu->m_pTopScreen) ? gMobileMenu->m_fMapZoom : 140.0f;
+                
+                x = fminf(fmaxf(x, (gMobileMenu->m_vecMapBase.x - clampScale) * (float)RsGlobal->maximumWidth / 640.0f),
+                                   (clampScale + gMobileMenu->m_vecMapBase.x) * (float)RsGlobal->maximumWidth / 640.0f);
+                y = fminf(fmaxf(y, (gMobileMenu->m_vecMapBase.y - clampScale) * (float)RsGlobal->maximumHeight / 448.0f),
+                                   (clampScale + gMobileMenu->m_vecMapBase.y) * (float)RsGlobal->maximumHeight / 448.0f);
+            }
         }
 
         CWidget* wdgt = m_pWidgets[161];
@@ -81,10 +66,11 @@ public:
             float size = fabsf(wdgt->screenRect.right - wdgt->screenRect.left) * blipScale;
 
             // i misplaced top and bottom in my code.
-            drawRect.left = y - size;
-            drawRect.bottom = x + size;
-            drawRect.right = y + size;
-            drawRect.top = x - size;
+            CRect drawRect;
+            drawRect.left = x - size;
+            drawRect.bottom = y + size;
+            drawRect.right = x + size;
+            drawRect.top = y - size;
             
             DrawSprite(sprite, drawRect, color);
         }
@@ -109,12 +95,10 @@ extern "C" void DrawBlips_Patch()
     {
         if (blip->entity)
         {
-            CVector entityPos = blip->entity->GetPosition();
-            blip->worldPos.x = entityPos.x;
-            blip->worldPos.y = entityPos.y;
+            blip->worldPos = blip->entity->GetPosition().m_vec2D;
         }
-        CVector2D radarPoint;
-        CVector2D screenPos;
+
+        CVector2D radarPoint, screenPos;
         TransformRealWorldPointToRadarSpace(radarPoint, blip->worldPos);
         float distance = LimitRadarPoint(radarPoint);
         if (!blip->shortDistance || distance <= 1.0f || gMobileMenu->m_bDrawMenuMap)
@@ -155,7 +139,7 @@ CLEO_Fn(ADD_CLEO_BLIP)
     CSprite2d *sprite = new CSprite2d();
     if (spriteId < 0 && spriteId > -10000)
     {
-        sprite->m_pTexture = ScriptSprites[-spriteId].m_pTexture;
+        sprite->m_pTexture = ScriptSprites[-spriteId].m_pTexture; // TODO: GetScriptTextureById
         spriteId = -1;
     }
     else
@@ -178,18 +162,18 @@ CLEO_Fn(ADD_CLEO_BLIP)
     int b = cleo->ReadParam(handle)->i;
     int a = cleo->ReadParam(handle)->i;
     CRadarBlipCLEO *blip = new CRadarBlipCLEO(spriteId, sprite, x, y, shortDistance, r, g, b, a);
-    blips.push_back(blip);
     cleo->GetPointerToScriptVar(handle)->i = (int)blip;
 }
 CLEO_Fn(REMOVE_CLEO_BLIP)
 {
     CRadarBlipCLEO *blip = (CRadarBlipCLEO *)cleo->ReadParam(handle)->i;
-    for (std::vector<CRadarBlipCLEO*>::iterator iter = blips.begin(); iter != blips.end(); ++iter)
+    auto itend = blips.end();
+    for (auto iter = blips.begin(); iter != itend; ++iter)
     {
         if (*iter == blip)
         {
-            delete blip;
             blips.erase(iter);
+            delete blip;
             break;
         }
     }

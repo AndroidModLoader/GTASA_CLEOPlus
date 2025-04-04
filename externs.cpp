@@ -118,6 +118,15 @@ void (*OnscreenTimerClearCounter)(COnscreenTimer*, uint32_t);
 void (*OnscreenTimerSetCounterFlashWhenFirstDisplayed)(COnscreenTimer*, uint32_t, bool);
 void (*OnscreenTimerSetClockBeepCountdownSecs)(COnscreenTimer*, uint32_t, uint32_t);
 void (*OnscreenTimerSetCounterColourID)(COnscreenTimer*, uint32_t, uint8_t);
+int (*GetInputType)();
+void (*RpAtomicDestroy)(RpAtomic*);
+void (*RpClumpDestroy)(RpClump*);
+void (*TxdStoreRemoveRef)(int);
+RwStream* (*RwStreamOpen)(int, int, void*);
+RwBool (*RwStreamFindChunk)(RwStream*, uint32_t, uint32_t*, uint32_t*);
+RpClump* (*RpClumpStreamRead)(RwStream*);
+RpAtomic* (*GetFirstAtomic)(RpClump*);
+RwBool (*RwStreamClose)(RwStream*, void*);
 
 // int main
 void ResolveExternals()
@@ -251,4 +260,13 @@ void ResolveExternals()
     SET_TO(OnscreenTimerSetCounterFlashWhenFirstDisplayed, aml->GetSym(hGTASA, "_ZN14COnscreenTimer33SetCounterFlashWhenFirstDisplayedEjh"));
     SET_TO(OnscreenTimerSetClockBeepCountdownSecs, aml->GetSym(hGTASA, "_ZN14COnscreenTimer25SetClockBeepCountdownSecsEjj"));
     SET_TO(OnscreenTimerSetCounterColourID, aml->GetSym(hGTASA, "_ZN14COnscreenTimer18SetCounterColourIDEjh"));
+    SET_TO(GetInputType, aml->GetSym(hGTASA, "_ZN4CHID12GetInputTypeEv"));
+    SET_TO(RpAtomicDestroy, aml->GetSym(hGTASA, "_Z15RpAtomicDestroyP8RpAtomic"));
+    SET_TO(RpClumpDestroy, aml->GetSym(hGTASA, "_Z14RpClumpDestroyP7RpClump"));
+    SET_TO(TxdStoreRemoveRef, aml->GetSym(hGTASA, "_ZN9CTxdStore9RemoveRefEi"));
+    SET_TO(RwStreamOpen, aml->GetSym(hGTASA, "_Z12RwStreamOpen12RwStreamType18RwStreamAccessTypePKv"));
+    SET_TO(RwStreamFindChunk, aml->GetSym(hGTASA, "_Z17RwStreamFindChunkP8RwStreamjPjS1_"));
+    SET_TO(RpClumpStreamRead, aml->GetSym(hGTASA, "_Z17RpClumpStreamReadP8RwStream"));
+    SET_TO(GetFirstAtomic, aml->GetSym(hGTASA, "_Z14GetFirstAtomicP7RpClump"));
+    SET_TO(RwStreamClose, aml->GetSym(hGTASA, "_Z13RwStreamCloseP8RwStreamPv"));
 }
