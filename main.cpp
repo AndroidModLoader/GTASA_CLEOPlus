@@ -4,6 +4,10 @@
 
 MYMOD(net.juniordjjr.rusjj.cleoplus, CLEOPlus, 1.0.1, JuniorDjjr & RusJJ)
 NEEDGAME(com.rockstargames.gtasa)
+BEGIN_DEPLIST()
+    ADD_DEPENDENCY_VER(net.rusjj.aml, 1.2.3)
+    ADD_DEPENDENCY_VER(net.rusjj.cleolib, 2.0.1.7)
+END_DEPLIST()
 
 // Savings
 uintptr_t pGTASA;

@@ -18,11 +18,16 @@ CLEO_Fn(GET_MOUSE_SENSIBILITY)
 }
 CLEO_Fn(IS_KEY_JUST_PRESSED)
 {
-    
+    int key = cleo->ReadParam(handle)->i;
+    // TODO: get it working?
+    cleoaddon->UpdateCompareFlag(handle, false);
 }
 CLEO_Fn(IS_BUTTON_JUST_PRESSED)
 {
-    
+    int pad = cleo->ReadParam(handle)->i;
+    int btn = cleo->ReadParam(handle)->i;
+    // TODO: get it working?
+    cleoaddon->UpdateCompareFlag(handle, false);
 }
 CLEO_Fn(SET_CAMERA_CONTROL)
 {

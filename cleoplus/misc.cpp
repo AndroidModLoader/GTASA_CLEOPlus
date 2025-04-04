@@ -381,7 +381,7 @@ CLEO_Fn(IS_STRING_COMMENT)
     cleoaddon->ReadString(handle, buf, sizeof(buf));
 
     unsigned int i = 0;
-    while (buf[i] == ' ' && i <= 127) ++i;
+    while (buf[i] == ' ' && i < sizeof(buf)) ++i;
     if (buf[i] == '#' || buf[i] == ';' || (buf[i] == '/' && buf[i + 1] == '/')) bResult = true;
     cleoaddon->UpdateCompareFlag(handle, bResult);
 }
