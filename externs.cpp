@@ -19,7 +19,6 @@ MobileMenu *gMobileMenu;
 CPickup* aPickUps;
 CEntity** pIgnoreEntity;
 CSprite2d* RadarBlipSprites;
-CSprite2d* ScriptSprites;
 int32_t *OnAMissionFlag;
 CPool<CPed, CCopPed> **ms_pPedPool;
 CPool<CVehicle, CHeli> **ms_pVehiclePool;
@@ -128,6 +127,7 @@ RpAtomic* (*GetFirstAtomic)(RpClump*);
 RwBool (*RwStreamClose)(RwStream*, void*);
 void (*ClearTasks)(CPedIntelligence*, bool, bool);
 CTask* (*GetSimplestActiveTask)(CTaskManager*);
+void (*CorrectAspect)(float&, float&, float&, float&);
 
 // int main
 void ResolveExternals()
@@ -158,7 +158,6 @@ void ResolveExternals()
     SET_TO(pIgnoreEntity, aml->GetSym(hGTASA, "_ZN6CWorld13pIgnoreEntityE"));
     SET_TO(ZonesRevealed, aml->GetSym(hGTASA, "_ZN9CTheZones13ZonesRevealedE"));
     SET_TO(RadarBlipSprites, aml->GetSym(hGTASA, "_ZN6CRadar16RadarBlipSpritesE"));
-    SET_TO(ScriptSprites, aml->GetSym(hGTASA, "_ZN11CTheScripts13ScriptSpritesE"));
     SET_TO(OnAMissionFlag, aml->GetSym(hGTASA, "_ZN11CTheScripts14OnAMissionFlagE"));
     SET_TO(ScriptSpace, *(void**)(pGTASA + 0x676040));
     SET_TO(ms_running, aml->GetSym(hGTASA, "_ZN12CCutsceneMgr10ms_runningE"));
@@ -271,4 +270,5 @@ void ResolveExternals()
     SET_TO(RwStreamClose, aml->GetSym(hGTASA, "_Z13RwStreamCloseP8RwStreamPv"));
     SET_TO(ClearTasks, aml->GetSym(hGTASA, "_ZN16CPedIntelligence10ClearTasksEbb"));
     SET_TO(GetSimplestActiveTask, aml->GetSym(hGTASA, "_ZNK12CTaskManager21GetSimplestActiveTaskEv"));
+    SET_TO(CorrectAspect, aml->GetSym(hGTASA, "_Z13CorrectAspectRfS_S_S_"));
 }

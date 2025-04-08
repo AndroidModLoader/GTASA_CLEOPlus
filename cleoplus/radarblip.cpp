@@ -139,7 +139,7 @@ CLEO_Fn(ADD_CLEO_BLIP)
     CSprite2d *sprite = new CSprite2d();
     if (spriteId < 0 && spriteId > -10000)
     {
-        sprite->m_pTexture = ScriptSprites[-spriteId].m_pTexture; // TODO: GetScriptTextureById
+        sprite->m_pTexture = (RwTexture*)cleoaddon->GetScriptTextureByID(handle, -spriteId);
         spriteId = -1;
     }
     else

@@ -185,7 +185,6 @@ extern MobileMenu *gMobileMenu;
 extern CPickup* aPickUps;
 extern CEntity** pIgnoreEntity;
 extern CSprite2d* RadarBlipSprites;
-extern CSprite2d* ScriptSprites;
 extern int32_t *OnAMissionFlag;
 extern CPool<CPed, CCopPed> **ms_pPedPool;
 extern CPool<CVehicle, CHeli> **ms_pVehiclePool;
@@ -294,6 +293,7 @@ extern RpAtomic* (*GetFirstAtomic)(RpClump*);
 extern RwBool (*RwStreamClose)(RwStream*, void*);
 extern void (*ClearTasks)(CPedIntelligence*, bool, bool);
 extern CTask* (*GetSimplestActiveTask)(CTaskManager*);
+extern void (*CorrectAspect)(float&, float&, float&, float&);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);
@@ -661,4 +661,16 @@ inline ExtendedVars *FindExtendedVarsFromId(std::list<ExtendedVars*> extendedVar
         if (extendedVars->id == findId) return extendedVars;
     }
     return NULL;
+}
+inline void FixAspectRatio(float *x, float *y)
+{
+    float trashVar = 0.0f;
+    CorrectAspect(*x, *y, trashVar, trashVar);
+    /*float resX = (float)RsGlobal->maximumWidth;
+    float resY = (float)RsGlobal->maximumHeight;
+    resY *= 1.33333333f;
+    resX /= resY;
+    
+    *x /= resX;
+    *y /= 1.07142857f;*/
 }

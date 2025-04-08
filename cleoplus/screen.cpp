@@ -1,16 +1,5 @@
 #include "externs.h"
 
-inline void FixAspectRatio(float *x, float *y)
-{
-    float resX = (float)RsGlobal->maximumWidth;
-    float resY = (float)RsGlobal->maximumHeight;
-    resY *= 1.33333333f;
-    resX /= resY;
-    
-    *x /= resX;
-    *y /= 1.07142857f;
-}
-
 CLEO_Fn(GET_CURRENT_RESOLUTION)
 {
     cleo->GetPointerToScriptVar(handle)->i = RsGlobal->maximumWidth;

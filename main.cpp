@@ -298,10 +298,10 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0D33, SET_CAR_DOOR_WINDOW_STATE); // 0D33=3,set_car %1d% door %2d% window_state %3d%
 
     // Drawing
-    CLEO_RegisterOpcode(0x0E1E, DRAW_TEXTURE_PLUS); // 0E1E=15,draw_texture_plus %1d% event %2d% pos %3d% %4d% size %5d% %6d% angle %7d% depth %8d% fix_aspect_ratio %9d% maskTrisCount %10d% maskTrisArray %11d% rgba %12d% %13d% %14d% %15d% 
+    //CLEO_RegisterOpcode(0x0E1E, DRAW_TEXTURE_PLUS); // 0E1E=15,draw_texture_plus %1d% event %2d% pos %3d% %4d% size %5d% %6d% angle %7d% depth %8d% fix_aspect_ratio %9d% maskTrisCount %10d% maskTrisArray %11d% rgba %12d% %13d% %14d% %15d% 
     CLEO_RegisterOpcode(0x0E3C, GET_TEXTURE_FROM_SPRITE); // 0E3C=2,get_texture_from_sprite %1d% store_to %2d%
-    CLEO_RegisterOpcode(0x0E62, DRAW_STRING); // 0E62=8,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d%
-    CLEO_RegisterOpcode(0x0E63, DRAW_STRING_EXT); // 0E63=27,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d% prop %9d% align %10d% wrap %11d% justify %12d% color %13d% %14d% %15d% %16d% outline %17d% shadow %18d% dropColor %19d% %20d% %21d% %22d% background %23d% backColor %24d% %25d% %26d% %27d%
+    //CLEO_RegisterOpcode(0x0E62, DRAW_STRING); // 0E62=8,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d%
+    //CLEO_RegisterOpcode(0x0E63, DRAW_STRING_EXT); // 0E63=27,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d% prop %9d% align %10d% wrap %11d% justify %12d% color %13d% %14d% %15d% %16d% outline %17d% shadow %18d% dropColor %19d% %20d% %21d% %22d% background %23d% backColor %24d% %25d% %26d% %27d%
 
     // Math
     CLEO_RegisterOpcode(0x0D1E, QUAT_SLERP); // 0D1E=4,quat_slerp %1d% to %2d% lambda %3d% result %4d%
