@@ -81,12 +81,17 @@ public:
         return (!gMobileMenu->m_bDrawMenuMap || *ZonesRevealed > 80 || GetCurrentZoneLockedOrUnlocked(worldPos.x, worldPos.y));
     }
 
-    static void Delete()
+    static void ClearAll()
     {
         for (CRadarBlipCLEO* blip : blips) delete blip;
         blips.clear();
     }
 };
+
+void ClearAllCLEOBlips()
+{
+    CRadarBlipCLEO::ClearAll();
+}
 
 uintptr_t DrawBlips_BackTo;
 extern "C" void DrawBlips_Patch()

@@ -42,7 +42,7 @@ public:
     }
 };
 std::vector<ScriptList*> scriptLists;
-inline void ClearScriptLists()
+void ClearScriptLists()
 {
     for (auto& scriptList : scriptLists) delete scriptList;
     scriptLists.clear();

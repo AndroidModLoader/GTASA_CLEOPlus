@@ -2,6 +2,11 @@
 
 std::vector<CLEOTexture*> m_aCLEOTexs[TOTAL_DRAW_EVENT];
 
+void ClearAllCLEOTextures()
+{
+    CLEOTexture::ClearAll();
+}
+
 CLEO_Fn(DRAW_TEXTURE_PLUS)
 {
     RwTexture* tex = (RwTexture*)cleo->ReadParam(handle)->i;

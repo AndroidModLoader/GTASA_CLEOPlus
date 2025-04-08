@@ -52,6 +52,21 @@ DECL_HOOKv(MobileMenuRender, void* self)
     for (auto scriptEvent : scriptEvents[ScriptEventList::OnMenu]) scriptEvent->RunScriptEvent(!pausedLastFrame);
     if (!pausedLastFrame) pausedLastFrame = true;
 }
+DECL_HOOKv(GameInitReInit)
+{
+    GameInitReInit();
+
+    extern void ClearAllCLEOTextures();
+    ClearAllCLEOTextures();
+
+    extern void ClearAllCLEOBlips();
+    ClearAllCLEOBlips();
+
+    extern void ClearScriptLists();
+    void ClearScriptLists();
+
+    ScriptEvent::ClearAllScriptEvents();
+}
 
 // int main!
 extern "C" void OnModLoad()
@@ -68,13 +83,14 @@ extern "C" void OnModLoad()
     HOOKPLT(OnGameProcess,                 pGTASA + 0x66FE58);
     HOOKPLT(DoGameSpecificStuffBeforeSave, pGTASA + 0x66EC5C);
     HOOKPLT(MobileMenuRender,              pGTASA + 0x674254);
+    HOOKPLT(GameInitReInit,                pGTASA + 0x672014);
 
     // NoSave
     CLEO_RegisterOpcode(0x0E01, CREATE_OBJECT_NO_SAVE); // 0E01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
     CLEO_RegisterOpcode(0x0E02, SET_CAR_GENERATOR_NO_SAVE); // 0E02=1,set_car_generator_no_save %1d%
 
     // Environment
-    CLEO_RegisterOpcode(0x0D59, GET_CURRENT_WEATHER);
+    CLEO_RegisterOpcode(0x0D59, GET_CURRENT_WEATHER); // 0D59=1,get_current_weather_to %1d%
     CLEO_RegisterOpcode(0x0E04, GET_NEXT_WEATHER); // 0E04=1,get_next_weather_to %1d%
     CLEO_RegisterOpcode(0x0E05, SET_NEXT_WEATHER); // 0E05=1,set_next_weather_to %1d%
     CLEO_RegisterOpcode(0x0E06, GET_RAIN_INTENSITY); // 0E06=1,get_rain_intensity %1d%
@@ -170,15 +186,15 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0E4D, RANDOM_PERCENT); // 0E4D=1,random_percent %1d%
     CLEO_RegisterOpcode(0x0E59, GET_TRAILER_FROM_CAR); // 0E59=2,get_trailer_from_car %1d% trailer %2d%
     CLEO_RegisterOpcode(0x0E5A, GET_CAR_FROM_TRAILER); // 0E5A=2,get_car_from_trailer %1d% store_to %2d%
-    CLEO_RegisterOpcode(0x0E5B, GET_CAR_DUMMY_COORD); // 0E5B=7,get_car_dummy_coord %1d% dummy %2d% world_coords %3d% invert_x %4d% store_to %5d% %6d% %7d% // same as NewOpcodes but this is adapted to VehFuncs
+    CLEO_RegisterOpcode(0x0E5B, GET_CAR_DUMMY_COORD); // 0E5B=7,get_car_dummy_coord %1d% dummy %2d% world_coords %3d% invert_x %4d% store_to %5d% %6d% %7d%
     CLEO_RegisterOpcode(0x0E5D, IS_CHEAT_ACTIVE); // 0E5D=1,is_cheat_active %1d%
     CLEO_RegisterOpcode(0x0E5E, CHANGE_PLAYER_MONEY); // 0E5E=3,change_player_money %1d% mode %2d% value %3d%
     CLEO_RegisterOpcode(0x0E5F, CAR_HORN); // 0E5F=1,car_horn %1d%
-    CLEO_RegisterOpcode(0x0D4C, GET_STRING_LENGTH); // 0D4C=2,%2d% = string %1s% length // keep NewOpcodes order
+    CLEO_RegisterOpcode(0x0D4C, GET_STRING_LENGTH); // 0D4C=2,%2d% = string %1s% length
     CLEO_RegisterOpcode(0x0D4D, COPY_STRING); // 0D4D=2,copy_string %1s% to %2d%
     CLEO_RegisterOpcode(0x0E00, GET_CAR_ALARM); // 0E00=2,get_car_alarm %1d% mode_to %2d%
     CLEO_RegisterOpcode(0x0E61, SET_CAR_ALARM); // 0E61=2,set_car_alarm %1d% mode %2d%
-    CLEO_RegisterOpcode(0x0D39, GET_CHAR_MAX_HEALTH); // 0D39=2,%2d% = get_char_max_health %1d% // keep NewOpcodes order
+    CLEO_RegisterOpcode(0x0D39, GET_CHAR_MAX_HEALTH); // 0D39=2,%2d% = get_char_max_health %1d%
     CLEO_RegisterOpcode(0x0E5C, GET_CHAR_HEALTH_PERCENT); // 0E5C=2,get_player_health_percent %1d% store_to %2d%
     CLEO_RegisterOpcode(0x0E64, GET_CURRENT_CAMERA_MODE); // 0E64=1,get_camera_mode %1d%
     CLEO_RegisterOpcode(0x0E65, GET_CAR_COLLISION_INTENSITY); // 0E65=2,get_car_collision_intensity %1d% store_to %2d%
@@ -231,7 +247,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0EAF, IS_CHAR_WEAPON_VISIBLE_SET); // 0EAF=1,is_char_weapon_visible_set %1d%
     CLEO_RegisterOpcode(0x0EB1, GET_CHAR_STAT_ID); // 0EB1=2,get_char_stat_id %1d% store_to %2d%
     CLEO_RegisterOpcode(0x0EB2, GET_OFFSET_FROM_CAMERA_IN_WORLD_COORDS); // 0EB2=6,get_offset_from_camera_in_world_coords %1d% %2d% %3d% store_to %4d% %5d% %6d%
-    CLEO_RegisterOpcode(0x0D0A, GET_OFFSET_FROM_MATRIX_IN_WORLD_COORDS); // 0D0A=7,store_coords_to %5d% %6d% %7d% from_matrix %1d% with_offsets %2d% %3d% %4d% // keep NewOpcodes order
+    CLEO_RegisterOpcode(0x0D0A, GET_OFFSET_FROM_MATRIX_IN_WORLD_COORDS); // 0D0A=7,store_coords_to %5d% %6d% %7d% from_matrix %1d% with_offsets %2d% %3d% %4d%
     CLEO_RegisterOpcode(0x0EB4, SET_CAR_COORDINATES_SIMPLE); // 0EB4=4,set_car_coordinates_simple %1d% position %2d% %3d% %4d%
     CLEO_RegisterOpcode(0x0EB5, GET_CHAR_DAMAGE_LAST_FRAME); // 0EB5=5,get_char_damage_last_frame %1d% damager %2d% type %3d% part %4d% intensity %5d%
     CLEO_RegisterOpcode(0x0EB6, GET_CAR_WEAPON_DAMAGE_LAST_FRAME); // 0EB6=4,get_car_weapon_damage_last_frame %1d% char %2d% type %3d% intensity %4d%
@@ -294,7 +310,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0D11, SET_OBJECT_MODEL_ALPHA); // 0D11=2,set_object_model_alpha %1d% alpha %2d%
     CLEO_RegisterOpcode(0x0D2D, GET_LOCAL_TIME); // 0D2D=8,get_local_time_year_to %1d% month_to %2d% day_of_week_to %3d% day_to %4d% hour_to %5d% minute_to %6d% second_to %7d% milliseconds_to %8d%
     CLEO_RegisterOpcode(0x0D2E, SET_SCRIPT_VAR); // 0D2E=3,set_script %1d% var %2d% value %3d%
-    CLEO_RegisterOpcode(0x0D2F, GET_SCRIPT_VAR); // 0D2F=3,%3d% = get_script %1d% var %2d% // keep NewOpcodes order
+    CLEO_RegisterOpcode(0x0D2F, GET_SCRIPT_VAR); // 0D2F=3,%3d% = get_script %1d% var %2d%
     CLEO_RegisterOpcode(0x0D33, SET_CAR_DOOR_WINDOW_STATE); // 0D33=3,set_car %1d% door %2d% window_state %3d%
 
     // Drawing
@@ -309,13 +325,13 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0D17, SET_QUAT_FROM_MATRIX); // 0D17=2,set_quat_from_matrix %1d% to_quat %2d%
     CLEO_RegisterOpcode(0x0D18, ROTATE_QUAT_ON_AXIS); // 0D18=6,rotate_quat_on_axis %1d% axis_vector %2d% %3d% %4d% angle %5d% combine_op %6d%
     CLEO_RegisterOpcode(0x0D19, GET_NORMALISED_QUAT); // 0D19=2,get_normalised_quat %1d% to_quat %2d%
-    CLEO_RegisterOpcode(0x0D1A, MULTIPLY_QUATS); // 0D1A=3,multiply_quats %3d% = quat %1d% * quat %2d% // keep NewOpcodes order
+    CLEO_RegisterOpcode(0x0D1A, MULTIPLY_QUATS); // 0D1A=3,multiply_quats %3d% = quat %1d% * quat %2d%
     CLEO_RegisterOpcode(0x0D24, INITIALISE_QUAT); // 0D24=5,set_quat %1d% elements %2d% %3d% %4d% %5d%
     CLEO_RegisterOpcode(0x0D29, GET_QUAT_ELEMENTS); // 0D29=5,get_quat %1d% elements_to %2d% %3d% %4d% %5d%
     CLEO_RegisterOpcode(0x0D01, ROTATE_MATRIX_ON_AXIS); // 0D01=6,rotate_matrix %1d% on_axis %2d% %3d% %4d% angle %5d% combine_op %6d%
-    CLEO_RegisterOpcode(0x0D02, GET_MATRIX_X_ANGLE); // 0D02=2,%2d% = matrix %1d% x_angle // keep NewOpcodes order
-    CLEO_RegisterOpcode(0x0D03, GET_MATRIX_Y_ANGLE); // 0D03=2,%2d% = matrix %1d% y_angle // keep NewOpcodes order
-    CLEO_RegisterOpcode(0x0D04, GET_MATRIX_Z_ANGLE); // 0D04=2,%2d% = matrix %1d% z_angle // keep NewOpcodes order
+    CLEO_RegisterOpcode(0x0D02, GET_MATRIX_X_ANGLE); // 0D02=2,%2d% = matrix %1d% x_angle
+    CLEO_RegisterOpcode(0x0D03, GET_MATRIX_Y_ANGLE); // 0D03=2,%2d% = matrix %1d% y_angle
+    CLEO_RegisterOpcode(0x0D04, GET_MATRIX_Z_ANGLE); // 0D04=2,%2d% = matrix %1d% z_angle
     CLEO_RegisterOpcode(0x0E1F, EASE); // 0E1F=4,ease %1d% mode %2d% way %3d% to %4d%
     CLEO_RegisterOpcode(0x0E27, GET_ANGLE_FROM_TWO_COORDS); // 0E27=5,get_angle_from_two_coords %1d% %2d% and %3d% %4d% to %5d%
     CLEO_RegisterOpcode(0x0E03, PERLIN_NOISE); // 0E03=2,perlin_noise %1d% store_to %2d%
@@ -336,11 +352,11 @@ extern "C" void OnModLoad()
 
     // Memory
     CLEO_RegisterOpcode(0x0E28, WRITE_STRUCT_OFFSET); // 0E28=4,write_struct %1d% offset %2d% size %3d% value %4d%
-    CLEO_RegisterOpcode(0x0D4E, READ_STRUCT_OFFSET); // 0D4E=4,%4d% = read_struct %1d% offset %2d% size %3d% // keep newOpcodes ordering for SB
-    CLEO_RegisterOpcode(0x0D4F, WRITE_STRUCT_OFFSET); // // newOpcodes version of 0E28, the original one doesn't work, this is a fall off
+    CLEO_RegisterOpcode(0x0D4E, READ_STRUCT_OFFSET); // 0D4E=4,%4d% = read_struct %1d% offset %2d% size %3d%
+    CLEO_RegisterOpcode(0x0D4F, WRITE_STRUCT_OFFSET); // newOpcodes version of 0E28, the original one doesn't work, this is a fall off
     CLEO_RegisterOpcode(0x0D27, COPY_MEMORY); // 0D27=3,copy_memory %1d% to %2d% size %3d%
     CLEO_RegisterOpcode(0x0D37, WRITE_STRUCT_PARAM); // 0D37=3,write_struct_param %1d% param %2d% value %3d%
-    CLEO_RegisterOpcode(0x0D38, READ_STRUCT_PARAM); // 0D38=3,%3d% = read_struct_param %1d% param %2d% // keep newOpcodes ordering for SB
+    CLEO_RegisterOpcode(0x0D38, READ_STRUCT_PARAM); // 0D38=3,%3d% = read_struct_param %1d% param %2d%
     CLEO_RegisterOpcode(0x0E6A, MAKE_NOP); // 0E6A=2,make_nop %1d% size %2d%
     CLEO_RegisterOpcode(0x0EE2, READ_STRUCT_OFFSET_MULTI); // 0EE2=-1,read_struct_offset_multi %1d% offset %2d% total %3d% size %4d%
     CLEO_RegisterOpcode(0x0EE3, WRITE_STRUCT_OFFSET_MULTI); // 0EE3=-1,write_struct_offset_multi %1d% offset %2d% count %3d% size %4d%
@@ -399,7 +415,7 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0EFF, GET_CHAR_SIMPLEST_ACTIVE_TASK); // 0EFF=3,get_char_simplest_active_task %1d% id_to %2d% pointer_to %3d%
 
     // Colpoint
-    CLEO_RegisterOpcode(0x0D3A, GET_COLLISION_BETWEEN_POINTS); // 0D3A=20,get_collision_between_points %1d% %2d% %3d% and %4d% %5d% %6d% flags %7d% %8d% %9d% %10d% %11d% %12d% %13d% %14d% ignore_entity %15d% store_point_to %17d% %18d% %19d% entity_to %20d% colpoint_data_to %16d% // keep NewOpcodes order
+    CLEO_RegisterOpcode(0x0D3A, GET_COLLISION_BETWEEN_POINTS); // 0D3A=20,get_collision_between_points %1d% %2d% %3d% and %4d% %5d% %6d% flags %7d% %8d% %9d% %10d% %11d% %12d% %13d% %14d% ignore_entity %15d% store_point_to %17d% %18d% %19d% entity_to %20d% colpoint_data_to %16d%
     CLEO_RegisterOpcode(0x0D3B, GET_COLPOINT_NORMAL_VECTOR); // 0D3B=4,get_colpoint_normal_vector %1d% store_to %2d% %3d% %4d%
     CLEO_RegisterOpcode(0x0D3C, GET_COLPOINT_SURFACE); // 0D3C=2,get_colpoint_surface %1d% store_to %2d%
     CLEO_RegisterOpcode(0x0D3E, GET_COLPOINT_DEPTH); // 0D3E=2,get_colpoint_depth %1d% store_to %2d%
