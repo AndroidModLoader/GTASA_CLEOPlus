@@ -14,7 +14,7 @@
 
 #define CLEO_RegisterOpcode(x, h) cleo->RegisterOpcode(x, h); cleo->RegisterOpcodeFunction(#h, h)
 #define CLEO_Fn(h) void h (void *handle, uint32_t *ip, uint16_t opcode, const char *name)
-#define RpClumpGetAnimBlendClumpData(clump) (*(CAnimBlendClumpData**)(((unsigned int)(clump) + ClumpOffset)))
+#define RpClumpGetAnimBlendClumpData(clump) (*(CAnimBlendClumpData**)(((unsigned int)(clump) + *ClumpOffset)))
 
 extern uintptr_t pGTASA;
 extern void* hGTASA;

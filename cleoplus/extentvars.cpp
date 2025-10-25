@@ -81,12 +81,12 @@ CLEO_Fn(INIT_EXTENDED_CAR_VARS)
 {
     char buf[100];
     bool bResult = false;
-    CVehicle *ped = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    CVehicle *veh = GetVehicleFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int totalVars = cleo->ReadParam(handle)->i;
     if(totalVars > 0)
     {
-        auto xdata = *GetExtData(ped);
+        auto xdata = *GetExtData(veh);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
@@ -106,13 +106,13 @@ CLEO_Fn(SET_EXTENDED_CAR_VAR)
 {
     char buf[100];
     bool bResult = false;
-    CVehicle *ped = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    CVehicle *veh = GetVehicleFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = cleo->ReadParam(handle)->i;
     if(varId >= 0)
     {
-        auto xdata = *GetExtData(ped);
+        auto xdata = *GetExtData(veh);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
@@ -129,13 +129,13 @@ CLEO_Fn(GET_EXTENDED_CAR_VAR)
 {
     char buf[100];
     bool bResult = false;
-    CVehicle *ped = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    CVehicle *veh = GetVehicleFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = 0;
     if(varId >= 0)
     {
-        auto xdata = *GetExtData(ped);
+        auto xdata = *GetExtData(veh);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
@@ -154,12 +154,12 @@ CLEO_Fn(INIT_EXTENDED_OBJECT_VARS)
 {
     char buf[100];
     bool bResult = false;
-    CObject *ped = GetObjectFromRef(cleo->ReadParam(handle)->i);
+    CObject *obj = GetObjectFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int totalVars = cleo->ReadParam(handle)->i;
     if(totalVars > 0)
     {
-        auto xdata = *GetExtData(ped);
+        auto xdata = *GetExtData(obj);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
@@ -179,13 +179,13 @@ CLEO_Fn(SET_EXTENDED_OBJECT_VAR)
 {
     char buf[100];
     bool bResult = false;
-    CObject *ped = GetObjectFromRef(cleo->ReadParam(handle)->i);
+    CObject *obj = GetObjectFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = cleo->ReadParam(handle)->i;
     if(varId >= 0)
     {
-        auto xdata = *GetExtData(ped);
+        auto xdata = *GetExtData(obj);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
@@ -202,13 +202,13 @@ CLEO_Fn(GET_EXTENDED_OBJECT_VAR)
 {
     char buf[100];
     bool bResult = false;
-    CObject *ped = GetObjectFromRef(cleo->ReadParam(handle)->i);
+    CObject *obj = GetObjectFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int varId = cleo->ReadParam(handle)->i - 1;
     int varValue = 0;
     if(varId >= 0)
     {
-        auto xdata = *GetExtData(ped);
+        auto xdata = *GetExtData(obj);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
