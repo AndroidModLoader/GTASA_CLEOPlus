@@ -461,6 +461,7 @@ ON_ALL_MODS_LOAD()
     CLEO_RegisterOpcode(0x0D3E, GET_COLPOINT_DEPTH); // 0D3E=2,get_colpoint_depth %1d% store_to %2d%
     CLEO_RegisterOpcode(0x0E6B, GET_COLPOINT_LIGHTING); // 0E6B=3,get_colpoint_lighting %1d% from_night %2d% store_to %3d%
     CLEO_RegisterOpcode(0x0EE1, GET_COLPOINT_COORDINATES); // 0EE1=4,get_colpoint_coordinates %1d% store_to %2d% %3d% %4d%
+    CLEO_RegisterOpcode(0x0D3D, GET_COL_DATA_LIGHTING); // 0D3D=2,get_colpoint_data %1d% lighting_to %2d% // newOpcodes
 
     // List
     CLEO_RegisterOpcode(0x0E72, CREATE_LIST); // 0E72=2,create_list %1d% store_to %2d%

@@ -81,3 +81,8 @@ CLEO_Fn(GET_COLPOINT_COORDINATES)
     cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecPoint.y;
     cleo->GetPointerToScriptVar(handle)->f = colPoint->m_vecPoint.z;
 }
+CLEO_Fn(GET_COL_DATA_LIGHTING) // newOpcodes
+{
+    CColPoint *colPoint = (CColPoint*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = colPoint->m_nLightingB.as_uint8;
+}
