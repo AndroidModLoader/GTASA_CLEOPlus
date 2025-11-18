@@ -344,6 +344,16 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0EB3, CONVERT_DIRECTION_TO_QUAT); // 0EB3=4,convert_direction_to_quat %1d% dir %2d% %3d% %4d%
     CLEO_RegisterOpcode(0x0EF3, LERP); // 0EF3=4,lerp %1d% %2d% %3d% store_to %4d%
     CLEO_RegisterOpcode(0x0F0D, SET_MATRIX_LOOK_DIRECTION); // 0F0D=7,set_matrix_look_direction %1d% origin %2d% %3d% %4d% dir %5d% %6d% %7d%
+    CLEO_RegisterOpcode(0x0D05, SET_MATRIX_POSITION); // 0D05=4,set_matrix %1d% position %2d% %3d% %4d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D06, GET_MATRIX_POSITION); // 0D06=4,get_matrix %1d% position_to %2d% %3d% %4d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D07, GET_COORDS_OFFSETS_RELATIVELY_TO_MATRIX); // 0D07=7,get_coords %1d% %2d% %3d% offsets_relative_to_matrix %4d% store_to %5d% %6d% %7d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D08, SET_MATRIX_ROTATION); // 0D08=4,set_matrix %1d% rotation %2d% %3d% %4d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D09, COPY_MATRIX); // 0D09=2,copy_matrix %1d% to %2d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D13, SET_MATRIX_X_ROTATION); // 0D13=3,set_matrix %1d% x_angle %2d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D14, SET_MATRIX_Y_ROTATION); // 0D14=3,set_matrix %1d% y_angle %2d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D15, SET_MATRIX_Z_ROTATION); // 0D15=3,set_matrix %1d% z_angle %2d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D1D, INTERPOLATE_MATRIX); // 0D1D=4,matrix_slerp %1d% from_matrix %2d% to_matrix %3d% t %4d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D25, INITIALISE_MATRIX); // 0D25=17,set_matrix %1d% elements %2d% %3d% %4d% %5d% %6d% %7d% %8d% %9d% %10d% %11d% %12d% %13d% %14d% %15d% %16d% %17d% // newOpcodes
 
     // Audio
     CLEO_RegisterOpcode(0x0E21, GET_AUDIO_SFX_VOLUME); // 0E21=1,get_audio_sfx_volume %1d%

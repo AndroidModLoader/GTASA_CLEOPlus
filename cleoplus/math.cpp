@@ -598,3 +598,90 @@ CLEO_Fn(SET_MATRIX_LOOK_DIRECTION)
 
     CreateMatFromVec(NULL, matrix, &origin, &direction);
 }
+CLEO_Fn(SET_MATRIX_POSITION) // newOpcodes
+{
+    CMatrix *matrix = (CMatrix *)cleo->ReadParam(handle)->i;
+    matrix->GetPosition().x = cleo->ReadParam(handle)->f;
+    matrix->GetPosition().y = cleo->ReadParam(handle)->f;
+    matrix->GetPosition().z = cleo->ReadParam(handle)->f;
+}
+CLEO_Fn(GET_MATRIX_POSITION) // newOpcodes
+{
+    CMatrix *matrix = (CMatrix *)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->f = matrix->GetPosition().x;
+    cleo->GetPointerToScriptVar(handle)->f = matrix->GetPosition().y;
+    cleo->GetPointerToScriptVar(handle)->f = matrix->GetPosition().z;
+}
+CLEO_Fn(GET_COORDS_OFFSETS_RELATIVELY_TO_MATRIX) // newOpcodes
+{
+    CVector coors, result;
+    coors.x = cleo->ReadParam(handle)->f;
+    coors.y = cleo->ReadParam(handle)->f;
+    coors.z = cleo->ReadParam(handle)->f;
+    CMatrix *matrix = (CMatrix *)cleo->ReadParam(handle)->i;
+    CMatrix invMatrix;
+    InvertMatrix(matrix, &invMatrix);
+
+    result = invMatrix * coors;
+
+    cleo->GetPointerToScriptVar(handle)->f = result.x;
+    cleo->GetPointerToScriptVar(handle)->f = result.y;
+    cleo->GetPointerToScriptVar(handle)->f = result.z;
+}
+CLEO_Fn(SET_MATRIX_ROTATION) // newOpcodes
+{
+    CMatrix *matrix = (CMatrix *)cleo->ReadParam(handle)->i;
+    CVector rot;
+    rot.x = cleo->ReadParam(handle)->f;
+    rot.y = cleo->ReadParam(handle)->f;
+    rot.z = cleo->ReadParam(handle)->f;
+
+    CVector posn = matrix->GetPosition();
+    matrix->SetRotate(rot.x, rot.y, rot.z);
+    matrix->GetPosition() = posn;
+}
+CLEO_Fn(COPY_MATRIX) // newOpcodes
+{
+    RwMatrix *dst = (RwMatrix *)cleo->ReadParam(handle)->i;
+    RwMatrix *src = (RwMatrix *)cleo->ReadParam(handle)->i;
+    memcpy(dst, src, sizeof(*dst));
+}
+CLEO_Fn(SET_MATRIX_X_ROTATION) // newOpcodes
+{
+    CMatrix *matrix = (CMatrix *)cleo->ReadParam(handle)->i;
+    float angle = (M_PI / 180.0f) * cleo->ReadParam(handle)->f;
+    matrix->SetRotateXOnly(angle);
+}
+CLEO_Fn(SET_MATRIX_Y_ROTATION) // newOpcodes
+{
+    CMatrix *matrix = (CMatrix *)cleo->ReadParam(handle)->i;
+    float angle = (M_PI / 180.0f) * cleo->ReadParam(handle)->f;
+    matrix->SetRotateYOnly(angle);
+}
+CLEO_Fn(SET_MATRIX_Z_ROTATION) // newOpcodes
+{
+    CMatrix *matrix = (CMatrix *)cleo->ReadParam(handle)->i;
+    float angle = (M_PI / 180.0f) * cleo->ReadParam(handle)->f;
+    matrix->SetRotateZOnly(angle);
+}
+CLEO_Fn(INTERPOLATE_MATRIX) // newOpcodes
+{
+    CMatrix *out = (CMatrix *)cleo->ReadParam(handle)->i;
+    CMatrix *matrix1 = (CMatrix *)cleo->ReadParam(handle)->i;
+    CMatrix *matrix2 = (CMatrix *)cleo->ReadParam(handle)->i;
+    float t = cleo->ReadParam(handle)->f;
+    
+    CQuaternion q1, q2, result;
+    q1.SetFromMatrix(matrix1);
+    q2.SetFromMatrix(matrix2);
+    result.Slerp(&q1, &q2, t);
+    out->SetRotate(result);
+}
+CLEO_Fn(INITIALISE_MATRIX) // newOpcodes
+{
+    float *matrix = (float*)cleo->ReadParam(handle)->i;
+    for(int i = 0; i < 16; ++i)
+    {
+        matrix[i] = cleo->ReadParam(handle)->f;
+    }
+}

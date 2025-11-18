@@ -128,6 +128,7 @@ RwBool (*RwStreamClose)(RwStream*, void*);
 void (*ClearTasks)(CPedIntelligence*, bool, bool);
 CTask* (*GetSimplestActiveTask)(CTaskManager*);
 void (*CorrectAspect)(float&, float&, float&, float&);
+CMatrix* (*InvertMatrix)(const CMatrix *, CMatrix *);
 
 // int main
 void ResolveExternals()
@@ -271,4 +272,5 @@ void ResolveExternals()
     SET_TO(ClearTasks, aml->GetSym(hGTASA, "_ZN16CPedIntelligence10ClearTasksEbb"));
     SET_TO(GetSimplestActiveTask, aml->GetSym(hGTASA, "_ZNK12CTaskManager21GetSimplestActiveTaskEv"));
     SET_TO(CorrectAspect, aml->GetSym(hGTASA, "_Z13CorrectAspectRfS_S_S_"));
+    SET_TO(InvertMatrix, aml->GetSym(hGTASA, "_Z6InvertRK7CMatrixRS_"));
 }

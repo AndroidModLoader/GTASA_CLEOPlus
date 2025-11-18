@@ -294,6 +294,7 @@ extern RwBool (*RwStreamClose)(RwStream*, void*);
 extern void (*ClearTasks)(CPedIntelligence*, bool, bool);
 extern CTask* (*GetSimplestActiveTask)(CTaskManager*);
 extern void (*CorrectAspect)(float&, float&, float&, float&);
+extern CMatrix* (*InvertMatrix)(const CMatrix *, CMatrix *);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);
@@ -527,6 +528,16 @@ CLEO_Fn(CLAMP_INT);
 CLEO_Fn(CONVERT_DIRECTION_TO_QUAT);
 CLEO_Fn(LERP);
 CLEO_Fn(SET_MATRIX_LOOK_DIRECTION);
+CLEO_Fn(SET_MATRIX_POSITION);
+CLEO_Fn(GET_MATRIX_POSITION);
+CLEO_Fn(GET_COORDS_OFFSETS_RELATIVELY_TO_MATRIX);
+CLEO_Fn(SET_MATRIX_ROTATION);
+CLEO_Fn(COPY_MATRIX);
+CLEO_Fn(SET_MATRIX_X_ROTATION);
+CLEO_Fn(SET_MATRIX_Y_ROTATION);
+CLEO_Fn(SET_MATRIX_Z_ROTATION);
+CLEO_Fn(INTERPOLATE_MATRIX);
+CLEO_Fn(INITIALISE_MATRIX);
 CLEO_Fn(GET_AUDIO_SFX_VOLUME);
 CLEO_Fn(GET_AUDIO_RADIO_VOLUME);
 CLEO_Fn(GET_AUDIOSTREAM_INTERNAL);
@@ -628,9 +639,11 @@ inline PedExtVars* GetExtData(CPed* ped)
         ms_pPedExtVarsPool->m_nFirstFree = size;
         for(int i = 0; i < size; ++i) ms_pPedExtVarsPool->m_byteMap[i].bEmpty = false;
     }
-    return ms_pPedExtVarsPool->GetAt((*ms_pPedPool)->GetIndex(ped));
+
+    auto idx = (*ms_pPedPool)->GetIndex(ped);
+    return (*ms_pPedPool)->IsIndexInBounds(idx) ? ms_pPedExtVarsPool->GetAt((*ms_pPedPool)->GetIndex(ped)) : NULL;
 }
-inline VehicleExtVars* GetExtData(CVehicle* ped)
+inline VehicleExtVars* GetExtData(CVehicle* veh)
 {
     if(!ms_pVehicleExtVarsPool)
     {
@@ -640,9 +653,11 @@ inline VehicleExtVars* GetExtData(CVehicle* ped)
         ms_pVehicleExtVarsPool->m_nFirstFree = size;
         for(int i = 0; i < size; ++i) ms_pVehicleExtVarsPool->m_byteMap[i].bEmpty = false;
     }
-    return ms_pVehicleExtVarsPool->GetAt((*ms_pVehiclePool)->GetIndex(ped));
+
+    auto idx = (*ms_pVehiclePool)->GetIndex(veh);
+    return (*ms_pVehiclePool)->IsIndexInBounds(idx) ? ms_pVehicleExtVarsPool->GetAt(idx) : NULL;
 }
-inline ObjectExtVars* GetExtData(CObject* ped)
+inline ObjectExtVars* GetExtData(CObject* obj)
 {
     if(!ms_pObjectExtVarsPool)
     {
@@ -652,9 +667,11 @@ inline ObjectExtVars* GetExtData(CObject* ped)
         ms_pObjectExtVarsPool->m_nFirstFree = size;
         for(int i = 0; i < size; ++i) ms_pObjectExtVarsPool->m_byteMap[i].bEmpty = false;
     }
-    return ms_pObjectExtVarsPool->GetAt((*ms_pObjectPool)->GetIndex(ped));
+
+    auto idx = (*ms_pObjectPool)->GetIndex(obj);
+    return (*ms_pObjectPool)->IsIndexInBounds(idx) ? ms_pObjectExtVarsPool->GetAt((*ms_pObjectPool)->GetIndex(obj)) : NULL;
 }
-inline ExtendedVars *FindExtendedVarsFromId(std::list<ExtendedVars*> extendedVarsList, uint32_t findId)
+inline ExtendedVars *FindExtendedVarsFromId(std::list<ExtendedVars*>& extendedVarsList, uint32_t findId)
 {
     for (ExtendedVars* extendedVars : extendedVarsList)
     {
