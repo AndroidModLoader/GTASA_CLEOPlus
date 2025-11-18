@@ -172,7 +172,45 @@ CLEO_Fn(IS_CHAR_DOING_TASK_ID)
 }
 CLEO_Fn(GET_CHAR_TASK_POINTER_BY_ID)
 {
-    
+    CPed* ped = (CPed*)cleo->ReadParam(handle)->i;
+    int taskId = cleo->ReadParam(handle)->i;
+
+    if(ped->m_pIntelligence)
+    {
+        CTask* task;
+        CTaskManager& taskMan = ped->m_pIntelligence->m_TaskMgr;
+        for(int i = 0; i < 5; ++i)
+        {
+            task = taskMan.m_aPrimaryTasks[i];
+            while(task)
+            {
+                if(task->GetTaskType() == (eTaskType)taskId)
+                {
+                    cleo->GetPointerToScriptVar(handle)->i = (int)task;
+                    cleoaddon->UpdateCompareFlag(handle, true);
+                    return;
+                }
+                task = task->GetSubTask();
+            }
+        }
+        for(int i = 0; i < 6; ++i)
+        {
+            task = taskMan.m_aSecondaryTasks[i];
+            while(task)
+            {
+                if(task->GetTaskType() == (eTaskType)taskId)
+                {
+                    cleo->GetPointerToScriptVar(handle)->i = (int)task;
+                    cleoaddon->UpdateCompareFlag(handle, true);
+                    return;
+                }
+                task = task->GetSubTask();
+            }
+        }
+    }
+
+    cleo->GetPointerToScriptVar(handle)->i = 0;
+    cleoaddon->UpdateCompareFlag(handle, false);
 }
 CLEO_Fn(GET_CHAR_KILL_TARGET_CHAR)
 {    
