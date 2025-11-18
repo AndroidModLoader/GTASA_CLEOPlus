@@ -40,7 +40,7 @@ inline void toupper(char *s)
 }
 
 extern std::set<int> SpecialCharacterModelsUsed;
-extern int g_nCurrentSaveSlot;
+extern int g_nCurrentSaveSlot, g_nTempCoronaId;
 
 enum ScriptEventList
 {
@@ -204,6 +204,14 @@ extern float *m_radarRange;
 extern CWidget** m_pWidgets;
 extern int *windowSize;
 extern COnscreenTimer* OnscnTimer;
+extern uintptr_t *gpShadowCarTex, *gpShadowPedTex, *gpShadowHeliTex, *gpShadowBikeTex, *gpShadowBaronTex, *gpShadowExplosionTex,
+                 *gpShadowHeadLightsTex, *gpShadowHeadLightsTex2, *gpBloodPoolTex, *gpHandManTex, *gpCrackedGlassTex, *gpPostShadowTex;
+extern uintptr_t *gpCoronaTexture;
+extern CColourSet *m_CurrentColours;
+extern float *SunScreenX, *SunScreenY;
+extern int *m_CurrentStoredValue;
+extern CVector *m_VectorToSun;
+extern float *ms_fFarClipZ;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -295,6 +303,15 @@ extern void (*ClearTasks)(CPedIntelligence*, bool, bool);
 extern CTask* (*GetSimplestActiveTask)(CTaskManager*);
 extern void (*CorrectAspect)(float&, float&, float&, float&);
 extern CMatrix* (*InvertMatrix)(const CMatrix *, CMatrix *);
+extern void (*StoreShadowToBeRendered)(UInt8, RwTexture *, CVector *, float, float, float, float, Int16, UInt8, UInt8, UInt8, float, bool, float, CRealTimeShadow *, bool);
+extern void (*AddPermanentShadow)(UInt8, RwTexture *, CVector *, float, float, float, float, Int16, UInt8, UInt8, UInt8, float, UInt32, float);
+extern void (*AddLight)(UInt8, CVector, CVector, float, float, float, float, UInt8, bool, CEntity *);
+extern void (*RegisterCorona)(uint,CEntity *,uint8_t,uint8_t,uint8_t,uint8_t,CVector *,float,float,RwTexture *,uint8_t,uint8_t,uint8_t,uint8_t,float,bool,float,bool,float,bool,bool);
+extern int (*LightForCars1_Visual)();
+extern int (*LightForCars2_Visual)();
+extern int (*GetLightStatus)(CDamageManager*, int);
+extern void (*SetLightStatus)(CDamageManager*, int, int);
+extern bool (*AddProjectile)(CEntity *,eWeaponType,CVector,float,CVector*,CEntity *);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);
@@ -500,6 +517,34 @@ CLEO_Fn(GET_LOCAL_TIME);
 CLEO_Fn(SET_SCRIPT_VAR);
 CLEO_Fn(GET_SCRIPT_VAR);
 CLEO_Fn(SET_CAR_DOOR_WINDOW_STATE);
+CLEO_Fn(GET_ENTITY_TYPE_AND_CLASS);
+CLEO_Fn(GET_CAR_NUM_COLLIDED_ENTITIES);
+CLEO_Fn(GET_CHAR_NUM_COLLIDED_ENTITIES);
+CLEO_Fn(GET_OBJECT_NUM_COLLIDED_ENTITIES);
+CLEO_Fn(GET_CAR_COLLIDED_ENTITIES);
+CLEO_Fn(GET_CHAR_COLLIDED_ENTITIES);
+CLEO_Fn(GET_OBJECT_COLLIDED_ENTITIES);
+CLEO_Fn(FIND_INTERSECTION_BETWEEN_CIRCLES);
+CLEO_Fn(GET_MODEL_TXD_ID);
+CLEO_Fn(GET_MODEL_CRC);
+CLEO_Fn(DRAW_TEMPORARY_SHADOW);
+CLEO_Fn(DRAW_PERMANENT_SHADOW);
+CLEO_Fn(DRAW_TEMPORARY_LIGHT);
+CLEO_Fn(DRAW_TEMPORARY_CORONA);
+CLEO_Fn(DRAW_TEMPORARY_CORONA_EX);
+CLEO_Fn(GET_SUN_COLORS);
+CLEO_Fn(GET_SUN_SCREEN_COORS);
+CLEO_Fn(GET_SUN_WORLD_COORS);
+CLEO_Fn(GET_SUN_SIZE);
+CLEO_Fn(GET_TRAFFICLIGHTS_CURRENT_COLOR); 
+CLEO_Fn(DRAW_SPOTLIGHT);
+CLEO_Fn(GET_CAR_LIGHT_DAMAGE_STATUS);
+CLEO_Fn(SET_CAR_LIGHT_DAMAGE_STATUS);
+CLEO_Fn(GET_VEHICLE_CLASS_AND_SUBCLASS);
+CLEO_Fn(GET_VEHICLE_DUMMY_POSN);
+CLEO_Fn(CREATE_PROJECTILE);
+CLEO_Fn(GET_GAME_VOLUME);
+CLEO_Fn(GET_SCREEN_WIDTH_AND_HEIGHT);
 CLEO_Fn(DRAW_TEXTURE_PLUS);
 CLEO_Fn(GET_TEXTURE_FROM_SPRITE);
 CLEO_Fn(DRAW_STRING);

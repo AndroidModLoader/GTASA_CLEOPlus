@@ -66,10 +66,12 @@ DECL_HOOKv(GameInitReInit)
     void ClearScriptLists();
 
     ScriptEvent::ClearAllScriptEvents();
+
+    g_nTempCoronaId = 10000;
 }
 
 // int main!
-extern "C" void OnModLoad()
+ON_ALL_MODS_LOAD()
 {
     logger->SetTag("CLEOPlus");
     pGTASA =    aml->GetLib("libGTASA.so");
@@ -312,6 +314,34 @@ extern "C" void OnModLoad()
     CLEO_RegisterOpcode(0x0D2E, SET_SCRIPT_VAR); // 0D2E=3,set_script %1d% var %2d% value %3d%
     CLEO_RegisterOpcode(0x0D2F, GET_SCRIPT_VAR); // 0D2F=3,%3d% = get_script %1d% var %2d%
     CLEO_RegisterOpcode(0x0D33, SET_CAR_DOOR_WINDOW_STATE); // 0D33=3,set_car %1d% door %2d% window_state %3d%
+    CLEO_RegisterOpcode(0x0D1B, GET_ENTITY_TYPE_AND_CLASS); // 0D1B=2,get_entity %1d% type_to %2d% class_to %3d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D2A, GET_CAR_NUM_COLLIDED_ENTITIES); // 0D2A=2,%2d% = get_car %1d% number_of_collided_entites // newOpcodes
+    CLEO_RegisterOpcode(0x0D2B, GET_CHAR_NUM_COLLIDED_ENTITIES); // 0D2B=2,%2d% = get_actor %1d% number_of_collided_entites // newOpcodes
+    CLEO_RegisterOpcode(0x0D2C, GET_OBJECT_NUM_COLLIDED_ENTITIES); // 0D2C=2,%2d% = get_object %1d% number_of_collided_entites // newOpcodes
+    CLEO_RegisterOpcode(0x0D34, GET_CAR_COLLIDED_ENTITIES); // 0D34=7,store_car %1d% collided_entities_to %2d% %3d% %4d% %5d% %6d% %7d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D35, GET_CHAR_COLLIDED_ENTITIES); // 0D35=7,store_actor %1d% collided_entities_to %2d% %3d% %4d% %5d% %6d% %7d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D36, GET_OBJECT_COLLIDED_ENTITIES); // 0D36=7,store_object %1d% collided_entities_to %2d% %3d% %4d% %5d% %6d% %7d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D3F, FIND_INTERSECTION_BETWEEN_CIRCLES); // 0D3F=10,find_intersection_between_circles_xyr1 %1d% %2d% %3d% and_xyr2 %4d% %5d% %6d% store_point1_to %7d% %8d% point2_to %9d% %10d% // IF and SET // newOpcodes
+    CLEO_RegisterOpcode(0x0D47, GET_MODEL_TXD_ID); // 0D47=2,%2d% = model %1d% txd_id // IF and SET // newOpcodes
+    CLEO_RegisterOpcode(0x0D48, GET_MODEL_CRC); // 0D48=2,%2d% = model %1d% crc32_key // IF and SET // newOpcodes
+    CLEO_RegisterOpcode(0x0D50, DRAW_TEMPORARY_SHADOW); // 0D50=14,draw_shadow_type %1d% position %2d% %3d% %4d% width %5d% height %6d% rotation %7d% distance %8d% texture %9d% intensity %10d% RGB %11d% %12d% %13d% shadow_data %14d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D51, DRAW_PERMANENT_SHADOW); // 0D51=14,draw_permanent_shadow_type %1d% position %2d% %3d% %4d% width %5d% height %6d% rotation %7d% distance %8d% texture %9d% intensity %10d% RGB %11d% %12d% %13d% time %14d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D52, DRAW_TEMPORARY_LIGHT); // 0D52=12,draw_light_type %1d% position %2d% %3d% %4d% direction %5d% %6d% %7d% radius %8d% RGB %9d% %10d% %11d% affect_entity %12d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D53, DRAW_TEMPORARY_CORONA); // 0D53=10,draw_corona_with_texture %1d% color %2d% %3d% %4d% %5d% on_entity %6d% at %7d% %8d% %9d% size %10d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D54, DRAW_TEMPORARY_CORONA_EX); // 0D54=18,draw_corona_with_extra_params_texture %1d% color %2d% %3d% %4d% %5d% on_entity %6d% at %7d% %8d% %9d% size %10d% far_clip %11d% near_clip %12d% flare %13d% enable_reflection %14d% check_obstacles %15d% flash_while_fading %16d% fade_speed %17d% only_from_below %18d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D55, GET_SUN_COLORS); // 0D55=6,get_sun_colors_core_to %1d% %2d% %3d% glow_to %4d% %5d% %6d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D56, GET_SUN_SCREEN_COORS); // 0D56=2,get_sun_screen_coords_XY_to %1d% %2d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D57, GET_SUN_WORLD_COORS); // 0D57=3,get_sun_position_to %1d% %2d% %3d% // IF and SET // newOpcodes
+    CLEO_RegisterOpcode(0x0D58, GET_SUN_SIZE); // 0D58=2,get_sun_size_core_to %1d% glow_to %2d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D5A, GET_TRAFFICLIGHTS_CURRENT_COLOR); // 0D5A=2,get_trafficlights_type_NS_current_color_to %1d% type_WE_current_color_to %2d% // newOpcodes
+    //CLEO_RegisterOpcode(0x0D5B, DRAW_SPOTLIGHT); // 0D5B=12,draw_spotlight_from %1d% %2d% %3d% to %4d% %5d% %6d% base_radius %7d% target_radius %8d% enable_shadow %9d% shadow_intensity %10d% flag1 %11d% flag2 %12d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D5C, GET_CAR_LIGHT_DAMAGE_STATUS); // 0D5C=3,%3d% =  get_car %1d% light %2d% damage_state // newOpcodes
+    CLEO_RegisterOpcode(0x0D5D, SET_CAR_LIGHT_DAMAGE_STATUS); // 0D5D=3,set_car %1d% light %2d% damage_state %3d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D5E, GET_VEHICLE_CLASS_AND_SUBCLASS); // 0D5E=3,get_vehicle %1d% class_to %2d% subclass_to %3d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D5F, GET_VEHICLE_DUMMY_POSN); // 0D5F=7,get_vehicle %1d% dummy_element %2d% position %3d% to %5d% %6d% %7d% %4d% // IF and SET // newOpcodes
+    CLEO_RegisterOpcode(0x0D60, CREATE_PROJECTILE); // 0D60=10,create_projectile_type %1d% launched_from_entity %2d% origin %3d% %4d% %5d% target %6d% %7% %8d% target_entity %9d% force %10d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D72, GET_GAME_VOLUME); // 0D72=3,get_sfx_volume_to %2d% radio_volume_to %3d% type %1d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D73, GET_SCREEN_WIDTH_AND_HEIGHT); // 0D73=3,get_screen_width_to %2d% height_to %3d% type %1d% // newOpcodes
 
     // Drawing
     //CLEO_RegisterOpcode(0x0E1E, DRAW_TEXTURE_PLUS); // 0E1E=15,draw_texture_plus %1d% event %2d% pos %3d% %4d% size %5d% %6d% angle %7d% depth %8d% fix_aspect_ratio %9d% maskTrisCount %10d% maskTrisArray %11d% rgba %12d% %13d% %14d% %15d% 

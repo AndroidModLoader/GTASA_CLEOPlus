@@ -2,7 +2,7 @@
 #include "externs.h"
 
 std::set<int> SpecialCharacterModelsUsed;
-int g_nCurrentSaveSlot = -2;
+int g_nCurrentSaveSlot = -2, g_nTempCoronaId = 10000;
 
 // Vars
 CCamera* TheCamera;
@@ -38,6 +38,14 @@ float *m_radarRange;
 CWidget** m_pWidgets;
 int *windowSize;
 COnscreenTimer* OnscnTimer;
+uintptr_t *gpShadowCarTex, *gpShadowPedTex, *gpShadowHeliTex, *gpShadowBikeTex, *gpShadowBaronTex, *gpShadowExplosionTex,
+          *gpShadowHeadLightsTex, *gpShadowHeadLightsTex2, *gpBloodPoolTex, *gpHandManTex, *gpCrackedGlassTex, *gpPostShadowTex;
+uintptr_t *gpCoronaTexture;
+CColourSet *m_CurrentColours;
+float *SunScreenX, *SunScreenY;
+int *m_CurrentStoredValue;
+CVector *m_VectorToSun;
+float *ms_fFarClipZ;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -129,6 +137,15 @@ void (*ClearTasks)(CPedIntelligence*, bool, bool);
 CTask* (*GetSimplestActiveTask)(CTaskManager*);
 void (*CorrectAspect)(float&, float&, float&, float&);
 CMatrix* (*InvertMatrix)(const CMatrix *, CMatrix *);
+void (*StoreShadowToBeRendered)(UInt8, RwTexture *, CVector *, float, float, float, float, Int16, UInt8, UInt8, UInt8, float, bool, float, CRealTimeShadow *, bool);
+void (*AddPermanentShadow)(UInt8, RwTexture *, CVector *, float, float, float, float, Int16, UInt8, UInt8, UInt8, float, UInt32, float);
+void (*AddLight)(UInt8, CVector, CVector, float, float, float, float, UInt8, bool, CEntity *);
+void (*RegisterCorona)(uint,CEntity *,uint8_t,uint8_t,uint8_t,uint8_t,CVector *,float,float,RwTexture *,uint8_t,uint8_t,uint8_t,uint8_t,float,bool,float,bool,float,bool,bool);
+int (*LightForCars1_Visual)();
+int (*LightForCars2_Visual)();
+int (*GetLightStatus)(CDamageManager*, int);
+void (*SetLightStatus)(CDamageManager*, int, int);
+bool (*AddProjectile)(CEntity *,eWeaponType,CVector,float,CVector*,CEntity *);
 
 // int main
 void ResolveExternals()
@@ -136,7 +153,7 @@ void ResolveExternals()
 // Vars
     SET_TO(TheCamera, aml->GetSym(hGTASA, "TheCamera"));
     SET_TO(UsedObjectArray, aml->GetSym(hGTASA, "_ZN11CTheScripts15UsedObjectArrayE"));
-    SET_TO(ms_modelInfoPtrs, aml->GetSym(hGTASA, "_ZN10CModelInfo16ms_modelInfoPtrsE"));
+    SET_TO(ms_modelInfoPtrs, *(void**)(pGTASA + 0x6796D4));
     SET_TO(CarGeneratorArray, aml->GetSym(hGTASA, "_ZN17CTheCarGenerators17CarGeneratorArrayE"));
     SET_TO(OldWeatherType, aml->GetSym(hGTASA, "_ZN8CWeather14OldWeatherTypeE"));
     SET_TO(NewWeatherType, aml->GetSym(hGTASA, "_ZN8CWeather14NewWeatherTypeE"));
@@ -182,6 +199,25 @@ void ResolveExternals()
     SET_TO(m_pWidgets, *(void**)(pGTASA + 0x67947C));
     SET_TO(windowSize, aml->GetSym(hGTASA, "windowSize"));
     SET_TO(OnscnTimer, aml->GetSym(hGTASA, "_ZN12CUserDisplay10OnscnTimerE"));
+    SET_TO(gpShadowCarTex, aml->GetSym(hGTASA, "gpShadowCarTex"));
+    SET_TO(gpShadowPedTex, aml->GetSym(hGTASA, "gpShadowPedTex"));
+    SET_TO(gpShadowHeliTex, aml->GetSym(hGTASA, "gpShadowHeliTex"));
+    SET_TO(gpShadowBikeTex, aml->GetSym(hGTASA, "gpShadowBikeTex"));
+    SET_TO(gpShadowBaronTex, aml->GetSym(hGTASA, "gpShadowBaronTex"));
+    SET_TO(gpShadowExplosionTex, aml->GetSym(hGTASA, "gpShadowExplosionTex"));
+    SET_TO(gpShadowHeadLightsTex, aml->GetSym(hGTASA, "gpShadowHeadLightsTex"));
+    SET_TO(gpShadowHeadLightsTex2, aml->GetSym(hGTASA, "gpShadowHeadLightsTex2"));
+    SET_TO(gpBloodPoolTex, aml->GetSym(hGTASA, "gpBloodPoolTex"));
+    SET_TO(gpHandManTex, aml->GetSym(hGTASA, "gpHandManTex"));
+    SET_TO(gpCrackedGlassTex, aml->GetSym(hGTASA, "gpCrackedGlassTex"));
+    SET_TO(gpPostShadowTex, aml->GetSym(hGTASA, "gpPostShadowTex"));
+    SET_TO(gpCoronaTexture, aml->GetSym(hGTASA, "gpCoronaTexture"));
+    SET_TO(m_CurrentColours, aml->GetSym(hGTASA, "_ZN10CTimeCycle16m_CurrentColoursE"));
+    SET_TO(SunScreenX, aml->GetSym(hGTASA, "_ZN8CCoronas10SunScreenXE"));
+    SET_TO(SunScreenY, aml->GetSym(hGTASA, "_ZN8CCoronas10SunScreenYE"));
+    SET_TO(m_CurrentStoredValue, aml->GetSym(hGTASA, "_ZN10CTimeCycle20m_CurrentStoredValueE"));
+    SET_TO(m_VectorToSun, aml->GetSym(hGTASA, "_ZN10CTimeCycle13m_VectorToSunE"));
+    SET_TO(ms_fFarClipZ, aml->GetSym(hGTASA, "_ZN5CDraw12ms_fFarClipZE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -273,4 +309,13 @@ void ResolveExternals()
     SET_TO(GetSimplestActiveTask, aml->GetSym(hGTASA, "_ZNK12CTaskManager21GetSimplestActiveTaskEv"));
     SET_TO(CorrectAspect, aml->GetSym(hGTASA, "_Z13CorrectAspectRfS_S_S_"));
     SET_TO(InvertMatrix, aml->GetSym(hGTASA, "_Z6InvertRK7CMatrixRS_"));
+    SET_TO(StoreShadowToBeRendered, aml->GetSym(hGTASA, "_ZN8CShadows23StoreShadowToBeRenderedEhP9RwTextureP7CVectorffffshhhfbfP15CRealTimeShadowb"));
+    SET_TO(AddPermanentShadow, aml->GetSym(hGTASA, "_ZN8CShadows18AddPermanentShadowEhP9RwTextureP7CVectorffffshhhfjf"));
+    SET_TO(AddLight, aml->GetSym(hGTASA, "_ZN12CPointLights8AddLightEh7CVectorS0_ffffhbP7CEntity"));
+    SET_TO(RegisterCorona, aml->GetSym(hGTASA, "_ZN8CCoronas14RegisterCoronaEjP7CEntityhhhhRK7CVectorffP9RwTexturehhhhfbfbfbb"));
+    SET_TO(LightForCars1_Visual, aml->GetSym(hGTASA, "_ZN14CTrafficLights20LightForCars1_VisualEv"));
+    SET_TO(LightForCars2_Visual, aml->GetSym(hGTASA, "_ZN14CTrafficLights20LightForCars2_VisualEv"));
+    SET_TO(GetLightStatus, aml->GetSym(hGTASA, "_ZNK14CDamageManager14GetLightStatusE7eLights"));
+    SET_TO(SetLightStatus, aml->GetSym(hGTASA, "_ZN14CDamageManager14SetLightStatusE7eLightsj"));
+    SET_TO(AddProjectile, aml->GetSym(hGTASA, "_ZN15CProjectileInfo13AddProjectileEP7CEntity11eWeaponType7CVectorfPS3_S1_"));
 }
