@@ -4,6 +4,29 @@ int timesGameRestarted = 0;
 const int maxDffFiles = 50000;
 char modelNames[maxDffFiles][32];
 
+struct AtomicSearchInfo
+{
+    unsigned int counter;
+    unsigned int number;
+    RpAtomic *result;
+};
+RwObject *CountObjectsInFrame(RwObject *atomic, void *data)
+{
+    unsigned int* counter = (unsigned int*)data;
+    ++(counter);
+    return atomic;
+}
+RwObject *GetObjectInFrame(RwObject *atomic, void *data)
+{
+    AtomicSearchInfo* si = (AtomicSearchInfo*)data;
+    if(si->counter == si->number)
+    {
+        si->result = (RpAtomic*)atomic;
+        return NULL;
+    }
+    ++(si->counter);
+    return atomic;
+}
 inline void TransformFromObjectSpace(CEntity* self, CVector& outPos, const CVector& offset)
 {
     if(self->m_matrix)
@@ -1955,6 +1978,188 @@ CLEO_Fn(GET_SCREEN_WIDTH_AND_HEIGHT)
         }
     }
     else { cleo->ReadParam(handle); }
+}
+CLEO_Fn(GET_CAR_COMPONENT_MATRIX)
+{
+    char buf[255];
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
+
+    if(buf[0] && vehicle->m_pRwClump)
+    {
+        RwFrame* comp = GetFrameFromName(vehicle->m_pRwClump, buf);
+        if(comp)
+        {
+            cleo->GetPointerToScriptVar(handle)->i = (int)&comp->ltm;
+            cleoaddon->UpdateCompareFlag(handle, true);
+            return;
+        }
+    }
+    cleo->GetPointerToScriptVar(handle)->i = 0;
+    cleoaddon->UpdateCompareFlag(handle, false);
+}
+CLEO_Fn(GET_CAR_COMPONENT)
+{
+    char buf[255];
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
+
+    if(buf[0] && vehicle->m_pRwClump)
+    {
+        RwFrame* comp = GetFrameFromName(vehicle->m_pRwClump, buf);
+        if(comp)
+        {
+            cleo->GetPointerToScriptVar(handle)->i = (int)comp;
+            cleoaddon->UpdateCompareFlag(handle, true);
+            return;
+        }
+    }
+    cleo->GetPointerToScriptVar(handle)->i = 0;
+    cleoaddon->UpdateCompareFlag(handle, false);
+}
+CLEO_Fn(SET_CAR_COMPONENT_STATE)
+{
+    char buf[255];
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
+    int state = cleo->ReadParam(handle)->i;
+
+    if(buf[0] && vehicle->m_pRwClump)
+    {
+        RwFrame* comp = GetFrameFromName(vehicle->m_pRwClump, buf);
+        if(comp)
+        {
+            SetComponentVisibility(vehicle, comp, state);
+            cleoaddon->UpdateCompareFlag(handle, true);
+            return;
+        }
+    }
+    cleoaddon->UpdateCompareFlag(handle, false);
+}
+CLEO_Fn(SET_CAR_COMPONENT_MODEL_ALPHA)
+{
+    char buf[255];
+    CVehicle *vehicle = GetVehicleFromRef(cleo->ReadParam(handle)->i);
+    cleoaddon->ReadString(handle, buf, sizeof(buf));
+    int alpha = cleo->ReadParam(handle)->i;
+
+    if(buf[0] && vehicle->m_pRwClump)
+    {
+        RwFrame* comp = GetFrameFromName(vehicle->m_pRwClump, buf);
+        if(comp)
+        {
+            RwFrameForAllObjects(comp, SetComponentAtomicAlpha, (void*)alpha);
+            cleoaddon->UpdateCompareFlag(handle, true);
+            return;
+        }
+    }
+    cleoaddon->UpdateCompareFlag(handle, false);
+}
+CLEO_Fn(GET_COMPONENT_CHILD_COMPONENT)
+{
+    RwFrame* comp = (RwFrame*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = (int)comp->child;
+}
+CLEO_Fn(GET_COMPONENT_NEXT_COMPONENT)
+{
+    RwFrame* comp = (RwFrame*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = (int)comp->next;
+}
+CLEO_Fn(GET_COMPONENT_NAME)
+{
+    RwFrame* comp = (RwFrame*)cleo->ReadParam(handle)->i;
+    const char* nodeName = GetFrameNodeName(comp);
+    cleoaddon->WriteString(handle, nodeName ? nodeName : "");
+}
+CLEO_Fn(GET_COMPONENT_WORLD_MATRIX)
+{
+    RwFrame* comp = (RwFrame*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = (int)&comp->ltm;
+}
+CLEO_Fn(GET_COMPONENT_MODELLING_MATRIX)
+{
+    RwFrame* comp = (RwFrame*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = (int)&comp->modelling;
+}
+CLEO_Fn(GET_COMPONENT_PARENT_COMPONENT)
+{
+    RwFrame* comp = (RwFrame*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->i = (int)comp->object.parent;
+}
+CLEO_Fn(GET_COMPONENT_NUM_OBJECTS)
+{
+    RwFrame* comp = (RwFrame*)cleo->ReadParam(handle)->i;
+    unsigned int counter = 0;
+    RwFrameForAllObjects(comp, CountObjectsInFrame, &counter);
+}
+CLEO_Fn(GET_COMPONENT_OBJECT)
+{
+    RwFrame* comp = (RwFrame*)cleo->ReadParam(handle)->i;
+    AtomicSearchInfo si { 0 };
+    si.number = cleo->ReadParam(handle)->u;
+    
+    RwFrameForAllObjects(comp, GetObjectInFrame, &si);
+    cleo->GetPointerToScriptVar(handle)->i = (int)si.result;
+    cleoaddon->UpdateCompareFlag(handle, si.result != NULL);
+}
+CLEO_Fn(HIDE_OBJECT_ATOMIC)
+{
+    RpAtomic* atomic = (RpAtomic*)cleo->ReadParam(handle)->i;
+    if(cleo->ReadParam(handle)->u)
+    {
+        atomic->object.object.flags = 0x0;
+    }
+    else
+    {
+        atomic->object.object.flags = 0x4;
+    }
+}
+CLEO_Fn(GET_OBJECT_ATOMIC_FLAG)
+{
+    RpAtomic* atomic = (RpAtomic*)cleo->ReadParam(handle)->i;
+    int flag = cleo->ReadParam(handle)->i;
+
+    uint16_t atomicFlags = *(uint16_t*)( (int)(&atomic->object.object.flags) + *ms_atomicPluginOffset );
+    cleo->GetPointerToScriptVar(handle)->i = ((atomicFlags & flag) != 0);
+}
+CLEO_Fn(SET_OBJECT_ATOMIC_FLAG)
+{
+    RpAtomic* atomic = (RpAtomic*)cleo->ReadParam(handle)->i;
+    uint16_t& atomicFlags = *(uint16_t*)( (int)(&atomic->object.object.flags) + *ms_atomicPluginOffset );
+    int flag = cleo->ReadParam(handle)->i;
+    if(cleo->ReadParam(handle)->i != 0)
+    {
+        atomicFlags |= flag;
+    }
+    else
+    {
+        atomicFlags &= ~flag;
+    }
+}
+CLEO_Fn(GET_OBJECT_ATOMIC_NUM_MATERIALS)
+{
+    RpAtomic* atomic = (RpAtomic*)cleo->ReadParam(handle)->i;
+    if(!atomic->geometry)
+    {
+        cleo->GetPointerToScriptVar(handle)->i = 0;
+        cleoaddon->UpdateCompareFlag(handle, false);
+        return;
+    }
+    cleo->GetPointerToScriptVar(handle)->i = atomic->geometry->matList.numMaterials;
+    cleoaddon->UpdateCompareFlag(handle, true);
+}
+CLEO_Fn(GET_OBJECT_ATOMIC_MATERIAL_TEXTURE)
+{
+    RpAtomic* atomic = (RpAtomic*)cleo->ReadParam(handle)->i;
+    int mat = cleo->ReadParam(handle)->u;
+    if(!atomic->geometry || atomic->geometry->matList.numMaterials >= mat)
+    {
+        cleo->GetPointerToScriptVar(handle)->i = 0;
+        cleoaddon->UpdateCompareFlag(handle, false);
+        return;
+    }
+    cleo->GetPointerToScriptVar(handle)->i = (int)atomic->geometry->matList.materials[mat]->texture;
+    cleoaddon->UpdateCompareFlag(handle, true);
 }
 
 DECL_HOOKv(InitialiseWhenRestarting)

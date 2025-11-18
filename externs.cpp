@@ -46,6 +46,7 @@ float *SunScreenX, *SunScreenY;
 int *m_CurrentStoredValue;
 CVector *m_VectorToSun;
 float *ms_fFarClipZ;
+int *ms_atomicPluginOffset;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -146,6 +147,11 @@ int (*LightForCars2_Visual)();
 int (*GetLightStatus)(CDamageManager*, int);
 void (*SetLightStatus)(CDamageManager*, int, int);
 bool (*AddProjectile)(CEntity *,eWeaponType,CVector,float,CVector*,CEntity *);
+RwFrame* (*GetFrameFromName)(RpClump*, const char*);
+void (*SetComponentVisibility)(CVehicle*, RwFrame*, int);
+void (*RwFrameForAllObjects)(RwFrame*, RwObject*(*)(RwObject*, void*), void*);
+RwObject* (*SetComponentAtomicAlpha)(RwObject*, void*);
+const char* (*GetFrameNodeName)(RwFrame*);
 
 // int main
 void ResolveExternals()
@@ -218,6 +224,7 @@ void ResolveExternals()
     SET_TO(m_CurrentStoredValue, aml->GetSym(hGTASA, "_ZN10CTimeCycle20m_CurrentStoredValueE"));
     SET_TO(m_VectorToSun, aml->GetSym(hGTASA, "_ZN10CTimeCycle13m_VectorToSunE"));
     SET_TO(ms_fFarClipZ, aml->GetSym(hGTASA, "_ZN5CDraw12ms_fFarClipZE"));
+    SET_TO(ms_atomicPluginOffset, aml->GetSym(hGTASA, "_ZN18CVisibilityPlugins21ms_atomicPluginOffsetE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -318,4 +325,9 @@ void ResolveExternals()
     SET_TO(GetLightStatus, aml->GetSym(hGTASA, "_ZNK14CDamageManager14GetLightStatusE7eLights"));
     SET_TO(SetLightStatus, aml->GetSym(hGTASA, "_ZN14CDamageManager14SetLightStatusE7eLightsj"));
     SET_TO(AddProjectile, aml->GetSym(hGTASA, "_ZN15CProjectileInfo13AddProjectileEP7CEntity11eWeaponType7CVectorfPS3_S1_"));
+    SET_TO(GetFrameFromName, aml->GetSym(hGTASA, "_ZN15CClumpModelInfo16GetFrameFromNameEP7RpClumpPKc"));
+    SET_TO(SetComponentVisibility, aml->GetSym(hGTASA, "_ZN8CVehicle22SetComponentVisibilityEP7RwFramej"));
+    SET_TO(RwFrameForAllObjects, aml->GetSym(hGTASA, "_Z20RwFrameForAllObjectsP7RwFramePFP8RwObjectS2_PvES3_"));
+    SET_TO(SetComponentAtomicAlpha, aml->GetSym(hGTASA, "_ZN8CVehicle23SetComponentAtomicAlphaEP8RpAtomici"));
+    SET_TO(GetFrameNodeName, aml->GetSym(hGTASA, "_Z16GetFrameNodeNameP7RwFrame"));
 }

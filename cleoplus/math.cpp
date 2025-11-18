@@ -685,3 +685,22 @@ CLEO_Fn(INITIALISE_MATRIX) // newOpcodes
         matrix[i] = cleo->ReadParam(handle)->f;
     }
 }
+CLEO_Fn(NORMALISE_VECTOR) // newOpcodes
+{
+    CVector *vec = (CVector*)cleo->ReadParam(handle)->i;
+    VectorNormalise(vec);
+}
+CLEO_Fn(INITIALISE_VECTOR) // newOpcodes
+{
+    CVector *vec = (CVector*)cleo->ReadParam(handle)->i;
+    vec->x = cleo->ReadParam(handle)->f;
+    vec->y = cleo->ReadParam(handle)->f;
+    vec->z = cleo->ReadParam(handle)->f;
+}
+CLEO_Fn(GET_VECTOR_ELEMENTS) // newOpcodes
+{
+    CVector *vec = (CVector*)cleo->ReadParam(handle)->i;
+    cleo->GetPointerToScriptVar(handle)->f = vec->x;
+    cleo->GetPointerToScriptVar(handle)->f = vec->y;
+    cleo->GetPointerToScriptVar(handle)->f = vec->z;
+}

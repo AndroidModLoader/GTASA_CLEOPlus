@@ -342,6 +342,23 @@ ON_ALL_MODS_LOAD()
     CLEO_RegisterOpcode(0x0D60, CREATE_PROJECTILE); // 0D60=10,create_projectile_type %1d% launched_from_entity %2d% origin %3d% %4d% %5d% target %6d% %7% %8d% target_entity %9d% force %10d% // newOpcodes
     CLEO_RegisterOpcode(0x0D72, GET_GAME_VOLUME); // 0D72=3,get_sfx_volume_to %2d% radio_volume_to %3d% type %1d% // newOpcodes
     CLEO_RegisterOpcode(0x0D73, GET_SCREEN_WIDTH_AND_HEIGHT); // 0D73=3,get_screen_width_to %2d% height_to %3d% type %1d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D0C, GET_CAR_COMPONENT_MATRIX); // 0D0C=3,get_car %1d% component %2s% matrix_to %3d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D0D, GET_CAR_COMPONENT); // 0D0D=3,%3d% = get_car %1d% component %2s% // newOpcodes
+    CLEO_RegisterOpcode(0x0D0E, SET_CAR_COMPONENT_STATE); // 0D0E=3,set_car %1d% component %2s% state %3d% // IF and SET // newOpcodes
+    CLEO_RegisterOpcode(0x0D12, SET_CAR_COMPONENT_MODEL_ALPHA); // 0D12=3,set_car %1d% component %2s% model_alpha %3d% // IF and SET // newOpcodes
+    CLEO_RegisterOpcode(0x0D1F, GET_COMPONENT_CHILD_COMPONENT); // 0D1F=2,%2d% = component %1d% child // newOpcodes
+    CLEO_RegisterOpcode(0x0D20, GET_COMPONENT_NEXT_COMPONENT); // 0D20=2,%2d% = component %1d% next_component // newOpcodes
+    CLEO_RegisterOpcode(0x0D21, GET_COMPONENT_NAME); // 0D21=2,%2s% = component %1d% name // newOpcodes
+    CLEO_RegisterOpcode(0x0D22, GET_COMPONENT_WORLD_MATRIX); // 0D22=2,%2d% = component %1d% world_matrix // newOpcodes
+    CLEO_RegisterOpcode(0x0D23, GET_COMPONENT_MODELLING_MATRIX); // 0D23=2,%2d% = component %1d% modelling_matrix // newOpcodes
+    CLEO_RegisterOpcode(0x0D74, GET_COMPONENT_PARENT_COMPONENT); // 0D74=2,%2d% = component %1d% parent_component // newOpcodes
+    CLEO_RegisterOpcode(0x0D75, GET_COMPONENT_NUM_OBJECTS); // 0D75=2,%2d% = component %1d% num_objects // newOpcodes
+    CLEO_RegisterOpcode(0x0D76, GET_COMPONENT_OBJECT); // 0D76=3,%3d% = component %1d% object %2d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D77, HIDE_OBJECT_ATOMIC); // 0D77=2,object_atomic %1d% hide %2d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D78, GET_OBJECT_ATOMIC_FLAG); // 0D78=3,%3d% = get_object %1d% atomic_flag %2d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D79, SET_OBJECT_ATOMIC_FLAG); // 0D79=3,set_object %1d% atomic_flag %2d% state %3d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D7A, GET_OBJECT_ATOMIC_NUM_MATERIALS); // 0D7A=2,%2d% = get_object %1d% num_materials // IF and SET // newOpcodes
+    CLEO_RegisterOpcode(0x0D7B, GET_OBJECT_ATOMIC_MATERIAL_TEXTURE); // 0D7B=3,%3d% = get_object %1d% material %2d% texture // newOpcodes
 
     // Drawing
     //CLEO_RegisterOpcode(0x0E1E, DRAW_TEXTURE_PLUS); // 0E1E=15,draw_texture_plus %1d% event %2d% pos %3d% %4d% size %5d% %6d% angle %7d% depth %8d% fix_aspect_ratio %9d% maskTrisCount %10d% maskTrisArray %11d% rgba %12d% %13d% %14d% %15d% 
@@ -384,6 +401,9 @@ ON_ALL_MODS_LOAD()
     CLEO_RegisterOpcode(0x0D15, SET_MATRIX_Z_ROTATION); // 0D15=3,set_matrix %1d% z_angle %2d% // newOpcodes
     CLEO_RegisterOpcode(0x0D1D, INTERPOLATE_MATRIX); // 0D1D=4,matrix_slerp %1d% from_matrix %2d% to_matrix %3d% t %4d% // newOpcodes
     CLEO_RegisterOpcode(0x0D25, INITIALISE_MATRIX); // 0D25=17,set_matrix %1d% elements %2d% %3d% %4d% %5d% %6d% %7d% %8d% %9d% %10d% %11d% %12d% %13d% %14d% %15d% %16d% %17d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D1C, NORMALISE_VECTOR); // 0D1C=1,normalize_vector %1d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D26, INITIALISE_VECTOR); // 0D26=4,set_vector %1d% elements %2d% %3d% %4d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D28, GET_VECTOR_ELEMENTS); // 0D28=4,get_vector %1d% elements_to %2d% %3d% %4d% // newOpcodes
 
     // Audio
     CLEO_RegisterOpcode(0x0E21, GET_AUDIO_SFX_VOLUME); // 0E21=1,get_audio_sfx_volume %1d%
