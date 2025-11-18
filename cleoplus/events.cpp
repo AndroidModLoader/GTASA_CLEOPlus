@@ -4,7 +4,7 @@ DECL_HOOKv(PedDamageResponse, CPedDamageResponseCalculator* self, CPed* victim, 
 {
     if(!response->m_bDamageCalculated)
     {
-        auto xdata = GetExtData(victim);
+        PedExtVars* xdata = GetExtData(victim);
         if(xdata)
         {
             xdata->lastDamageEntity = (CEntity*)self->m_pInflictor;
@@ -23,7 +23,7 @@ extern "C" uintptr_t CarInflictDmg_Patch(CVehicle* self, int type, CEntity* dama
 {
     if(damage > 0)
     {
-        auto xdata = GetExtData(self);
+        VehicleExtVars* xdata = GetExtData(self);
         if(xdata)
         {
             xdata->lastDamageEntity = damager;

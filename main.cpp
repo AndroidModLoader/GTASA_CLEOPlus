@@ -33,7 +33,7 @@ DECL_HOOKv(OnGameProcess)
         CPed* ped = (*ms_pPedPool)->GetAt(i);
         if(ped)
         {
-            auto xdata = GetExtData(ped);
+            PedExtVars* xdata = GetExtData(ped);
             if(xdata) xdata->GrabTasks(ped);
         }
     }

@@ -906,7 +906,7 @@ CLEO_Fn(GET_CHAR_DAMAGE_LAST_FRAME)
 
     if(ped)
     {
-        auto xdata = GetExtData(ped);
+        PedExtVars* xdata = GetExtData(ped);
         if(xdata)
         {
             if(xdata->lastDamageEntity)
@@ -933,7 +933,7 @@ CLEO_Fn(GET_CAR_WEAPON_DAMAGE_LAST_FRAME)
 
     if(veh)
     {
-        auto xdata = GetExtData(veh);
+        VehicleExtVars* xdata = GetExtData(veh);
         if(xdata)
         {
             if(xdata->lastDamageEntity)

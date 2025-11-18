@@ -713,7 +713,7 @@ inline PedExtVars* GetExtData(CPed* ped)
     }
 
     auto idx = (*ms_pPedPool)->GetIndex(ped);
-    return (*ms_pPedPool)->IsIndexInBounds(idx) ? ms_pPedExtVarsPool->GetAt((*ms_pPedPool)->GetIndex(ped)) : NULL;
+    return (*ms_pPedPool)->IsIndexInBounds(idx) ? ms_pPedExtVarsPool->GetAt(idx) : NULL;
 }
 inline VehicleExtVars* GetExtData(CVehicle* veh)
 {
@@ -741,9 +741,9 @@ inline ObjectExtVars* GetExtData(CObject* obj)
     }
 
     auto idx = (*ms_pObjectPool)->GetIndex(obj);
-    return (*ms_pObjectPool)->IsIndexInBounds(idx) ? ms_pObjectExtVarsPool->GetAt((*ms_pObjectPool)->GetIndex(obj)) : NULL;
+    return (*ms_pObjectPool)->IsIndexInBounds(idx) ? ms_pObjectExtVarsPool->GetAt(idx) : NULL;
 }
-inline ExtendedVars *FindExtendedVarsFromId(std::list<ExtendedVars*>& extendedVarsList, uint32_t findId)
+inline ExtendedVars* FindExtendedVarsFromId(std::list<ExtendedVars*>& extendedVarsList, uint32_t findId)
 {
     for (ExtendedVars* extendedVars : extendedVarsList)
     {
@@ -755,11 +755,4 @@ inline void FixAspectRatio(float *x, float *y)
 {
     float trashVar = 0.0f;
     CorrectAspect(*x, *y, trashVar, trashVar);
-    /*float resX = (float)RsGlobal->maximumWidth;
-    float resY = (float)RsGlobal->maximumHeight;
-    resY *= 1.33333333f;
-    resX /= resY;
-    
-    *x /= resX;
-    *y /= 1.07142857f;*/
 }

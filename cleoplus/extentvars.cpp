@@ -11,20 +11,20 @@ CLEO_Fn(INIT_EXTENDED_CHAR_VARS)
     CPed *ped = GetPedFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int totalVars = cleo->ReadParam(handle)->i;
-    PedExtVars& xdata = *GetExtData(ped);
-    if((void*)&xdata != NULL && totalVars > 0)
+    PedExtVars* xdata = GetExtData(ped);
+    if(xdata && totalVars > 0)
     {
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
-        ExtendedVars *extVars = FindExtendedVarsFromId(xdata.extendedVarsList, findId);
+        ExtendedVars *extVars = FindExtendedVarsFromId(xdata->extendedVarsList, findId);
         if (extVars)
         {
             free(extVars->data);
-            xdata.extendedVarsList.remove(extVars);
+            xdata->extendedVarsList.remove(extVars);
             delete extVars;
         }
-        xdata.extendedVarsList.push_back(new ExtendedVars(findId, totalVars));
+        xdata->extendedVarsList.push_back(new ExtendedVars(findId, totalVars));
         bResult = true;
     }
     cleoaddon->UpdateCompareFlag(handle, bResult);
@@ -39,11 +39,11 @@ CLEO_Fn(SET_EXTENDED_CHAR_VAR)
     int varValue = cleo->ReadParam(handle)->i;
     if(varId >= 0)
     {
-        PedExtVars& xdata = *GetExtData(ped);
+        PedExtVars* xdata = GetExtData(ped);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
-        ExtendedVars *extVars = FindExtendedVarsFromId(xdata.extendedVarsList, findId);
+        ExtendedVars *extVars = FindExtendedVarsFromId(xdata->extendedVarsList, findId);
         if (extVars)
         {
             ((int*)(extVars->data))[varId] = varValue;
@@ -62,11 +62,11 @@ CLEO_Fn(GET_EXTENDED_CHAR_VAR)
     int varValue = 0;
     if(varId >= 0)
     {
-        PedExtVars& xdata = *GetExtData(ped);
+        PedExtVars* xdata = GetExtData(ped);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
-        ExtendedVars *extVars = FindExtendedVarsFromId(xdata.extendedVarsList, findId);
+        ExtendedVars *extVars = FindExtendedVarsFromId(xdata->extendedVarsList, findId);
         if (extVars)
         {
             varValue = ((int*)(extVars->data))[varId];
@@ -84,20 +84,20 @@ CLEO_Fn(INIT_EXTENDED_CAR_VARS)
     CVehicle *veh = GetVehicleFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int totalVars = cleo->ReadParam(handle)->i;
-    VehicleExtVars& xdata = *GetExtData(veh);
-    if((void*)&xdata != NULL && totalVars > 0)
+    VehicleExtVars* xdata = GetExtData(veh);
+    if(xdata && totalVars > 0)
     {
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
-        ExtendedVars *extVars = FindExtendedVarsFromId(xdata.extendedVarsList, findId);
+        ExtendedVars *extVars = FindExtendedVarsFromId(xdata->extendedVarsList, findId);
         if (extVars)
         {
             free(extVars->data);
-            xdata.extendedVarsList.remove(extVars);
+            xdata->extendedVarsList.remove(extVars);
             delete extVars;
         }
-        xdata.extendedVarsList.push_back(new ExtendedVars(findId, totalVars));
+        xdata->extendedVarsList.push_back(new ExtendedVars(findId, totalVars));
         bResult = true;
     }
     cleoaddon->UpdateCompareFlag(handle, bResult);
@@ -112,11 +112,11 @@ CLEO_Fn(SET_EXTENDED_CAR_VAR)
     int varValue = cleo->ReadParam(handle)->i;
     if(varId >= 0)
     {
-        VehicleExtVars& xdata = *GetExtData(veh);
+        VehicleExtVars* xdata = GetExtData(veh);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
-        ExtendedVars *extVars = FindExtendedVarsFromId(xdata.extendedVarsList, findId);
+        ExtendedVars *extVars = FindExtendedVarsFromId(xdata->extendedVarsList, findId);
         if (extVars)
         {
             ((int*)(extVars->data))[varId] = varValue;
@@ -135,11 +135,11 @@ CLEO_Fn(GET_EXTENDED_CAR_VAR)
     int varValue = 0;
     if(varId >= 0)
     {
-        VehicleExtVars& xdata = *GetExtData(veh);
+        VehicleExtVars* xdata = GetExtData(veh);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
-        ExtendedVars *extVars = FindExtendedVarsFromId(xdata.extendedVarsList, findId);
+        ExtendedVars *extVars = FindExtendedVarsFromId(xdata->extendedVarsList, findId);
         if (extVars)
         {
             varValue = ((int*)(extVars->data))[varId];
@@ -157,20 +157,20 @@ CLEO_Fn(INIT_EXTENDED_OBJECT_VARS)
     CObject *obj = GetObjectFromRef(cleo->ReadParam(handle)->i);
     uint32_t findId = GetUppercaseKey(cleoaddon->ReadString(handle, buf, sizeof(buf)));
     int totalVars = cleo->ReadParam(handle)->i;
-    ObjectExtVars& xdata = *GetExtData(obj);
-    if((void*)&xdata != NULL && totalVars > 0)
+    ObjectExtVars* xdata = GetExtData(obj);
+    if(xdata && totalVars > 0)
     {
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
-        ExtendedVars *extVars = FindExtendedVarsFromId(xdata.extendedVarsList, findId);
+        ExtendedVars *extVars = FindExtendedVarsFromId(xdata->extendedVarsList, findId);
         if (extVars)
         {
             free(extVars->data);
-            xdata.extendedVarsList.remove(extVars);
+            xdata->extendedVarsList.remove(extVars);
             delete extVars;
         }
-        xdata.extendedVarsList.push_back(new ExtendedVars(findId, totalVars));
+        xdata->extendedVarsList.push_back(new ExtendedVars(findId, totalVars));
         bResult = true;
     }
     cleoaddon->UpdateCompareFlag(handle, bResult);
@@ -185,11 +185,11 @@ CLEO_Fn(SET_EXTENDED_OBJECT_VAR)
     int varValue = cleo->ReadParam(handle)->i;
     if(varId >= 0)
     {
-        ObjectExtVars& xdata = *GetExtData(obj);
+        ObjectExtVars* xdata = GetExtData(obj);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
-        ExtendedVars *extVars = FindExtendedVarsFromId(xdata.extendedVarsList, findId);
+        ExtendedVars *extVars = FindExtendedVarsFromId(xdata->extendedVarsList, findId);
         if (extVars)
         {
             ((int*)(extVars->data))[varId] = varValue;
@@ -208,11 +208,11 @@ CLEO_Fn(GET_EXTENDED_OBJECT_VAR)
     int varValue = 0;
     if(varId >= 0)
     {
-        ObjectExtVars& xdata = *GetExtData(obj);
+        ObjectExtVars* xdata = GetExtData(obj);
         if (findId == 2949658545) // "AUTO"
             findId = (uint32_t)handle;
 
-        ExtendedVars *extVars = FindExtendedVarsFromId(xdata.extendedVarsList, findId);
+        ExtendedVars *extVars = FindExtendedVarsFromId(xdata->extendedVarsList, findId);
         if (extVars)
         {
             varValue = ((int*)(extVars->data))[varId];
