@@ -1875,6 +1875,7 @@ CLEO_Fn(GET_VEHICLE_DUMMY_POSN)
         CVehicleModelInfo* mi = (CVehicleModelInfo*)ms_modelInfoPtrs[vehicle->m_nModelIndex];
         if(mi && mi->m_VehicleStructure)
         {
+            bResult = true;
             posn = mi->m_VehicleStructure->m_positions[dummy];
             if(xflag) posn.x = -posn.x;
             if(posflag)
