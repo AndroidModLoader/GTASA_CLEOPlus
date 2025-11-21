@@ -98,9 +98,9 @@ public:
 class PedExtVars
 {
 public:
-    static const int g_nTasksCacheSize = 64;
+    static const int MAX_TASKS_CACHE = 64;
 
-    int activeTasks[g_nTasksCacheSize];
+    int activeTasks[MAX_TASKS_CACHE];
     CEntity *killTargetPed;
     CEntity *lastDamageEntity;
     CVehicle* enterExitTargetCar;
@@ -131,7 +131,7 @@ public:
     void GrabFlags(CTask* task, int type, bool secondaryTask, int idx, CPed* ped); // ai.cpp
     inline bool HasTask(int task)
     {
-        for(int i = 0; i < g_nTasksCacheSize; ++i)
+        for(int i = 0; i < MAX_TASKS_CACHE; ++i)
         {
             if(activeTasks[i] == task) return true;
         }
@@ -709,11 +709,20 @@ inline PedExtVars* GetExtData(CPed* ped)
         auto size = (*ms_pPedPool)->m_nSize;
         ms_pPedExtVarsPool = new CPool<PedExtVars>(size, "PedExtVars");
         ms_pPedExtVarsPool->m_nFirstFree = size;
-        for(int i = 0; i < size; ++i) ms_pPedExtVarsPool->m_byteMap[i].bEmpty = false;
-    }
+        for(int i = 0; i < size; ++i)
+        {
+            ms_pPedExtVarsPool->m_byteMap[i].bEmpty = false;
+            memset(&ms_pPedExtVarsPool->m_pObjects[i], 0, sizeof(PedExtVars));
 
-    auto idx = (*ms_pPedPool)->GetIndex(ped);
-    return (*ms_pPedPool)->IsIndexInBounds(idx) ? ms_pPedExtVarsPool->GetAt(idx) : NULL;
+            std::vector<RenderObject*>* pRenderObjects = &ms_pPedExtVarsPool->m_pObjects[i].renderObjects;
+            new(pRenderObjects) std::vector<RenderObject*>();
+            
+            std::list<ExtendedVars*>* pExtendedVarsList = &ms_pPedExtVarsPool->m_pObjects[i].extendedVarsList;
+            new(pExtendedVarsList) std::list<ExtendedVars*>();
+        }
+    }
+    int idx = (GetPedRef(ped) >> 8);
+    return ms_pPedExtVarsPool->GetAt(idx);
 }
 inline VehicleExtVars* GetExtData(CVehicle* veh)
 {
@@ -723,11 +732,16 @@ inline VehicleExtVars* GetExtData(CVehicle* veh)
         auto size = (*ms_pVehiclePool)->m_nSize;
         ms_pVehicleExtVarsPool = new CPool<VehicleExtVars>(size, "VehicleExtVars");
         ms_pVehicleExtVarsPool->m_nFirstFree = size;
-        for(int i = 0; i < size; ++i) ms_pVehicleExtVarsPool->m_byteMap[i].bEmpty = false;
+        for(int i = 0; i < size; ++i)
+        {
+            ms_pVehicleExtVarsPool->m_byteMap[i].bEmpty = false;
+            memset(&ms_pVehicleExtVarsPool->m_pObjects[i], 0, sizeof(VehicleExtVars));
+            std::list<ExtendedVars*>* pExtendedVarsList = &ms_pVehicleExtVarsPool->m_pObjects[i].extendedVarsList;
+            new(pExtendedVarsList) std::list<ExtendedVars*>();
+        }
     }
-
-    auto idx = (*ms_pVehiclePool)->GetIndex(veh);
-    return (*ms_pVehiclePool)->IsIndexInBounds(idx) ? ms_pVehicleExtVarsPool->GetAt(idx) : NULL;
+    int idx = (GetVehicleRef(veh) >> 8);
+    return ms_pVehicleExtVarsPool->GetAt(idx);
 }
 inline ObjectExtVars* GetExtData(CObject* obj)
 {
@@ -737,11 +751,16 @@ inline ObjectExtVars* GetExtData(CObject* obj)
         auto size = (*ms_pObjectPool)->m_nSize;
         ms_pObjectExtVarsPool = new CPool<ObjectExtVars>(size, "ObjectExtVars");
         ms_pObjectExtVarsPool->m_nFirstFree = size;
-        for(int i = 0; i < size; ++i) ms_pObjectExtVarsPool->m_byteMap[i].bEmpty = false;
+        for(int i = 0; i < size; ++i)
+        {
+            ms_pObjectExtVarsPool->m_byteMap[i].bEmpty = false;
+            memset(&ms_pObjectExtVarsPool->m_pObjects[i], 0, sizeof(ObjectExtVars));
+            std::list<ExtendedVars*>* pExtendedVarsList = &ms_pObjectExtVarsPool->m_pObjects[i].extendedVarsList;
+            new(pExtendedVarsList) std::list<ExtendedVars*>();
+        }
     }
-
-    auto idx = (*ms_pObjectPool)->GetIndex(obj);
-    return (*ms_pObjectPool)->IsIndexInBounds(idx) ? ms_pObjectExtVarsPool->GetAt(idx) : NULL;
+    int idx = (GetObjectRef(obj) >> 8);
+    return ms_pObjectExtVarsPool->GetAt(idx);
 }
 inline ExtendedVars* FindExtendedVarsFromId(std::list<ExtendedVars*>& extendedVarsList, uint32_t findId)
 {

@@ -45,7 +45,7 @@ void PedExtVars::GrabTasks(CPed* ped)
         while(task)
         {
             type = (int)task->GetTaskType();
-            if(idx < PedExtVars::g_nTasksCacheSize) activeTasks[idx++] = type;
+            if(idx < PedExtVars::MAX_TASKS_CACHE) activeTasks[idx++] = type;
             GrabFlags(task, type, false, idx, ped);
             task = task->GetSubTask();
         }
@@ -56,13 +56,13 @@ void PedExtVars::GrabTasks(CPed* ped)
         while(task)
         {
             type = (int)task->GetTaskType();
-            if(idx < PedExtVars::g_nTasksCacheSize) activeTasks[idx++] = type;
+            if(idx < PedExtVars::MAX_TASKS_CACHE) activeTasks[idx++] = type;
             GrabFlags(task, type, true, idx, ped);
             task = task->GetSubTask();
         }
     }
 
-    for(int i = idx; i < PedExtVars::g_nTasksCacheSize; ++i)
+    for(int i = idx; i < PedExtVars::MAX_TASKS_CACHE; ++i)
     {
         activeTasks[i] = -1;
     }
