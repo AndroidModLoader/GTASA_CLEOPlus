@@ -1,16 +1,17 @@
 #pragma once
 
+#include <mod/amlmod.h>
+#include <mod/logger.h>
+
+#include "cleo.h"
+#include "cleoaddon.h"
+#include "GTASA_STRUCTS.h"
+
 #include <list>
 #include <cctype>
 #include <string>
 #include <vector>
 #include <set>
-#define AML32
-#include <mod/amlmod.h>
-#include <mod/logger.h>
-#include "GTASA_STRUCTS.h"
-#include "cleo.h"
-#include "cleoaddon.h"
 
 #define CLEO_RegisterOpcode(x, h) cleo->RegisterOpcode(x, h); cleo->RegisterOpcodeFunction(#h, h)
 #define CLEO_Fn(h) void h (void *handle, uint32_t *ip, uint16_t opcode, const char *name)
@@ -318,6 +319,8 @@ extern void (*SetComponentVisibility)(CVehicle*, RwFrame*, int);
 extern void (*RwFrameForAllObjects)(RwFrame*, RwObject*(*)(RwObject*, void*), void*);
 extern RwObject* (*SetComponentAtomicAlpha)(RwObject*, void*);
 extern const char* (*GetFrameNodeName)(RwFrame*);
+extern void (*RwRenderStateSet)(int, void*);
+extern void (*RwIm2DRenderPrimitive)(int, RwOpenGLVertex*, int);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);
@@ -572,6 +575,9 @@ CLEO_Fn(DRAW_TEXTURE_PLUS);
 CLEO_Fn(GET_TEXTURE_FROM_SPRITE);
 CLEO_Fn(DRAW_STRING);
 CLEO_Fn(DRAW_STRING_EXT);
+CLEO_Fn(DRAW_SHAPE);
+CLEO_Fn(SETUP_SHAPE_VERTEX);
+CLEO_Fn(ROTATE_SHAPE_VERTICES);
 CLEO_Fn(QUAT_SLERP);
 CLEO_Fn(SET_MATRIX_ROTATION_FROM_QUAT);
 CLEO_Fn(SET_QUAT_FROM_MATRIX);

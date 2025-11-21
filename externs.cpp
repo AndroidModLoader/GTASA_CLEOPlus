@@ -152,6 +152,8 @@ void (*SetComponentVisibility)(CVehicle*, RwFrame*, int);
 void (*RwFrameForAllObjects)(RwFrame*, RwObject*(*)(RwObject*, void*), void*);
 RwObject* (*SetComponentAtomicAlpha)(RwObject*, void*);
 const char* (*GetFrameNodeName)(RwFrame*);
+void (*RwRenderStateSet)(int, void*);
+void (*RwIm2DRenderPrimitive)(int, RwOpenGLVertex*, int);
 
 // int main
 void ResolveExternals()
@@ -330,4 +332,6 @@ void ResolveExternals()
     SET_TO(RwFrameForAllObjects, aml->GetSym(hGTASA, "_Z20RwFrameForAllObjectsP7RwFramePFP8RwObjectS2_PvES3_"));
     SET_TO(SetComponentAtomicAlpha, aml->GetSym(hGTASA, "_ZN8CVehicle23SetComponentAtomicAlphaEP8RpAtomici"));
     SET_TO(GetFrameNodeName, aml->GetSym(hGTASA, "_Z16GetFrameNodeNameP7RwFrame"));
+    SET_TO(RwRenderStateSet, aml->GetSym(hGTASA, "_Z16RwRenderStateSet13RwRenderStatePv"));
+    SET_TO(RwIm2DRenderPrimitive, aml->GetSym(hGTASA, "_Z21RwIm2DRenderPrimitive15RwPrimitiveTypeP14RwOpenGLVertexi"));
 }

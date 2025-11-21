@@ -2,6 +2,8 @@
 #include <mod/logger.h>
 #include "externs.h"
 
+#include <newopcodes/no_shape.h>
+
 MYMOD(net.juniordjjr.rusjj.cleoplus, CLEOPlus, 1.0.1, JuniorDjjr & RusJJ)
 NEEDGAME(com.rockstargames.gtasa)
 BEGIN_DEPLIST()
@@ -69,6 +71,23 @@ DECL_HOOKv(GameInitReInit)
 
     g_nTempCoronaId = 10000;
 }
+DECL_HOOKv(DefaultDraw)
+{
+    DefaultDraw();
+
+    ShapeDrawer::DrawAll();
+    // TextDrawer::DrawAll();
+    // SpriteDrawer::DrawAll();
+}
+DECL_HOOKv(BeforeScriptsProcessing)
+{
+    g_nTempCoronaId = 10000;
+    ShapeDrawer::m_nShapes = 0;
+    // TextDrawer::m_nTexts = 0;
+    // SpriteDrawer::m_nSprites = 0;
+
+    BeforeScriptsProcessing();
+}
 
 // int main!
 ON_ALL_MODS_LOAD()
@@ -86,6 +105,8 @@ ON_ALL_MODS_LOAD()
     HOOKPLT(DoGameSpecificStuffBeforeSave, pGTASA + 0x66EC5C);
     HOOKPLT(MobileMenuRender,              pGTASA + 0x674254);
     HOOKPLT(GameInitReInit,                pGTASA + 0x672014);
+    HOOKPLT(DefaultDraw,                   pGTASA + 0x675CC4);
+    HOOKPLT(BeforeScriptsProcessing,       pGTASA + 0x673178);
 
     // NoSave
     CLEO_RegisterOpcode(0x0E01, CREATE_OBJECT_NO_SAVE); // 0E01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
@@ -365,6 +386,9 @@ ON_ALL_MODS_LOAD()
     CLEO_RegisterOpcode(0x0E3C, GET_TEXTURE_FROM_SPRITE); // 0E3C=2,get_texture_from_sprite %1d% store_to %2d%
     //CLEO_RegisterOpcode(0x0E62, DRAW_STRING); // 0E62=8,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d%
     //CLEO_RegisterOpcode(0x0E63, DRAW_STRING_EXT); // 0E63=27,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d% prop %9d% align %10d% wrap %11d% justify %12d% color %13d% %14d% %15d% %16d% outline %17d% shadow %18d% dropColor %19d% %20d% %21d% %22d% background %23d% backColor %24d% %25d% %26d% %27d%
+    CLEO_RegisterOpcode(0x0D40, DRAW_SHAPE); // 0D40=8,draw_2d_shape_type %3d% texture %4d% numVerts %2d% pVerts %1d% vertexAlpha %5d% srcBlend %6d% dstBlend %7d% _unused %8d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D41, SETUP_SHAPE_VERTEX); // 0D41=14,set_vertices %1d% vertex %2d% xyz %5d% %6d% %7d% rhw %8d% RGBA %9d% %10d% %11d% %12d% uv %13d% %14d% invertX %3d% invertY %4d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D45, ROTATE_SHAPE_VERTICES); // 0D45=5,rotate_2d_vertices_shape %1d% num_verts %2d% aroundXY %3d% %4d% angle %5d% // newOpcodes
 
     // Math
     CLEO_RegisterOpcode(0x0D1E, QUAT_SLERP); // 0D1E=4,quat_slerp %1d% to %2d% lambda %3d% result %4d%
