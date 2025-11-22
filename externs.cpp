@@ -159,6 +159,7 @@ void (*RwIm2DRenderPrimitive)(int, RwOpenGLVertex*, int);
 void (*SetMaskVertices)(int, float*, float);
 void (*SetVertices4)(int,float*,float*,CRGBA&);
 void (*SetVertices8)(float,float,float,float,float,float,float,float,CRGBA&,CRGBA&,CRGBA&,CRGBA&);
+void (*DrawAnyRect)(float,float,float,float,float,float,float,float,CRGBA&,CRGBA&,CRGBA&,CRGBA&);
 
 // int main
 void ResolveExternals()
@@ -344,4 +345,5 @@ void ResolveExternals()
     SET_TO(SetMaskVertices, aml->GetSym(hGTASA, "_ZN9CSprite2d15SetMaskVerticesEiPff"));
     SET_TO(SetVertices4, aml->GetSym(hGTASA, "_ZN9CSprite2d11SetVerticesEiPfS0_RK5CRGBA"));
     SET_TO(SetVertices8, aml->GetSym(hGTASA, "_ZN9CSprite2d11SetVerticesEffffffffRK5CRGBAS2_S2_S2_"));
+    SET_TO(DrawAnyRect, aml->GetSym(hGTASA, "_ZN9CSprite2d11DrawAnyRectEffffffffRK5CRGBAS2_S2_S2_"));
 }

@@ -3,7 +3,7 @@
 #include "externs.h"
 
 #include <cleoplus/drawing.h>
-#include <newopcodes/no_shape.h>
+#include <newopcodes/drawing.h>
 
 MYMOD(net.juniordjjr.rusjj.cleoplus, CLEOPlus, 1.1, JuniorDjjr & RusJJ)
 NEEDGAME(com.rockstargames.gtasa)
@@ -79,7 +79,7 @@ DECL_HOOKv(DefaultDraw)
 
     ShapeDrawer::DrawAll();
     // TextDrawer::DrawAll();
-    // SpriteDrawer::DrawAll();
+    SpriteDrawer::DrawAll();
     CLEOTexture::DrawAll(AfterDrawing);
 }
 DECL_HOOKv(BeforeScriptsProcessing)
@@ -87,7 +87,7 @@ DECL_HOOKv(BeforeScriptsProcessing)
     g_nTempCoronaId = 10000;
     ShapeDrawer::m_nShapes = 0;
     // TextDrawer::m_nTexts = 0;
-    // SpriteDrawer::m_nSprites = 0;
+    SpriteDrawer::m_nSprites = 0;
 
     BeforeScriptsProcessing();
 }
@@ -431,6 +431,8 @@ ON_ALL_MODS_LOAD()
     CLEO_RegisterOpcode(0x0D40, DRAW_SHAPE); // 0D40=8,draw_2d_shape_type %3d% texture %4d% numVerts %2d% pVerts %1d% vertexAlpha %5d% srcBlend %6d% dstBlend %7d% _unused %8d% // newOpcodes
     CLEO_RegisterOpcode(0x0D41, SETUP_SHAPE_VERTEX); // 0D41=14,set_vertices %1d% vertex %2d% xyz %5d% %6d% %7d% rhw %8d% RGBA %9d% %10d% %11d% %12d% uv %13d% %14d% invertX %3d% invertY %4d% // newOpcodes
     CLEO_RegisterOpcode(0x0D45, ROTATE_SHAPE_VERTICES); // 0D45=5,rotate_2d_vertices_shape %1d% num_verts %2d% aroundXY %3d% %4d% angle %5d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D7E, DRAW_2D_SPRITE); // 0D7E=11,draw_sprite_with_texture %1d% at_cornerA %2d% %3d% cornerB %4d% %5d% color %6d% %7d% %8d% %9d% angle %10d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D7F, DRAW_2D_SPRITE_WITH_GRADIENT); // 0D7F=22,draw_gradient_sprite_with_texture %1d% at_cornerA %2d% %3d% cornerB %4d% %5d% colors %6d% %7d% %8d% %9d%  %10d% %11d% %12d% %13d%  %14d% %15d% %16d% %17d%  %18d% %19d% %20d% %21d% angle %22d% // newOpcodes
 
     // Math
     CLEO_RegisterOpcode(0x0D1E, QUAT_SLERP); // 0D1E=4,quat_slerp %1d% to %2d% lambda %3d% result %4d%

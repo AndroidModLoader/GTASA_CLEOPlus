@@ -326,6 +326,7 @@ extern void (*RwIm2DRenderPrimitive)(int, RwOpenGLVertex*, int);
 extern void (*SetMaskVertices)(int, float*, float);
 extern void (*SetVertices4)(int,float*,float*,CRGBA&);
 extern void (*SetVertices8)(float,float,float,float,float,float,float,float,CRGBA&,CRGBA&,CRGBA&,CRGBA&);
+extern void (*DrawAnyRect)(float,float,float,float,float,float,float,float,CRGBA&,CRGBA&,CRGBA&,CRGBA&);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);
@@ -583,6 +584,8 @@ CLEO_Fn(DRAW_STRING_EXT);
 CLEO_Fn(DRAW_SHAPE);
 CLEO_Fn(SETUP_SHAPE_VERTEX);
 CLEO_Fn(ROTATE_SHAPE_VERTICES);
+CLEO_Fn(DRAW_2D_SPRITE);
+CLEO_Fn(DRAW_2D_SPRITE_WITH_GRADIENT);
 CLEO_Fn(QUAT_SLERP);
 CLEO_Fn(SET_MATRIX_ROTATION_FROM_QUAT);
 CLEO_Fn(SET_QUAT_FROM_MATRIX);

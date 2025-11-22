@@ -1,6 +1,5 @@
 #include "drawing.h"
-
-#include <newopcodes/no_shape.h>
+#include <newopcodes/drawing.h>
 
 std::vector<CLEOTexture*> m_aCLEOTexs[TOTAL_DRAW_EVENT];
 
@@ -183,4 +182,56 @@ CLEO_Fn(ROTATE_SHAPE_VERTICES) // newOpcodes
         --numVerts;
         ++pVerts;
     }
+}
+CLEO_Fn(DRAW_2D_SPRITE) // newOpcodes
+{
+    CRect rect;
+    CRGBA color;
+    float angle;
+    RwTexture* texture;
+
+    texture = (RwTexture*)cleo->ReadParam(handle)->u;
+    rect.left = cleo->ReadParam(handle)->f;
+    rect.top = cleo->ReadParam(handle)->f;
+    rect.right = cleo->ReadParam(handle)->f;
+    rect.bottom = cleo->ReadParam(handle)->f;
+    color.r = cleo->ReadParam(handle)->u;
+    color.g = cleo->ReadParam(handle)->u;
+    color.b = cleo->ReadParam(handle)->u;
+    color.a = cleo->ReadParam(handle)->u;
+    angle = cleo->ReadParam(handle)->f;
+
+    cleoaddon->UpdateCompareFlag(handle, SpriteDrawer::DrawSpriteThisFrame(texture, rect, color, color, color, color, angle));
+}
+CLEO_Fn(DRAW_2D_SPRITE_WITH_GRADIENT) // newOpcodes
+{
+    CRect rect;
+    CRGBA color[4];
+    float angle;
+    RwTexture* texture;
+
+    texture = (RwTexture*)cleo->ReadParam(handle)->u;
+    rect.left = cleo->ReadParam(handle)->f;
+    rect.top = cleo->ReadParam(handle)->f;
+    rect.right = cleo->ReadParam(handle)->f;
+    rect.bottom = cleo->ReadParam(handle)->f;
+    color[0].r = cleo->ReadParam(handle)->u;
+    color[0].g = cleo->ReadParam(handle)->u;
+    color[0].b = cleo->ReadParam(handle)->u;
+    color[0].a = cleo->ReadParam(handle)->u;
+    color[1].r = cleo->ReadParam(handle)->u;
+    color[1].g = cleo->ReadParam(handle)->u;
+    color[1].b = cleo->ReadParam(handle)->u;
+    color[1].a = cleo->ReadParam(handle)->u;
+    color[2].r = cleo->ReadParam(handle)->u;
+    color[2].g = cleo->ReadParam(handle)->u;
+    color[2].b = cleo->ReadParam(handle)->u;
+    color[2].a = cleo->ReadParam(handle)->u;
+    color[3].r = cleo->ReadParam(handle)->u;
+    color[3].g = cleo->ReadParam(handle)->u;
+    color[3].b = cleo->ReadParam(handle)->u;
+    color[3].a = cleo->ReadParam(handle)->u;
+    angle = cleo->ReadParam(handle)->f;
+
+    cleoaddon->UpdateCompareFlag(handle, SpriteDrawer::DrawSpriteThisFrame(texture, rect, color[0], color[1], color[2], color[3], angle));
 }
