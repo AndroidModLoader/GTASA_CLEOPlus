@@ -47,6 +47,8 @@ int *m_CurrentStoredValue;
 CVector *m_VectorToSun;
 float *ms_fFarClipZ;
 int *ms_atomicPluginOffset;
+RwOpenGLVertex *maVertices;
+float *NearScreenZ;
 
 // Funcs
 CObject* (*CreateObject)(int);
@@ -154,6 +156,9 @@ RwObject* (*SetComponentAtomicAlpha)(RwObject*, void*);
 const char* (*GetFrameNodeName)(RwFrame*);
 void (*RwRenderStateSet)(int, void*);
 void (*RwIm2DRenderPrimitive)(int, RwOpenGLVertex*, int);
+void (*SetMaskVertices)(int, float*, float);
+void (*SetVertices4)(int,float*,float*,CRGBA&);
+void (*SetVertices8)(float,float,float,float,float,float,float,float,CRGBA&,CRGBA&,CRGBA&,CRGBA&);
 
 // int main
 void ResolveExternals()
@@ -227,6 +232,8 @@ void ResolveExternals()
     SET_TO(m_VectorToSun, aml->GetSym(hGTASA, "_ZN10CTimeCycle13m_VectorToSunE"));
     SET_TO(ms_fFarClipZ, aml->GetSym(hGTASA, "_ZN5CDraw12ms_fFarClipZE"));
     SET_TO(ms_atomicPluginOffset, aml->GetSym(hGTASA, "_ZN18CVisibilityPlugins21ms_atomicPluginOffsetE"));
+    SET_TO(maVertices, aml->GetSym(hGTASA, "_ZN9CSprite2d10maVerticesE"));
+    SET_TO(NearScreenZ, aml->GetSym(hGTASA, "_ZN9CSprite2d11NearScreenZE"));
 
 // Funcs
     SET_TO(CreateObject, aml->GetSym(hGTASA, "_ZN7CObject6CreateEib"));
@@ -334,4 +341,7 @@ void ResolveExternals()
     SET_TO(GetFrameNodeName, aml->GetSym(hGTASA, "_Z16GetFrameNodeNameP7RwFrame"));
     SET_TO(RwRenderStateSet, aml->GetSym(hGTASA, "_Z16RwRenderStateSet13RwRenderStatePv"));
     SET_TO(RwIm2DRenderPrimitive, aml->GetSym(hGTASA, "_Z21RwIm2DRenderPrimitive15RwPrimitiveTypeP14RwOpenGLVertexi"));
+    SET_TO(SetMaskVertices, aml->GetSym(hGTASA, "_ZN9CSprite2d15SetMaskVerticesEiPff"));
+    SET_TO(SetVertices4, aml->GetSym(hGTASA, "_ZN9CSprite2d11SetVerticesEiPfS0_RK5CRGBA"));
+    SET_TO(SetVertices8, aml->GetSym(hGTASA, "_ZN9CSprite2d11SetVerticesEffffffffRK5CRGBAS2_S2_S2_"));
 }

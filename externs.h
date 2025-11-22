@@ -214,6 +214,8 @@ extern int *m_CurrentStoredValue;
 extern CVector *m_VectorToSun;
 extern float *ms_fFarClipZ;
 extern int *ms_atomicPluginOffset;
+extern RwOpenGLVertex *maVertices;
+extern float *NearScreenZ;
 
 // Game funcs
 extern CObject* (*CreateObject)(int);
@@ -321,6 +323,9 @@ extern RwObject* (*SetComponentAtomicAlpha)(RwObject*, void*);
 extern const char* (*GetFrameNodeName)(RwFrame*);
 extern void (*RwRenderStateSet)(int, void*);
 extern void (*RwIm2DRenderPrimitive)(int, RwOpenGLVertex*, int);
+extern void (*SetMaskVertices)(int, float*, float);
+extern void (*SetVertices4)(int,float*,float*,CRGBA&);
+extern void (*SetVertices8)(float,float,float,float,float,float,float,float,CRGBA&,CRGBA&,CRGBA&,CRGBA&);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);

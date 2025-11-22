@@ -2,13 +2,14 @@
 #include <mod/logger.h>
 #include "externs.h"
 
+#include <cleoplus/drawing.h>
 #include <newopcodes/no_shape.h>
 
-MYMOD(net.juniordjjr.rusjj.cleoplus, CLEOPlus, 1.0.1, JuniorDjjr & RusJJ)
+MYMOD(net.juniordjjr.rusjj.cleoplus, CLEOPlus, 1.1, JuniorDjjr & RusJJ)
 NEEDGAME(com.rockstargames.gtasa)
 BEGIN_DEPLIST()
-    ADD_DEPENDENCY_VER(net.rusjj.aml, 1.2.3)
-    ADD_DEPENDENCY_VER(net.rusjj.cleolib, 2.0.1.7)
+    ADD_DEPENDENCY_VER(net.rusjj.aml, 1.3.0)
+    ADD_DEPENDENCY_VER(net.rusjj.cleolib, 2.0.1.9)
 END_DEPLIST()
 
 // Savings
@@ -29,7 +30,7 @@ DECL_HOOKv(OnGameProcess)
 {
     if(!*m_UserPause && !*m_CodePause) pausedLastFrame = false;
     for (auto scriptEvent : scriptEvents[ScriptEventList::BeforeGameProcess]) scriptEvent->RunScriptEvent();
-    auto size = (*ms_pPedPool)->m_nSize;
+    const int size = (*ms_pPedPool)->m_nSize;
     for(int i = 0; i < size; ++i)
     {
         CPed* ped = (*ms_pPedPool)->GetAt(i);
@@ -58,8 +59,7 @@ DECL_HOOKv(GameInitReInit)
 {
     GameInitReInit();
 
-    extern void ClearAllCLEOTextures();
-    ClearAllCLEOTextures();
+    CLEOTexture::ClearAll();
 
     extern void ClearAllCLEOBlips();
     ClearAllCLEOBlips();
@@ -73,11 +73,14 @@ DECL_HOOKv(GameInitReInit)
 }
 DECL_HOOKv(DefaultDraw)
 {
+    CLEOTexture::DrawAll(BeforeDrawing);
+
     DefaultDraw();
 
     ShapeDrawer::DrawAll();
     // TextDrawer::DrawAll();
     // SpriteDrawer::DrawAll();
+    CLEOTexture::DrawAll(AfterDrawing);
 }
 DECL_HOOKv(BeforeScriptsProcessing)
 {
@@ -87,6 +90,39 @@ DECL_HOOKv(BeforeScriptsProcessing)
     // SpriteDrawer::m_nSprites = 0;
 
     BeforeScriptsProcessing();
+}
+DECL_HOOKv(BeforeHUDDraw)
+{
+    BeforeHUDDraw();
+    CLEOTexture::DrawAll(BeforeHud);
+}
+DECL_HOOKv(AfterHUDDraw)
+{
+    AfterHUDDraw();
+    CLEOTexture::DrawAll(AfterHud);
+}
+DECL_HOOKv(RadarDraw)
+{
+    CLEOTexture::DrawAll(BeforeRadar);
+    RadarDraw();
+    CLEOTexture::DrawAll(AfterRadar);
+}
+DECL_HOOKv(RadarOverlayDraw)
+{
+    CLEOTexture::DrawAll(BeforeRadarOverlay);
+    RadarOverlayDraw();
+    CLEOTexture::DrawAll(AfterRadarOverlay);
+}
+DECL_HOOKv(RadarBlipsDraw)
+{
+    CLEOTexture::DrawAll(BeforeBlips);
+    RadarBlipsDraw();
+    CLEOTexture::DrawAll(AfterBlips);
+}
+DECL_HOOKv(AfterFadeDraw)
+{
+    CLEOTexture::DrawAll(AfterFade);
+    AfterFadeDraw();
 }
 
 // int main!
@@ -101,12 +137,18 @@ ON_ALL_MODS_LOAD()
     ResolveExternals();
 
     // Hooks
-    HOOKPLT(OnGameProcess,                 pGTASA + 0x66FE58);
-    HOOKPLT(DoGameSpecificStuffBeforeSave, pGTASA + 0x66EC5C);
-    HOOKPLT(MobileMenuRender,              pGTASA + 0x674254);
-    HOOKPLT(GameInitReInit,                pGTASA + 0x672014);
-    HOOKPLT(DefaultDraw,                   pGTASA + 0x675CC4);
-    HOOKPLT(BeforeScriptsProcessing,       pGTASA + 0x673178);
+    HOOKPLT(OnGameProcess,                  pGTASA + 0x66FE58);
+    HOOKPLT(DoGameSpecificStuffBeforeSave,  pGTASA + 0x66EC5C);
+    HOOKPLT(MobileMenuRender,               pGTASA + 0x674254);
+    HOOKPLT(GameInitReInit,                 pGTASA + 0x672014);
+    HOOKPLT(DefaultDraw,                    pGTASA + 0x675CC4);
+    HOOKPLT(BeforeScriptsProcessing,        pGTASA + 0x673178);
+    HOOKPLT(BeforeHUDDraw,                  pGTASA + 0x67058C);
+    HOOKPLT(AfterHUDDraw,                   pGTASA + 0x67589C);
+    HOOKPLT(RadarDraw,                      pGTASA + 0x66F618);
+    HOOKPLT(RadarOverlayDraw,               pGTASA + 0x67196C);
+    HOOKPLT(RadarBlipsDraw,                 pGTASA + 0x66E910);
+    HOOKPLT(AfterFadeDraw,                  pGTASA + 0x673C4C);
 
     // NoSave
     CLEO_RegisterOpcode(0x0E01, CREATE_OBJECT_NO_SAVE); // 0E01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
