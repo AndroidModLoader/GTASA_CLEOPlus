@@ -327,6 +327,7 @@ extern void (*SetMaskVertices)(int, float*, float);
 extern void (*SetVertices4)(int,float*,float*,CRGBA&);
 extern void (*SetVertices8)(float,float,float,float,float,float,float,float,CRGBA&,CRGBA&,CRGBA&,CRGBA&);
 extern void (*DrawAnyRect)(float,float,float,float,float,float,float,float,CRGBA&,CRGBA&,CRGBA&,CRGBA&);
+extern void (*SearchLightCone)(int,CVector,CVector,float,float,uint8_t,uint8_t,CVector*,CVector*,CVector*,bool,float,float,float,float);
 
 // All of CLEO functions
 CLEO_Fn(CREATE_OBJECT_NO_SAVE);

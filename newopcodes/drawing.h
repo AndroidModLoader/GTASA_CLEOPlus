@@ -5,6 +5,7 @@
 #define MAX_NO_SHAPES 100
 #define MAX_NO_VERTICES 20
 #define MAX_NO_SPRITES 200
+#define MAX_NO_SPOTLIGHTS 100
 
 struct NOShape
 {
@@ -68,6 +69,23 @@ struct NOSprite
             DrawAnyRect(m_Rect.left, m_Rect.bottom, m_Rect.right, m_Rect.top, m_Rect.left, m_Rect.top,
                         m_Rect.right, m_Rect.top, m_Color[0], m_Color[1], m_Color[2], m_Color[3]);
         }
+    }
+};
+
+struct NOSpotLight
+{
+    NOSpotLight() { memset(this, 0, sizeof(*this)); }
+
+    static inline CVector m_vecZeroVector = CVector(0);
+
+    CVector m_vecOrigin, m_vecTarget;
+    float m_fOriginRadius, m_fTargetRadius;
+    uint8_t m_nEnableShadow, m_nShadowIntensity, m_nFlag1, m_nFlag2;
+
+    inline void Draw(int id)
+    {
+        SearchLightCone(id, m_vecOrigin, m_vecTarget, m_fTargetRadius, m_nShadowIntensity, m_nFlag1, m_nEnableShadow,
+                        &m_vecZeroVector, &m_vecZeroVector, &m_vecZeroVector, m_nFlag2, m_fTargetRadius, 0.0f, 0.0f, 1.0f);
     }
 };
 
@@ -144,9 +162,35 @@ struct SpriteDrawer
     {
         for(int i = 0; i < m_nSprites; ++i) { m_Sprites[i].Draw(); }
         RwRenderStateSet(rwRENDERSTATETEXTURERASTER, NULL);
-        RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, (void*)true);
-        RwRenderStateSet(rwRENDERSTATESRCBLEND, (void*)rwBLENDSRCALPHA);
-        RwRenderStateSet(rwRENDERSTATEDESTBLEND, (void*)rwBLENDINVSRCALPHA);
         m_nSprites = 0;
+    }
+};
+
+struct SpotLightDrawer
+{
+    static inline NOSpotLight m_SpotLights[MAX_NO_SPOTLIGHTS];
+    static inline uint32_t m_nSpotLights = 0;
+
+    static inline bool DrawSpotLightThisFrame(CVector& origin, CVector& target, float oradius, float tradius, uint8_t enableShadow, uint8_t shadowIntensity, uint8_t flag1, uint8_t flag2)
+    {
+        if(m_nSpotLights >= MAX_NO_SPOTLIGHTS) return false;
+
+        NOSpotLight& spotl = m_SpotLights[m_nSpotLights];
+        spotl.m_vecOrigin = origin;
+        spotl.m_vecTarget = target;
+        spotl.m_fOriginRadius = oradius;
+        spotl.m_fTargetRadius = tradius;
+        spotl.m_nEnableShadow = enableShadow;
+        spotl.m_nShadowIntensity = shadowIntensity;
+        spotl.m_nFlag1 = flag1;
+        spotl.m_nFlag2 = flag2;
+
+        ++m_nSpotLights;
+        return true;
+    }
+    static inline void DrawAll()
+    {
+        for(int i = 0; i < m_nSpotLights; ++i) { m_SpotLights[i].Draw(15000 + i); }
+        m_nSpotLights = 0;
     }
 };

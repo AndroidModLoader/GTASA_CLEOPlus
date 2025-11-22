@@ -235,3 +235,25 @@ CLEO_Fn(DRAW_2D_SPRITE_WITH_GRADIENT) // newOpcodes
 
     cleoaddon->UpdateCompareFlag(handle, SpriteDrawer::DrawSpriteThisFrame(texture, rect, color[0], color[1], color[2], color[3], angle));
 }
+CLEO_Fn(DRAW_SPOTLIGHT)
+{
+    CVector origin, target;
+    float oradius, tradius;
+    uint8_t enableShadow, shadowIntensity, flag1, flag2;
+
+    origin.x = cleo->ReadParam(handle)->f;
+    origin.y = cleo->ReadParam(handle)->f;
+    origin.z = cleo->ReadParam(handle)->f;
+    target.x = cleo->ReadParam(handle)->f;
+    target.y = cleo->ReadParam(handle)->f;
+    target.z = cleo->ReadParam(handle)->f;
+    oradius = cleo->ReadParam(handle)->f;
+    tradius = cleo->ReadParam(handle)->f;
+    
+    enableShadow = cleo->ReadParam(handle)->u;
+    shadowIntensity = cleo->ReadParam(handle)->u;
+    flag1 = cleo->ReadParam(handle)->u;
+    flag2 = cleo->ReadParam(handle)->u;
+
+    cleoaddon->UpdateCompareFlag(handle, SpotLightDrawer::DrawSpotLightThisFrame(origin, target, oradius, tradius, enableShadow, shadowIntensity, flag1, flag2));
+}

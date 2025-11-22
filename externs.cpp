@@ -160,6 +160,7 @@ void (*SetMaskVertices)(int, float*, float);
 void (*SetVertices4)(int,float*,float*,CRGBA&);
 void (*SetVertices8)(float,float,float,float,float,float,float,float,CRGBA&,CRGBA&,CRGBA&,CRGBA&);
 void (*DrawAnyRect)(float,float,float,float,float,float,float,float,CRGBA&,CRGBA&,CRGBA&,CRGBA&);
+void (*SearchLightCone)(int,CVector,CVector,float,float,uint8_t,uint8_t,CVector*,CVector*,CVector*,bool,float,float,float,float);
 
 // int main
 void ResolveExternals()
@@ -346,4 +347,5 @@ void ResolveExternals()
     SET_TO(SetVertices4, aml->GetSym(hGTASA, "_ZN9CSprite2d11SetVerticesEiPfS0_RK5CRGBA"));
     SET_TO(SetVertices8, aml->GetSym(hGTASA, "_ZN9CSprite2d11SetVerticesEffffffffRK5CRGBAS2_S2_S2_"));
     SET_TO(DrawAnyRect, aml->GetSym(hGTASA, "_ZN9CSprite2d11DrawAnyRectEffffffffRK5CRGBAS2_S2_S2_"));
+    SET_TO(SearchLightCone, aml->GetSym(hGTASA, "_ZN5CHeli15SearchLightConeEi7CVectorS0_ffhhPS0_S1_S1_bffff"));
 }

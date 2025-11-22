@@ -1827,10 +1827,6 @@ CLEO_Fn(GET_TRAFFICLIGHTS_CURRENT_COLOR)
     cleo->GetPointerToScriptVar(handle)->i = LightForCars2_Visual();
     cleo->GetPointerToScriptVar(handle)->i = LightForCars1_Visual();
 }
-CLEO_Fn(DRAW_SPOTLIGHT)
-{
-    // TODO: DRAW_SPOTLIGHT
-}
 CLEO_Fn(GET_CAR_LIGHT_DAMAGE_STATUS)
 {
     CAutomobile *vehicle = (CAutomobile*)GetVehicleFromRef(cleo->ReadParam(handle)->i);

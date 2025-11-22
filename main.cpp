@@ -88,6 +88,7 @@ DECL_HOOKv(BeforeScriptsProcessing)
     ShapeDrawer::m_nShapes = 0;
     // TextDrawer::m_nTexts = 0;
     SpriteDrawer::m_nSprites = 0;
+    SpotLightDrawer::m_nSpotLights = 0;
 
     BeforeScriptsProcessing();
 }
@@ -124,6 +125,11 @@ DECL_HOOKv(AfterFadeDraw)
     CLEOTexture::DrawAll(AfterFade);
     AfterFadeDraw();
 }
+DECL_HOOKv(RenderAllSearchLights)
+{
+    RenderAllSearchLights();
+    SpotLightDrawer::DrawAll();
+}
 
 // int main!
 ON_ALL_MODS_LOAD()
@@ -149,6 +155,7 @@ ON_ALL_MODS_LOAD()
     HOOKPLT(RadarOverlayDraw,               pGTASA + 0x67196C);
     HOOKPLT(RadarBlipsDraw,                 pGTASA + 0x66E910);
     HOOKPLT(AfterFadeDraw,                  pGTASA + 0x673C4C);
+    HOOKPLT(RenderAllSearchLights,          pGTASA + 0x6742D8);
 
     // NoSave
     CLEO_RegisterOpcode(0x0E01, CREATE_OBJECT_NO_SAVE); // 0E01=7,create_object_no_save %1o% at %2d% %3d% %4d% offset %5d% ground %6d% to %7d%
@@ -397,7 +404,6 @@ ON_ALL_MODS_LOAD()
     CLEO_RegisterOpcode(0x0D57, GET_SUN_WORLD_COORS); // 0D57=3,get_sun_position_to %1d% %2d% %3d% // IF and SET // newOpcodes
     CLEO_RegisterOpcode(0x0D58, GET_SUN_SIZE); // 0D58=2,get_sun_size_core_to %1d% glow_to %2d% // newOpcodes
     CLEO_RegisterOpcode(0x0D5A, GET_TRAFFICLIGHTS_CURRENT_COLOR); // 0D5A=2,get_trafficlights_type_NS_current_color_to %1d% type_WE_current_color_to %2d% // newOpcodes
-    //CLEO_RegisterOpcode(0x0D5B, DRAW_SPOTLIGHT); // 0D5B=12,draw_spotlight_from %1d% %2d% %3d% to %4d% %5d% %6d% base_radius %7d% target_radius %8d% enable_shadow %9d% shadow_intensity %10d% flag1 %11d% flag2 %12d% // newOpcodes
     CLEO_RegisterOpcode(0x0D5C, GET_CAR_LIGHT_DAMAGE_STATUS); // 0D5C=3,%3d% =  get_car %1d% light %2d% damage_state // newOpcodes
     CLEO_RegisterOpcode(0x0D5D, SET_CAR_LIGHT_DAMAGE_STATUS); // 0D5D=3,set_car %1d% light %2d% damage_state %3d% // newOpcodes
     CLEO_RegisterOpcode(0x0D5E, GET_VEHICLE_CLASS_AND_SUBCLASS); // 0D5E=3,get_vehicle %1d% class_to %2d% subclass_to %3d% // newOpcodes
@@ -426,13 +432,14 @@ ON_ALL_MODS_LOAD()
     // Drawing
     CLEO_RegisterOpcode(0x0E1E, DRAW_TEXTURE_PLUS); // 0E1E=15,draw_texture_plus %1d% event %2d% pos %3d% %4d% size %5d% %6d% angle %7d% depth %8d% fix_aspect_ratio %9d% maskTrisCount %10d% maskTrisArray %11d% rgba %12d% %13d% %14d% %15d% 
     CLEO_RegisterOpcode(0x0E3C, GET_TEXTURE_FROM_SPRITE); // 0E3C=2,get_texture_from_sprite %1d% store_to %2d%
-    //CLEO_RegisterOpcode(0x0E62, DRAW_STRING); // 0E62=8,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d%
-    //CLEO_RegisterOpcode(0x0E63, DRAW_STRING_EXT); // 0E63=27,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d% prop %9d% align %10d% wrap %11d% justify %12d% color %13d% %14d% %15d% %16d% outline %17d% shadow %18d% dropColor %19d% %20d% %21d% %22d% background %23d% backColor %24d% %25d% %26d% %27d%
+    CLEO_RegisterOpcode(0x0E62, DRAW_STRING); // 0E62=8,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d%
+    CLEO_RegisterOpcode(0x0E63, DRAW_STRING_EXT); // 0E63=27,print %1s% event %2d% at %3d% %4d% scale %5d% %6d% fixAR %7d% style %8d% prop %9d% align %10d% wrap %11d% justify %12d% color %13d% %14d% %15d% %16d% outline %17d% shadow %18d% dropColor %19d% %20d% %21d% %22d% background %23d% backColor %24d% %25d% %26d% %27d%
     CLEO_RegisterOpcode(0x0D40, DRAW_SHAPE); // 0D40=8,draw_2d_shape_type %3d% texture %4d% numVerts %2d% pVerts %1d% vertexAlpha %5d% srcBlend %6d% dstBlend %7d% _unused %8d% // newOpcodes
     CLEO_RegisterOpcode(0x0D41, SETUP_SHAPE_VERTEX); // 0D41=14,set_vertices %1d% vertex %2d% xyz %5d% %6d% %7d% rhw %8d% RGBA %9d% %10d% %11d% %12d% uv %13d% %14d% invertX %3d% invertY %4d% // newOpcodes
     CLEO_RegisterOpcode(0x0D45, ROTATE_SHAPE_VERTICES); // 0D45=5,rotate_2d_vertices_shape %1d% num_verts %2d% aroundXY %3d% %4d% angle %5d% // newOpcodes
     CLEO_RegisterOpcode(0x0D7E, DRAW_2D_SPRITE); // 0D7E=11,draw_sprite_with_texture %1d% at_cornerA %2d% %3d% cornerB %4d% %5d% color %6d% %7d% %8d% %9d% angle %10d% // newOpcodes
     CLEO_RegisterOpcode(0x0D7F, DRAW_2D_SPRITE_WITH_GRADIENT); // 0D7F=22,draw_gradient_sprite_with_texture %1d% at_cornerA %2d% %3d% cornerB %4d% %5d% colors %6d% %7d% %8d% %9d%  %10d% %11d% %12d% %13d%  %14d% %15d% %16d% %17d%  %18d% %19d% %20d% %21d% angle %22d% // newOpcodes
+    CLEO_RegisterOpcode(0x0D5B, DRAW_SPOTLIGHT); // 0D5B=12,draw_spotlight_from %1d% %2d% %3d% to %4d% %5d% %6d% base_radius %7d% target_radius %8d% enable_shadow %9d% shadow_intensity %10d% flag1 %11d% flag2 %12d% // newOpcodes
 
     // Math
     CLEO_RegisterOpcode(0x0D1E, QUAT_SLERP); // 0D1E=4,quat_slerp %1d% to %2d% lambda %3d% result %4d%
